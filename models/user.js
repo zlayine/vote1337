@@ -20,7 +20,7 @@ const userSchema = new Schema({
 		required: true
 	},
 	staff: {
-		type: String,
+		type: Boolean,
 		required: true
 	},
 	campus: {

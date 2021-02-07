@@ -7,15 +7,15 @@ const reportSchema = new Schema({
 		type: String,
 		required: true
 	},
-	meal_item_id: {
+	meal_item: {
 		type: Schema.Types.ObjectId,
 		ref: 'MealItem'
 	},
-	meal_id: {
+	meal: {
 		type: Schema.Types.ObjectId,
 		ref: 'Meal'
 	},
-	user_id: {
+	user: {
 		type: Schema.Types.ObjectId,
 		ref: 'User'	
 	},

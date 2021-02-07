@@ -19,11 +19,11 @@ const mealItemSchema = new Schema({
 		type: Number,
 		default: 0
 	},
-	vote_sick: {
+	votes_sick: {
 		type: Number,
 		default: 0
 	},
-	meal_id: {
+	meal: {
 		type: Schema.Types.ObjectId,
 		ref: 'Meal'	
 	},

@@ -5,7 +5,9 @@ const mongoose = require('mongoose')
 
 const graphqlSchema = require('./graphql/schema')
 const graphqlResolvers = require('./graphql/resolvers')
-const isAuth = require('./middlewares/is-auth')
+import { GraphQLUpload } from 'graphql-upload'
+
+// const isAuth = require('./middlewares/is-auth')
 
 const app = express();
 
@@ -21,20 +23,24 @@ app.use((req, res, next) => {
 })
 
 app.use(bodyParser.json());
+app.use(express.static(path.join(__dirname, 'public')));
+app.use('/meals', express.static(path.join(__dirname, 'meals')));
 
-app.use(isAuth);
+// app.use(isAuth);
 
-app.use('/graphql', graphqlHttp({
-    schema: graphqlSchema,
-    rootValue: graphqlResolvers,
-    graphiql: true,
-}));
+app.use('/graphql',
+	graphqlUploadExpress({ maxFileSize: 10000000, maxFiles: 10 }),
+	graphqlHttp({
+		schema: graphqlSchema,
+		rootValue: graphqlResolvers,
+		graphiql: true,
+	}));
 
 mongoose.connect(process.env.MONGODB_URL)
-.then(() => {
-    app.listen(3000);
-}).catch(err => {
-    console.log(err)
-})
+	.then(() => {
+		app.listen(3000);
+	}).catch(err => {
+		console.log(err)
+	})
 
 

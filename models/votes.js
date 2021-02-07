@@ -3,7 +3,7 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema;
 
 const voteSchema = new Schema({
-	user_id: {
+	user: {
 		type: Schema.Types.ObjectId,
 		ref: 'User'	
 	},
@@ -11,7 +11,7 @@ const voteSchema = new Schema({
 		type: String,
 		required: true
 	},
-	meal_item_id: {
+	meal_item: {
 		type: Schema.Types.ObjectId,
 		ref: 'MealItem'
 	},

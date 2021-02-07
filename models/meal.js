@@ -15,13 +15,17 @@ const mealSchema = new Schema({
 		type: Number,
 		default: 0
 	},
-	user_id: {
+	user: {
 		type: Schema.Types.ObjectId,
 		ref: 'User'	
 	},
 	reports: {
 		type: Schema.Types.ObjectId,
 		ref: 'Report'	
+	},
+	meals: {
+		type: Schema.Types.ObjectId,
+		ref: 'MealItem'
 	}
 }, {timestamps: true});
 
