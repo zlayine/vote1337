@@ -73,8 +73,8 @@ input MealInput {
 
 input ReportInput {
 	description: String!
-	meal_item_id: String!
-	meal_id: String!
+	meal_item: String!
+	meal: String!
 }
 
 input VoteInput {
