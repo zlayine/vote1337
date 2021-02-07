@@ -2,10 +2,11 @@ const express = require('express');
 const bodyParser = require('body-parser')
 const graphqlHttp = require('express-graphql').graphqlHTTP
 const mongoose = require('mongoose')
+const path = require('path');
 
 const graphqlSchema = require('./graphql/schema')
 const graphqlResolvers = require('./graphql/resolvers')
-import { GraphQLUpload } from 'graphql-upload'
+import { graphqlUploadExpress } from 'graphql-upload'
 
 // const isAuth = require('./middlewares/is-auth')
 

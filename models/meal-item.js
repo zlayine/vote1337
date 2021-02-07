@@ -27,10 +27,10 @@ const mealItemSchema = new Schema({
 		type: Schema.Types.ObjectId,
 		ref: 'Meal'	
 	},
-	votes: {
+	votes: [{
 		type: Schema.Types.ObjectId,
 		ref: 'Vote'
-	},
+	}],
 }, {timestamps: true});
 
 module.exports = mongoose.model('MealItem', mealItemSchema);

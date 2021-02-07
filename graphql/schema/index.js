@@ -97,10 +97,10 @@ type RootQuery {
 }
 
 type RootMutation {
-	createMeal(mealInput: MealInput) Meal
-	createReport(reportInput: ReportInput) Report
-	createUser(userInput: UserInput) User
-	addVote(voteInput: VoteInput) Vote
+	createMeal(mealInput: MealInput): Meal
+	createReport(reportInput: ReportInput): Report
+	createUser(userInput: UserInput): User
+	addVote(voteInput: VoteInput): Vote
 }
 
 schema {

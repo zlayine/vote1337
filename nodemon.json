@@ -1,5 +1,5 @@
 {
-    "env" : {
-        "MONGODB_URL": "mongodb://localhost:27017/graphdb"
-    }
+	"env": {
+		"MONGODB_URL": "mongodb://localhost:27017/vote1337"
+	}
 }

@@ -19,14 +19,14 @@ const mealSchema = new Schema({
 		type: Schema.Types.ObjectId,
 		ref: 'User'	
 	},
-	reports: {
+	reports: [{
 		type: Schema.Types.ObjectId,
 		ref: 'Report'	
-	},
-	meals: {
+	}],
+	meals: [{
 		type: Schema.Types.ObjectId,
 		ref: 'MealItem'
-	}
+	}]
 }, {timestamps: true});
 
 module.exports = mongoose.model('Meal', mealSchema);

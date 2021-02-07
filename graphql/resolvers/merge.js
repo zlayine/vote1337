@@ -55,7 +55,7 @@ const votesResolver = async voteIds => {
 
 const userResolver = async userId => {
 	try {
-		const user = await User.findById(userId)
+		const user = await models.User.findById(userId)
 		return transformUser(user);
 	} catch (err) {
 		console.log(err);
