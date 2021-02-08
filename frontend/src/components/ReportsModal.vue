@@ -1,7 +1,7 @@
 <template>
   <div class="reports_modal">
     <div class="btn-close">
-      <v-btn class="btn-close" color="error" fab small dark>
+      <v-btn class="btn-close" color="error" fab small dark @click="closeReports">
         <v-icon>mdi-close</v-icon>
       </v-btn>
     </div>
@@ -72,6 +72,11 @@ export default {
       selected: null,
     };
   },
+	methods: {
+		closeReports() {
+			this.$emit("closeReports");
+		}
+	},
   components: { MealItem },
 };
 </script>
@@ -82,6 +87,7 @@ export default {
   background-color: #ffffffb9;
   width: 100%;
   height: 100%;
+	z-index: 100;
   top: 0;
   left: 0;
   backdrop-filter: blur(10px);
@@ -154,7 +160,8 @@ export default {
           justify-content: center;
 
           .avatar {
-            margin: auto;
+            margin: 4px auto;
+
           }
           .user-name {
             margin: 5px auto;
@@ -176,5 +183,21 @@ export default {
   .fade-leave-to {
     opacity: 0;
   }
+}
+
+@media (max-width: 768px) {
+	.reports_modal {
+		.reports_container {
+			width: 100%;
+
+			.text-title {
+				font-size: 22px;
+			}
+
+			.reports {
+				padding: 0 5px;
+			}
+		}
+	}
 }
 </style>

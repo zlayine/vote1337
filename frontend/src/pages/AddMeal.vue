@@ -11,10 +11,10 @@
       ></v-text-field>
       <p class="">Meal items:</p>
       <div class="meal-items mb-5">
+        <meal-item-form @saved="addItem" ref="empty" />
         <template v-for="(item, index) in items">
           <meal-item-form :key="item.name" :index="index" :item_data="item" @removeItem="removeItem" />
         </template>
-        <meal-item-form @saved="addItem" ref="empty" />
       </div>
       <v-btn class="mr-4" to="/"> cancel </v-btn>
       <v-btn color="primary" @click="submit"> Create meal </v-btn>

@@ -1,5 +1,17 @@
 <template>
   <div class="meals-voting">
+    <div class="btn-close">
+      <v-btn
+        class="btn-close"
+        color="error"
+        fab
+        small
+        dark
+        @click="closeVoting"
+      >
+        <v-icon>mdi-close</v-icon>
+      </v-btn>
+    </div>
     <div class="meals-container">
       <div class="text-title">Meal title</div>
       <div class="items_carrousel">
@@ -52,7 +64,7 @@
               fab
               small
               dark
-							@click="report = false"
+              @click="report = false"
             >
               <v-icon>mdi-close</v-icon>
             </v-btn>
@@ -90,6 +102,9 @@ export default {
       this.logo = this.logoNext;
       this.logoNext = this.logoPrev;
     },
+    closeVoting() {
+      this.$emit("closeVoting");
+    },
   },
 };
 </script>
@@ -101,8 +116,15 @@ export default {
   width: 100%;
   height: 100%;
   top: 0;
+  z-index: 100;
   left: 0;
   backdrop-filter: blur(10px);
+
+  > .btn-close {
+    position: fixed;
+    top: 15px;
+    left: 15px;
+  }
 
   .meals-container {
     width: 70%;
@@ -191,7 +213,7 @@ export default {
 
           .btn-close {
             margin: 10px 0;
-						transition: 200ms all;
+            transition: 200ms all;
             align-self: center;
           }
         }
@@ -250,5 +272,28 @@ export default {
   //   transform: translateX(100%);
   //   opacity: 0;
   // }
+}
+
+
+@media (max-width: 768px) {
+	.meals-voting {
+		.meals-container {
+			width: 80%;
+			overflow: initial;
+			margin: 50px auto;
+
+			.items_carrousel {
+				.edge {
+					display: none;
+				}
+				.item {
+					width: 400px;
+					.image {
+						height: 300px;
+					}
+				}
+			}
+		}
+	}
 }
 </style>

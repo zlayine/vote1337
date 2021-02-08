@@ -7,17 +7,17 @@
       </div>
       <div class="meal_action">
         <div class="reports">
-          <v-btn class="ma-2" plain color="primary" @click="reports = true">
+          <v-btn class="ma-2" plain color="primary" @click="openReports">
             <v-icon left> mdi-poll </v-icon> Reports
           </v-btn>
         </div>
       </div>
     </div>
     <div class="meal_items_holder">
-      <div class="overlay" v-if="!voted && !voting"></div>
+      <div class="overlay" v-if="!voted"></div>
 
-      <div class="start-vote" v-if="!voted && !voting">
-        <v-btn x-large rounded color="primary" dark @click="voting = !voting">
+      <div class="start-vote" v-if="!voted">
+        <v-btn x-large rounded color="primary" dark @click="openVoting">
           Start voting
         </v-btn>
       </div>
@@ -31,45 +31,42 @@
         <meal-item></meal-item>
       </div>
     </div>
-    <transition name="fade">
-      <meal-item-voting v-if="voting" />
-    </transition>
-		<transition name="fade">
-      <reports-modal v-if="reports" />
-    </transition>
+    
   </div>
 </template>
 
 <script>
 import MealItem from "./MealItem.vue";
-import MealItemVoting from "./MealItemVoting.vue";
-import ReportsModal from "./ReportsModal.vue"
 
 export default {
   data() {
     return {
-      voting: false,
-      voted: true,
-			reports: false,
+      voted: false,
     };
+  },
+  methods: {
+    openReports() {
+      this.$emit("openReports");
+    },
+		openVoting() {
+			this.$emit("openVoting");
+		}
   },
   components: {
     MealItem,
-    MealItemVoting,
-		ReportsModal
   },
 };
 </script>
 
 <style lang="scss" scoped>
 .meal_section {
-	margin-bottom: 25px;
-	.meal_header {
-		display: flex;
-		flex-direction: row;
-		justify-content: space-between;
-		padding: 0 10px;
-	}
+  margin-bottom: 25px;
+  .meal_header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 0 10px;
+  }
   .meal_title {
     font-size: 28px;
     font-weight: 700;
@@ -121,14 +118,29 @@ export default {
       padding-bottom: 15px;
     }
   }
+}
 
-  .fade-enter-active,
-  .fade-leave-active {
-    transition: opacity 0.2s;
-  }
-  .fade-enter,
-  .fade-leave-to {
-    opacity: 0;
+@media (max-width: 768px) {
+  .meal_section {
+    .meal_title {
+      font-size: 20px;
+    }
+
+    .meal_user {
+      font-size: 16px;
+    }
+
+		.meal_items_holder {
+			.start-vote {
+				left: 20%;
+			}
+		}
+    .reports {
+      button {
+        padding: 0;
+        margin-right: 0 !important;
+      }
+    }
   }
 }
 </style>
