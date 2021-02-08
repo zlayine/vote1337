@@ -1,16 +1,26 @@
 <template>
   <div class="meal_section">
-    <div class="meal_title">Meal for 01-01-2021</div>
-    <div class="meal_user">by username</div>
-    <div class="meal_items_holder">
-
-        <div class="overlay" v-if="!voted && !voting"></div>
-
-        <div class="start-vote" v-if="!voted && !voting">
-          <v-btn x-large rounded color="primary" dark @click="voting = !voting">
-            Start voting
+    <div class="meal_header">
+      <div class="meal_info">
+        <div class="meal_title">Meal for 01-01-2021</div>
+        <div class="meal_user">by username</div>
+      </div>
+      <div class="meal_action">
+        <div class="reports">
+          <v-btn class="ma-2" plain color="primary" @click="reports = true">
+            <v-icon left> mdi-poll </v-icon> Reports
           </v-btn>
         </div>
+      </div>
+    </div>
+    <div class="meal_items_holder">
+      <div class="overlay" v-if="!voted && !voting"></div>
+
+      <div class="start-vote" v-if="!voted && !voting">
+        <v-btn x-large rounded color="primary" dark @click="voting = !voting">
+          Start voting
+        </v-btn>
+      </div>
 
       <div class="meal_items">
         <meal-item></meal-item>
@@ -24,28 +34,42 @@
     <transition name="fade">
       <meal-item-voting v-if="voting" />
     </transition>
+		<transition name="fade">
+      <reports-modal v-if="reports" />
+    </transition>
   </div>
 </template>
 
 <script>
 import MealItem from "./MealItem.vue";
 import MealItemVoting from "./MealItemVoting.vue";
+import ReportsModal from "./ReportsModal.vue"
+
 export default {
   data() {
     return {
-      voting: true,
-      voted: false,
+      voting: false,
+      voted: true,
+			reports: false,
     };
   },
   components: {
     MealItem,
     MealItemVoting,
+		ReportsModal
   },
 };
 </script>
 
 <style lang="scss" scoped>
 .meal_section {
+	margin-bottom: 25px;
+	.meal_header {
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+		padding: 0 10px;
+	}
   .meal_title {
     font-size: 28px;
     font-weight: 700;

@@ -20,6 +20,9 @@ export default {
 body {
 	margin: 0;
 	padding: 0;
-	font-family: sans-serif;
+}
+* {
+	font-family: 'Open Sans', sans-serif;
+	letter-spacing: 0px;
 }
 </style>

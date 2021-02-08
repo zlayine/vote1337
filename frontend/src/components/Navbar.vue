@@ -3,13 +3,6 @@
     <div class="nav_logo">
       <h1>Navigation</h1>
     </div>
-    <div class="nav_items">
-      <ul>
-        <router-link to="/" class="nav_item">Home</router-link>
-        <router-link to="/addmeal" class="nav_item">Add meal</router-link>
-        <router-link to="/reports" class="nav_item">Reports</router-link>
-      </ul>
-    </div>
     <div class="nav_actions">
       <div class="action login">login</div>
       <div class="action logout">logout</div>
@@ -29,6 +22,9 @@ export default {};
 	align-items: center;
 	justify-content: space-between;
 	padding: 0 5px;
+	height: 60px;
+	border-bottom: 1px solid grey;
+	margin-bottom: 20px;
 
 	.nav_logo {
 		h1 {

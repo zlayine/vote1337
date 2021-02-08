@@ -1,11 +1,6 @@
 <template>
-  <v-card class="meal_item" elevation="3">
+  <v-card class="meal_item" :class="{ small: small }" elevation="3">
     <div class="item">
-      <div class="btn-report">
-        <v-btn icon color="white">
-          <v-icon dense>mdi-alert</v-icon>
-        </v-btn>
-      </div>
       <div class="image">
         <img
           src="https://www.flavcity.com/wp-content/uploads/2018/05/healthy-meal-prep-recipes-500x500.jpg"
@@ -33,10 +28,10 @@
 </template>
 
 <script>
-
 export default {
-
-	
+  props: {
+    small: String,
+  },
 };
 </script>
 
@@ -44,36 +39,34 @@ export default {
 .meal_item {
   min-width: 300px;
   border-radius: 10px;
-  margin: 0 10px 0 0;
+  margin: 0 15px 0 0;
+
+	&.small {
+		min-width: 200px;
+
+	}
 
   .item {
     position: relative;
-		overflow: hidden;
+    overflow: hidden;
 
-		.btn-report {
-			position: absolute;
-			padding: 5px;
-			right: -52px;
-			top: -52px;
-			border-radius: 40%;
-			background-color: red;
-			z-index: 20;
-			cursor: pointer;
-			transition: 200ms all;
+    // .btn-report {
+    // 	position: absolute;
+    // 	padding: 5px;
+    // 	right: -52px;
+    // 	top: -52px;
+    // 	border-radius: 40%;
+    // 	background-color: red;
+    // 	z-index: 20;
+    // 	cursor: pointer;
+    // 	transition: 200ms all;
 
-			button {
-				position: relative;
-				bottom: -3px;
-				left: -3px;
-			}
-		}
-
-		// &:hover {
-		// 	.btn-report {
-		// 		right: -12px;
-		// 		top: -12px;
-		// 	}
-		// }
+    // 	button {
+    // 		position: relative;
+    // 		bottom: -3px;
+    // 		left: -3px;
+    // 	}
+    // }
 
     .image {
       border-radius: 10px;
