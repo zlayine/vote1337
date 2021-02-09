@@ -1,6 +1,5 @@
 import Home from './pages/Home.vue'
 import Auth from './pages/Auth.vue'
-import Reports from './pages/Reports.vue'
 import AddMeal from './pages/AddMeal.vue'
 
 export const routes = [
@@ -23,13 +22,6 @@ export const routes = [
         component: Auth,
         meta: {
             requiresAuth: false,
-        }
-    },
-	{
-        path: "/reports",
-        component: Reports,
-        meta: {
-            requiresAuth: true,
         }
     },
 ];

@@ -9,17 +9,17 @@
       </div>
       <div class="overlay"></div>
       <div class="info">
-        <div class="info_title">item title</div>
+        <div class="info_title">{{ item.name }}</div>
         <div class="stats">
-          <div class="text">-20</div>
-          <div class="text">+20</div>
+          <div class="text">-{{ item.votes_down }}</div>
+          <div class="text">+{{ item.votes_up }}</div>
         </div>
         <div class="bar">
           <v-progress-linear
             background-color="success lighten-1"
             color="error"
-            value="15"
-            height="8"
+            :value="votePercent"
+            height="8" 
           ></v-progress-linear>
         </div>
       </div>
@@ -31,20 +31,26 @@
 export default {
   props: {
     small: String,
+    item: Object,
+  },
+  computed: {
+    votePercent() {
+      let total = this.item.votes.length;
+      return parseInt((total / this.item.votes_down) * 100);
+    },
   },
 };
 </script>
 
 <style lang="scss" scoped>
 .meal_item {
-  min-width: 300px;
+  width: 300px;
   border-radius: 10px;
   margin: 0 15px 0 0;
 
-	&.small {
-		min-width: 200px;
-
-	}
+  &.small {
+    width: 200px;
+  }
 
   .item {
     position: relative;
@@ -123,6 +129,7 @@ export default {
         border-radius: 10px;
         overflow: hidden;
         position: relative;
+				z-index: 21;
       }
     }
   }

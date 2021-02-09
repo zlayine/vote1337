@@ -70,8 +70,8 @@ const transformMeal = (meal) => {
 		meals: mealItemsResolver.bind(this, meal._doc.meals),
 		reports: reportsResolver.bind(this, meal._doc.reports),
 		user: userResolver.bind(this, meal._doc.user),
-		createdAt: dateToString(meal._doc.createdAt),
-		updatedAt: dateToString(meal._doc.updatedAt),
+		createdAt: dateToString(meal.createdAt),
+		updatedAt: dateToString(meal.updatedAt),
 	}
 };
 

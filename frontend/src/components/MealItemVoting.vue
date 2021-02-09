@@ -13,16 +13,9 @@
       </v-btn>
     </div>
     <div class="meals-container">
-      <div class="text-title">Meal title</div>
+      <div class="text-title">{{ meal.name }}</div>
       <div class="items_carrousel">
         <div class="edge left"></div>
-        <!-- <div class="prev">
-          <transition name="slide-disappear">
-            <div class="image">
-              <img :src="logoPrev" alt="img" />
-            </div>
-          </transition>
-        </div> -->
         <div class="item">
           <transition name="slide-hide">
             <div :key="logo" class="image">
@@ -31,7 +24,14 @@
           </transition>
           <div class="actions">
             <div class="likes" v-if="!report">
-              <v-btn class="mx-2" fab dark small color="error">
+              <v-btn
+                class="mx-2"
+                fab
+                dark
+                small
+                color="error"
+                @click="submitVote('down')"
+              >
                 <v-icon dark> mdi-thumb-down </v-icon>
               </v-btn>
               <v-btn
@@ -40,7 +40,7 @@
                 dark
                 small
                 color="success"
-                @click="changeImages"
+                @click="submitVote('up')"
               >
                 <v-icon dark> mdi-thumb-up </v-icon>
               </v-btn>
@@ -53,7 +53,7 @@
               rounded
               :color="!report ? 'error' : 'primary'"
               dark
-              @click="report = true"
+              @click="report ? this.submitReport() : report = true"
             >
               {{ report ? "Submit" : "Report something ?" }}
             </v-btn>
@@ -71,13 +71,6 @@
           </div>
         </div>
         <div class="edge right"></div>
-        <!-- <div class="next">
-          <transition name="slide-appear">
-            <div :key="logoNext" class="image">
-              <img :src="logoNext" alt="img" />
-            </div>
-          </transition>
-        </div> -->
       </div>
     </div>
   </div>
@@ -85,25 +78,41 @@
 
 <script>
 export default {
+  props: ["meal"],
   data() {
     return {
       report: false,
-      logo:
-        "https://www.flavcity.com/wp-content/uploads/2018/05/healthy-meal-prep-recipes-500x500.jpg?2",
-      logoPrev:
-        "https://www.flavcity.com/wp-content/uploads/2021/02/homemade-hummus.jpg",
-      logoNext:
-        "https://www.flavcity.com/wp-content/uploads/2021/02/homemade-hummus.jpg",
+      item: null,
+      current: 0,
+      description: null,
     };
   },
+  created() {
+    this.setItem();
+  },
   methods: {
-    changeImages() {
-      this.logoPrev = this.logo;
-      this.logo = this.logoNext;
-      this.logoNext = this.logoPrev;
+    nextItem() {
+      this.current++;
+      this.setItem();
+    },
+    submitVote(vote) {
+      console.log(vote);
+      this.nextItem();
+    },
+    submitReport() {
+      this.nextItem();
+      this.description = null;
     },
     closeVoting() {
       this.$emit("closeVoting");
+    },
+    setItem() {
+      if (this.current == this.meal.meals.length) this.showFinish();
+      else this.item = this.meal.meals[this.current];
+			this.description = null;
+    },
+    showFinish() {
+      this.closeVoting();
     },
   },
 };
@@ -274,26 +283,25 @@ export default {
   // }
 }
 
-
 @media (max-width: 768px) {
-	.meals-voting {
-		.meals-container {
-			width: 80%;
-			overflow: initial;
-			margin: 50px auto;
+  .meals-voting {
+    .meals-container {
+      width: 80%;
+      overflow: initial;
+      margin: 50px auto;
 
-			.items_carrousel {
-				.edge {
-					display: none;
-				}
-				.item {
-					width: 400px;
-					.image {
-						height: 300px;
-					}
-				}
-			}
-		}
-	}
+      .items_carrousel {
+        .edge {
+          display: none;
+        }
+        .item {
+          width: 400px;
+          .image {
+            height: 300px;
+          }
+        }
+      }
+    }
+  }
 }
 </style>

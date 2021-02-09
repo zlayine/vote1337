@@ -21,6 +21,8 @@ type Meal {
     user: User!
 	reports: [Report!]
 	meals: [MealItem!]!
+	createdAt: String!
+    updatedAt: String!
 }
 
 type MealItem {
@@ -32,6 +34,8 @@ type MealItem {
 	votes_sick: Int!
 	meal: Meal!
 	votes: [Vote!]
+	createdAt: String!
+    updatedAt: String!
 }
 
 type Report {
@@ -40,6 +44,8 @@ type Report {
     meal_item: MealItem!
     meal: Meal!
 	user: User!
+	createdAt: String!
+    updatedAt: String!
 }
 
 type Vote {
@@ -47,6 +53,8 @@ type Vote {
     user: User!
     vote: String!
     meal_item: MealItem!
+	createdAt: String!
+    updatedAt: String!
 }
 
 type MealData {
@@ -101,6 +109,7 @@ type RootMutation {
 	createReport(reportInput: ReportInput): Report
 	createUser(userInput: UserInput): User
 	addVote(voteInput: VoteInput): Vote
+	testFile(file: Upload!): String!
 }
 
 schema {

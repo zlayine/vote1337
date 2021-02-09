@@ -2,8 +2,8 @@
   <div class="meal_section">
     <div class="meal_header">
       <div class="meal_info">
-        <div class="meal_title">Meal for 01-01-2021</div>
-        <div class="meal_user">by username</div>
+        <div class="meal_title">{{ this.meal.name }}</div>
+        <div class="meal_user">{{ this.meal.username }}</div>
       </div>
       <div class="meal_action">
         <div class="reports">
@@ -23,15 +23,13 @@
       </div>
 
       <div class="meal_items">
-        <meal-item></meal-item>
-        <meal-item></meal-item>
-        <meal-item></meal-item>
-        <meal-item></meal-item>
-        <meal-item></meal-item>
-        <meal-item></meal-item>
+        <meal-item
+          :key="item._id"
+          :item="item"
+          v-for="item in this.meal.meals"
+        ></meal-item>
       </div>
     </div>
-    
   </div>
 </template>
 
@@ -39,18 +37,39 @@
 import MealItem from "./MealItem.vue";
 
 export default {
+  props: ["meal"],
   data() {
     return {
       voted: false,
+			loading: false,
     };
   },
+  created(){
+
+	},
   methods: {
     openReports() {
-      this.$emit("openReports");
+      this.$emit("openReports", this.meal._id);
     },
-		openVoting() {
-			this.$emit("openVoting");
-		}
+    openVoting() {
+      this.$emit("openVoting", this.meal._id);
+    },
+    userVoted() {
+      if (this.currentUser) {
+				const res = this.meal.meals[0].votes.filter(v => {
+					if (v.user._id == this.currentUser.userId)
+						return v;
+				})
+				if (res.length == 0)
+					this.voted = false;
+      }
+      return false;
+    },
+  },
+  computed: {
+    currentUser() {
+      return this.$store.getters.currentUser;
+    },
   },
   components: {
     MealItem,
@@ -130,11 +149,11 @@ export default {
       font-size: 16px;
     }
 
-		.meal_items_holder {
-			.start-vote {
-				left: 20%;
-			}
-		}
+    .meal_items_holder {
+      .start-vote {
+        left: 20%;
+      }
+    }
     .reports {
       button {
         padding: 0;

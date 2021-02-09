@@ -37,15 +37,13 @@ export default {
       this.$refs.empty.clearItem();
     },
 		removeItem(index) {
-			console.log(index)
 			this.items = this.items.filter((item, i) => {
-				console.log(i)
 				if (index != i)
 					return item;
 			})
 		},
 		submit() {
-
+			this.$store.dispatch("addMeal", {meal_name: this.meal_name, items: this.items})
 		}
   },
   components: {

@@ -14,7 +14,7 @@
       type="file"
       ref="file"
       :name="file"
-      @change="onFileChange($event.target.name, $event.target.files)"
+      @change="onFileChange($event.target.files)"
       style="display: none"
     />
     <div class="item-info" v-if="url">
@@ -72,9 +72,10 @@ export default {
     launchFilePicker() {
       this.$refs.file.click();
     },
-    onFileChange(fieldName, file) {
+    onFileChange(file) {
       const maxSize = 1024;
       let imageFile = file[0];
+			console.log(imageFile)
       if (file.length > 0) {
         let size = imageFile.size / maxSize / maxSize;
         if (!imageFile.type.match("image.*")) {

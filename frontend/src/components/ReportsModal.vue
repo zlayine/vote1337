@@ -1,17 +1,24 @@
 <template>
   <div class="reports_modal">
     <div class="btn-close">
-      <v-btn class="btn-close" color="error" fab small dark @click="closeReports">
+      <v-btn
+        class="btn-close"
+        color="error"
+        fab
+        small
+        dark
+        @click="closeReports"
+      >
         <v-icon>mdi-close</v-icon>
       </v-btn>
     </div>
     <div class="reports_container">
-      <div class="text-title">Reports for ....</div>
+      <div class="text-title">Reports for {{ meal.name }}</div>
       <v-item-group class="meals" v-model="selected">
-        <div v-for="n in 4" :key="n" class="meal-item">
+        <div v-for="item in meal.meals" :key="item._id" class="meal-item">
           <v-item v-slot="{ active, toggle }">
             <div @click="toggle" class="meal">
-              <meal-item small="true"></meal-item>
+              <meal-item :item="item" small="true"></meal-item>
               <v-btn
                 class="btn-check"
                 fab
@@ -31,32 +38,23 @@
             Please select a meal to show reports..
           </div>
         </transition>
-        <v-card class="report-info" elevation="1">
+        <div class="none" v-if="selected && reports.length == 0">
+          No reports for this meal
+        </div>
+        <v-card
+          class="report-info"
+          elevation="1"
+          :key="report._id"
+          v-for="report in reports"
+        >
           <div class="user-data">
             <v-avatar color="primary" class="avatar" size="40">
               <img src="https://cdn.vuetifyjs.com/images/john.jpg" alt="John" />
             </v-avatar>
-            <div class="user-name">username</div>
+            <div class="user-name">report.user.username</div>
           </div>
           <div class="description">
-            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Incidunt
-            quas possimus atque eligendi optio iure laborum beatae, aperiam in
-            dolorum aliquid quos fugiat soluta distinctio laboriosam, illum
-            laudantium, reprehenderit nobis?
-          </div>
-        </v-card>
-        <v-card class="report-info" elevation="1">
-          <div class="user-data">
-            <v-avatar color="primary" class="avatar" size="40">
-              <img src="https://cdn.vuetifyjs.com/images/john.jpg" alt="John" />
-            </v-avatar>
-            <div class="user-name">username</div>
-          </div>
-          <div class="description">
-            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Incidunt
-            quas possimus atque eligendi optio iure laborum beatae, aperiam in
-            dolorum aliquid quos fugiat soluta distinctio laboriosam, illum
-            laudantium, reprehenderit nobis?
+            {{ report.description }}
           </div>
         </v-card>
       </div>
@@ -67,16 +65,20 @@
 <script>
 import MealItem from "./MealItem.vue";
 export default {
+  props: ["meal"],
   data() {
     return {
       selected: null,
+      reports: null,
     };
   },
-	methods: {
-		closeReports() {
-			this.$emit("closeReports");
-		}
-	},
+  created() {},
+  methods: {
+    closeReports() {
+      this.$emit("closeReports");
+    },
+  },
+  computed: {},
   components: { MealItem },
 };
 </script>
@@ -87,7 +89,7 @@ export default {
   background-color: #ffffffb9;
   width: 100%;
   height: 100%;
-	z-index: 100;
+  z-index: 100;
   top: 0;
   left: 0;
   backdrop-filter: blur(10px);
@@ -151,7 +153,7 @@ export default {
         margin-top: 15px;
         display: flex;
         flex-direction: row;
-				transition: 200ms all;
+        transition: 200ms all;
 
         .user-data {
           padding: 10px;
@@ -161,7 +163,6 @@ export default {
 
           .avatar {
             margin: 4px auto;
-
           }
           .user-name {
             margin: 5px auto;
@@ -186,18 +187,18 @@ export default {
 }
 
 @media (max-width: 768px) {
-	.reports_modal {
-		.reports_container {
-			width: 100%;
+  .reports_modal {
+    .reports_container {
+      width: 100%;
 
-			.text-title {
-				font-size: 22px;
-			}
+      .text-title {
+        font-size: 22px;
+      }
 
-			.reports {
-				padding: 0 5px;
-			}
-		}
-	}
+      .reports {
+        padding: 0 5px;
+      }
+    }
+  }
 }
 </style>

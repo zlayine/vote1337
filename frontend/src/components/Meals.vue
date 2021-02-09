@@ -9,13 +9,14 @@
         </v-btn>
       </div>
     </v-card>
-    <meal @openReports="reports = true" @openVoting="voting = true"/>
-    <meal @openReports="reports = true" @openVoting="voting = true"/>
+    <template v-for="meal in meals">
+      <meal :key="meal._id" :meal="meal" @openReports="openReports" @openVoting="openVoting" />
+    </template>
     <transition name="fade">
-      <meal-item-voting v-if="voting" @closeVoting="voting = false" />
+      <meal-item-voting v-if="voting" :meal="selectedMeal" @closeVoting="voting = false" />
     </transition>
     <transition name="fade">
-      <reports-modal v-if="reports" @closeReports="reports = false" />
+      <reports-modal v-if="reports" :meal="selectedMeal" @closeReports="reports = false" />
     </transition>
   </div>
 </template>
@@ -29,8 +30,31 @@ export default {
   data() {
     return {
       reports: false,
-			voting: false,
+      voting: false,
+			selectedMeal: null,
     };
+  },
+  created() {
+    if (this.meals.length > 0) return;
+    this.$store.dispatch("getMeals");
+  },
+  methods: {
+		openReports(id){
+			this.selectedMeal = this.meals.filter(m => m._id == id);
+			this.reports = true;
+		},
+		openVoting(id) {
+			this.selectedMeal = this.meals.filter(m => m._id == id);
+			this.voting = true;
+		}
+	},
+  computed: {
+    meals() {
+      return this.$store.getters.meals;
+    },
+    currentUser() {
+      return this.$store.getters.currentUser;
+    },
   },
   components: {
     Meal,

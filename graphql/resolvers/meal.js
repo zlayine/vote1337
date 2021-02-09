@@ -20,7 +20,8 @@ const storeFS = ({ stream, filename }) => {
 }
 
 const createMealItem = async (item, mealId) => {
-	const { filename, mimetype, createReadStream } = await item.image.file;
+	console.log(item.image)
+	const { filename, mimetype, createReadStream } = await item.image;
 	const stream = createReadStream();
 	const pathObj = await storeFS({ stream, filename });
 	const fileLocation = pathObj.path;
@@ -62,7 +63,6 @@ module.exports = {
 				// user: req.userId
 			});
 			const result = await meal.save();
-			// const result = await models.Meal.findById("602015925c75e122c2387959").populate('meals');
 			args.mealInput.items.forEach(async item => {
 				let res = await createMealItem(item, result.id);
 				result.meals.push(res);
@@ -74,6 +74,14 @@ module.exports = {
 			throw err;
 		}
 	},
-
+	testFile: async (args, req) => {
+		try {
+			console.log(args.file)
+			return "ok";
+		}catch(err) {
+			console.log(err);
+			throw err;
+		}
+	}
 
 }
