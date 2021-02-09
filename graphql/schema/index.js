@@ -109,7 +109,7 @@ type RootMutation {
 	createReport(reportInput: ReportInput): Report
 	createUser(userInput: UserInput): User
 	addVote(voteInput: VoteInput): Vote
-	testFile(file: Upload!): String!
+	testFile(file: Upload!, name: String!): String!
 }
 
 schema {

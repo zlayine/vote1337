@@ -75,7 +75,6 @@ export default {
     onFileChange(file) {
       const maxSize = 1024;
       let imageFile = file[0];
-			console.log(imageFile)
       if (file.length > 0) {
         let size = imageFile.size / maxSize / maxSize;
         if (!imageFile.type.match("image.*")) {

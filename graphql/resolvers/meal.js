@@ -20,8 +20,7 @@ const storeFS = ({ stream, filename }) => {
 }
 
 const createMealItem = async (item, mealId) => {
-	console.log(item.image)
-	const { filename, mimetype, createReadStream } = await item.image;
+	const { filename, mimetype, createReadStream } = await item.image.file;
 	const stream = createReadStream();
 	const pathObj = await storeFS({ stream, filename });
 	const fileLocation = pathObj.path;
@@ -73,15 +72,7 @@ module.exports = {
 			console.log(err);
 			throw err;
 		}
-	},
-	testFile: async (args, req) => {
-		try {
-			console.log(args.file)
-			return "ok";
-		}catch(err) {
-			console.log(err);
-			throw err;
-		}
 	}
+	
 
 }

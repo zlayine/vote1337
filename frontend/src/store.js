@@ -5,6 +5,7 @@ import axios from 'axios'
 
 // const user = getLocalUser();
 const user = "";
+
 export default {
 	state: {
 		reports: [],
@@ -60,9 +61,9 @@ export default {
 									}
 									meals {
 										_id
-										name
-										image_url
-										votes_up
+										name 
+										image_url 
+										votes_up 
 										votes_down
 										votes {
 											user {
@@ -83,53 +84,45 @@ export default {
 			}
 		},
 		async addMeal({ commit }, data) {
-			let items = `[`;
-			data.items.forEach(item => {
-				items += `{name: "${item.name}", image: ${item.file.file}},`
-			});
-			items += `]`
-			try {
-				// const res = await axios({
-				// 	url: 'http://localhost:3000/graphql',
-				// 	method: 'post',
-				// 	data: {
-				// 		query: `
-				// 		mutation {
-				// 			createMeal(
-				// 				mealInput: {
-				// 					name: "${data.meal_name}",
-				// 					items: ${items}
-				// 				}
-				// 			){
-				// 			  name
-				// 			  user {
-				// 				username
-				// 			  }
-				// 			  meals {
-				// 				name
-				// 				image_url
-				// 			  }
-				// 			}
-				// 		  }
-				// 		`
-				// 	}
-				// });
-				// commit('ADD_MEAL' , "");
-				// console.log(res);
 
+			const formdata = new FormData();
+			let mutationParams = `mutation (`;
+			let variables = `"variables": {`;
+			let items = `[`;
+			let map = `{`
+			data.items.forEach((item, index) => {
+				mutationParams += `$file${index}: Upload!`
+				items += `{name: \\"${item.name}\\", image: $file${index}}`
+				variables += `"file${index}": null`;
+				map += `"${index}": ["variables.file${index}"]`;
+
+				if (index != data.items.length - 1) {
+					mutationParams += ',';
+					items += `,`;
+					variables += `,`;
+					map += `,`;
+				}
+			});
+			items += `]`;
+			mutationParams += `)`;
+			variables += `}`;
+			map += `}`;
+
+			const query = `{ "query": "${mutationParams} { createMeal( mealInput: { name: \\"${data.meal_name}\\", items: ${items} } ) { name createdAt user {username} meals {_id name image_url votes_up votes_down votes { user { _id }}} } }", ${variables} }`;
+			formdata.append("operations", query)
+			formdata.append("map", map)
+			data.items.forEach((item, index) => {
+				formdata.append(`${index}`, item.file)
+			})
+
+			try {
 				const res = await axios({
 					url: 'http://localhost:3000/graphql',
 					method: 'post',
-					data: {
-						query: `
-						mutation {
-							testFile(
-								file: ${data.items[0].file}
-							) 
-						  }
-						`
-					}
+					data: formdata
 				});
+				commit('ADD_MEAL', "");
+				console.log(res);
 			} catch (error) {
 				console.log(error)
 			}
