@@ -83,6 +83,41 @@ export default {
 				console.log(error)
 			}
 		},
+		async getReports({ commit }, id) {
+			try {
+				const res = await axios({
+					url: 'http://localhost:3000/graphql',
+					method: 'post',
+					data: {
+						query: `
+						query { 
+							getReports (page: 1, meal: "${id}") {
+								page
+								totalPages
+								reports {
+									_id
+									description
+									meal_item {
+										_id
+									}
+									meal {
+										_id
+									}
+									user {
+										username
+									}
+								}
+							}
+						}
+						`
+					}
+				});
+				commit('UPDATE_REPORTS', res.data.data.getReports.reports);
+				return "success";
+			} catch (error) {
+
+			}
+		},
 		async addMeal({ commit }, data) {
 
 			const formdata = new FormData();
@@ -121,11 +156,50 @@ export default {
 					method: 'post',
 					data: formdata
 				});
-				commit('ADD_MEAL', "");
+				commit('ADD_MEAL', res.data);
 				console.log(res);
 			} catch (error) {
 				console.log(error)
 			}
+		},
+		async submitVotes({ commit }, data) {
+			try {
+				// console.log(data);
+				let votes = "[";
+				data.votes.forEach(vote => {
+					votes += `{vote: "${vote.vote}", meal_item_id: "${vote.meal_item_id}", report: "${vote.report}"}`
+				});
+				votes += "]";
+				const res = await axios({
+					url: 'http://localhost:3000/graphql',
+					method: 'post',
+					data: {
+						query: `
+						mutation { 
+							addVotes (voteInput: ${votes}, meal: "${data.meal}"){
+								_id
+								meals {
+									_id
+									name 
+									image_url 
+									votes_up 
+									votes_down
+									votes {
+										user {
+											_id
+										}
+									}
+								}
+							}
+						}`
+					}
+				});
+				// commit('UPDATE_MEAL', "");
+				return "success";
+			} catch (error) {
+				console.log(error);
+			}
 		}
+
 	}
 }

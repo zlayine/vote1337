@@ -5,15 +5,14 @@ module.exports = {
 	getReports: async (args) => {
 		try {
 			const page = args.page;
-			const count = await models.Report.count();
-			const reports = await models.Report.find().skip((page - 1) * 10).limit(10);
+			const reports = await models.Report.find({meal: args.meal}).skip((page - 1) * 10).limit(10);
 			const res = reports.map(e => {
 				return transformReport(e)
 			});
 			return {
 				page: +page,
 				reports: res,
-				totalPages: parseInt(count / 10) + 1
+				totalPages: parseInt(reports.length / 10) + 1
 			}
 		} catch (err) {
 			console.log(err);

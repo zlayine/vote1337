@@ -81,6 +81,7 @@ const transformMealItem = (item) => {
 		_id: item.id,
 		meal: mealResolver.bind(this, item._doc.meal),
 		votes: votesResolver.bind(this, item._doc.votes),
+		image_url: process.env.SERVER_URL + item._doc.image_url,
 		createdAt: dateToString(item._doc.createdAt),
 		updatedAt: dateToString(item._doc.updatedAt),
 	}

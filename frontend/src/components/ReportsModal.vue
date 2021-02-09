@@ -18,7 +18,7 @@
         <div v-for="item in meal.meals" :key="item._id" class="meal-item">
           <v-item v-slot="{ active, toggle }">
             <div @click="toggle" class="meal">
-              <meal-item :item="item" small="true"></meal-item>
+              <meal-item :item="item"></meal-item>
               <v-btn
                 class="btn-check"
                 fab
@@ -51,7 +51,7 @@
             <v-avatar color="primary" class="avatar" size="40">
               <img src="https://cdn.vuetifyjs.com/images/john.jpg" alt="John" />
             </v-avatar>
-            <div class="user-name">report.user.username</div>
+            <div class="user-name">{{ report.user.username }}</div>
           </div>
           <div class="description">
             {{ report.description }}
@@ -69,16 +69,21 @@ export default {
   data() {
     return {
       selected: null,
-      reports: null,
     };
   },
-  created() {},
+  created() {
+    this.$store.dispatch("getReports", this.meal._id);
+  },
   methods: {
     closeReports() {
       this.$emit("closeReports");
     },
   },
-  computed: {},
+  computed: {
+    reports() {
+      return this.$store.getters.reports;
+    },
+  },
   components: { MealItem },
 };
 </script>

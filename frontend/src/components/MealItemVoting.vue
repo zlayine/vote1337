@@ -18,8 +18,8 @@
         <div class="edge left"></div>
         <div class="item">
           <transition name="slide-hide">
-            <div :key="logo" class="image">
-              <img :src="logo" alt="img" />
+            <div :key="item._id" class="image">
+              <img :src="item.image_url" alt="img" />
             </div>
           </transition>
           <div class="actions">
@@ -46,14 +46,14 @@
               </v-btn>
             </div>
             <div class="form-report" v-else>
-              <textarea rows="5">Description</textarea>
+              <textarea v-model="description" rows="5">Description</textarea>
             </div>
             <v-btn
               class="btn-report mt-5 mx-5"
               rounded
               :color="!report ? 'error' : 'primary'"
               dark
-              @click="report ? this.submitReport() : report = true"
+              @click="report ? submitReport() : report = true"
             >
               {{ report ? "Submit" : "Report something ?" }}
             </v-btn>
@@ -85,9 +85,11 @@ export default {
       item: null,
       current: 0,
       description: null,
+			votes: [],
     };
   },
   created() {
+		if (this.meal)
     this.setItem();
   },
   methods: {
@@ -96,10 +98,11 @@ export default {
       this.setItem();
     },
     submitVote(vote) {
-      console.log(vote);
+			this.votes.push({meal_item_id: this.item._id, vote: vote, report: null});
       this.nextItem();
     },
     submitReport() {
+			this.votes.push({meal_item_id: this.item._id, vote: 'down', report: this.description});
       this.nextItem();
       this.description = null;
     },
@@ -112,6 +115,7 @@ export default {
 			this.description = null;
     },
     showFinish() {
+			this.$store.dispatch("submitVotes", {votes: this.votes, meal: this.meal._id});
       this.closeVoting();
     },
   },

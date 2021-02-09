@@ -88,6 +88,7 @@ input ReportInput {
 input VoteInput {
 	vote: String!
 	meal_item_id: String!
+	report: String!
 }
 
 input UserInput {
@@ -101,15 +102,15 @@ input UserInput {
 
 type RootQuery {
     getMeals(page: Int): MealData!
-    getReports(page: Int): ReportData!
+    getReports(page: Int, meal: String!): ReportData!
 }
 
 type RootMutation {
 	createMeal(mealInput: MealInput): Meal
+	deleteMeal(mealId: String!): String
 	createReport(reportInput: ReportInput): Report
 	createUser(userInput: UserInput): User
-	addVote(voteInput: VoteInput): Vote
-	testFile(file: Upload!, name: String!): String!
+	addVotes(voteInput: [VoteInput!]!, meal: String!): Meal
 }
 
 schema {

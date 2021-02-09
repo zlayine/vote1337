@@ -3,7 +3,7 @@
     <div class="meal_header">
       <div class="meal_info">
         <div class="meal_title">{{ this.meal.name }}</div>
-        <div class="meal_user">{{ this.meal.username }}</div>
+        <div class="meal_user">{{ this.meal.user.username }}</div>
       </div>
       <div class="meal_action">
         <div class="reports">

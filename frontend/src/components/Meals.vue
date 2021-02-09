@@ -40,11 +40,11 @@ export default {
   },
   methods: {
 		openReports(id){
-			this.selectedMeal = this.meals.filter(m => m._id == id);
+			this.selectedMeal = this.meals.filter(m => m._id == id)[0];
 			this.reports = true;
 		},
 		openVoting(id) {
-			this.selectedMeal = this.meals.filter(m => m._id == id);
+			this.selectedMeal = this.meals.filter(m => m._id == id)[0];
 			this.voting = true;
 		}
 	},

@@ -3,7 +3,7 @@
     <div class="item">
       <div class="image">
         <img
-          src="https://www.flavcity.com/wp-content/uploads/2018/05/healthy-meal-prep-recipes-500x500.jpg"
+          :src="item.image_url"
           alt="img"
         />
       </div>
@@ -54,6 +54,7 @@ export default {
 
   .item {
     position: relative;
+		height: 300px;
     overflow: hidden;
 
     // .btn-report {
@@ -76,11 +77,14 @@ export default {
 
     .image {
       border-radius: 10px;
-      max-height: 300px;
+      // max-height: 300px;
+			height: 100%;
       overflow: hidden;
 
       img {
-        width: 100%;
+        // width: 100%;
+				width: auto;
+				height: 100%;
       }
     }
 
@@ -100,6 +104,10 @@ export default {
     }
 
     .info {
+			position: absolute;
+			bottom: 0;
+			left: 0;
+			right: 0;
       .info_title {
         position: absolute;
         left: 5px;
