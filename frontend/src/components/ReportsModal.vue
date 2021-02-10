@@ -18,7 +18,7 @@
         <div v-for="item in meal.meals" :key="item._id" class="meal-item">
           <v-item v-slot="{ active, toggle }">
             <div @click="toggle" class="meal">
-              <meal-item :item="item"></meal-item>
+              <meal-item :item="item" small="true"></meal-item>
               <v-btn
                 class="btn-check"
                 fab
@@ -34,18 +34,24 @@
       </v-item-group>
       <div class="reports">
         <transition name="fade">
-          <div class="none" v-if="selected == null">
-            Please select a meal to show reports..
+          <div
+            class="none"
+            v-if="
+              selected == null || (selected != null && mealReports.length == 0)
+            "
+          >
+            {{
+              selected == null
+                ? "Please select a meal to show reports.."
+                : "No reports for this meal"
+            }}
           </div>
         </transition>
-        <div class="none" v-if="selected && reports.length == 0">
-          No reports for this meal
-        </div>
         <v-card
           class="report-info"
           elevation="1"
           :key="report._id"
-          v-for="report in reports"
+          v-for="report in mealReports"
         >
           <div class="user-data">
             <v-avatar color="primary" class="avatar" size="40">
@@ -82,6 +88,14 @@ export default {
   computed: {
     reports() {
       return this.$store.getters.reports;
+    },
+    mealReports() {
+      if (this.selected != null) {
+        return this.reports.filter(
+          (r) => r.meal_item._id == this.meal.meals[this.selected]._id
+        );
+      }
+      return null;
     },
   },
   components: { MealItem },

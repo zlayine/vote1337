@@ -2,10 +2,7 @@
   <v-card class="meal_item" :class="{ small: small }" elevation="3">
     <div class="item">
       <div class="image">
-        <img
-          :src="item.image_url"
-          alt="img"
-        />
+        <img :src="item.image_url" alt="img" />
       </div>
       <div class="overlay"></div>
       <div class="info">
@@ -19,7 +16,7 @@
             background-color="success lighten-1"
             color="error"
             :value="votePercent"
-            height="8" 
+            height="8"
           ></v-progress-linear>
         </div>
       </div>
@@ -50,11 +47,21 @@ export default {
 
   &.small {
     width: 200px;
+		margin-right: 20px;
+    .item {
+      height: 200px;
+    }
+
+		.info {
+			.info_title {
+				font-size: 18px!important;
+			}
+		}
   }
 
   .item {
     position: relative;
-		height: 300px;
+    height: 300px;
     overflow: hidden;
 
     // .btn-report {
@@ -78,13 +85,13 @@ export default {
     .image {
       border-radius: 10px;
       // max-height: 300px;
-			height: 100%;
+      height: 100%;
       overflow: hidden;
 
       img {
         // width: 100%;
-				width: auto;
-				height: 100%;
+        width: auto;
+        height: 100%;
       }
     }
 
@@ -104,10 +111,10 @@ export default {
     }
 
     .info {
-			position: absolute;
-			bottom: 0;
-			left: 0;
-			right: 0;
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
       .info_title {
         position: absolute;
         left: 5px;
@@ -137,7 +144,7 @@ export default {
         border-radius: 10px;
         overflow: hidden;
         position: relative;
-				z-index: 21;
+        z-index: 21;
       }
     }
   }

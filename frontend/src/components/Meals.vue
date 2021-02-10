@@ -42,10 +42,12 @@ export default {
 		openReports(id){
 			this.selectedMeal = this.meals.filter(m => m._id == id)[0];
 			this.reports = true;
+			window.scrollTo(0, 0)
 		},
 		openVoting(id) {
 			this.selectedMeal = this.meals.filter(m => m._id == id)[0];
 			this.voting = true;
+			window.scrollTo(0, 0)
 		}
 	},
   computed: {
