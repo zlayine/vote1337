@@ -41,12 +41,12 @@ export default {
   data() {
     return {
       voted: false,
-			loading: false,
+      loading: false,
     };
   },
-  created(){
-
-	},
+  created() {
+    this.userVoted();
+  },
   methods: {
     openReports() {
       this.$emit("openReports", this.meal._id);
@@ -56,14 +56,12 @@ export default {
     },
     userVoted() {
       if (this.currentUser) {
-				const res = this.meal.meals[0].votes.filter(v => {
-					if (v.user._id == this.currentUser.userId)
-						return v;
-				})
-				if (res.length == 0)
-					this.voted = false;
-      }
-      return false;
+        const res = this.meal.meals[0].votes.filter((v) => {
+          if (v.user._id == this.currentUser.id) return v;
+        });
+        if (res.length == 0) this.voted = false;
+        else this.voted = true;
+      } else this.voted = true;
     },
   },
   computed: {
