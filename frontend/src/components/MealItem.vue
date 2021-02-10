@@ -33,7 +33,9 @@ export default {
   computed: {
     votePercent() {
       let total = this.item.votes.length;
-      return parseInt((total / this.item.votes_down) * 100);
+      if (this.item.votes_down > 0) {
+        return parseInt((this.item.votes_down / total) * 100);
+      }
     },
   },
 };
@@ -47,16 +49,16 @@ export default {
 
   &.small {
     width: 200px;
-		margin-right: 20px;
+    margin-right: 20px;
     .item {
       height: 200px;
     }
 
-		.info {
-			.info_title {
-				font-size: 18px!important;
-			}
-		}
+    .info {
+      .info_title {
+        font-size: 18px !important;
+      }
+    }
   }
 
   .item {

@@ -47,9 +47,9 @@ export default {
       selectedMeal: null,
     };
   },
-  created() {
+  async created() {
     if (this.meals.length > 0) return;
-    this.$store.dispatch("getMeals");
+    await this.$store.dispatch("getMeals");
   },
   methods: {
     openReports(id) {
@@ -89,7 +89,7 @@ export default {
     width: 80%;
     box-shadow: 0px 0px 7px #22222227;
     border-radius: 28px;
-		overflow: hidden;
+    overflow: hidden;
     background-color: #2eb9ff;
     position: relative;
     cursor: pointer;

@@ -6,6 +6,7 @@ import StoreData from './store';
 import Vuetify from 'vuetify';
 import App from './App.vue'
 import 'vuetify/dist/vuetify.min.css';
+import '@fortawesome/fontawesome-free/css/all.css'
 
 import {initialize} from './auth.js'
 
@@ -13,7 +14,7 @@ Vue.config.productionTip = false
 
 export default new Vuetify({
 	icons: {
-		iconfont: 'mdi',
+		iconfont: 'fa',
 	},
 })
 

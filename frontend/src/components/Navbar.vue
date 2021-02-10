@@ -4,13 +4,16 @@
       <h1>Voting 1337</h1>
     </div>
     <div class="nav_actions">
-      <div class="action avatar">
-        <v-avatar color="primary" class="avatar" size="50" v-if="user">
+      <div class="action" v-if="user">
+        <v-avatar color="primary" class="avatar" size="50">
           <img :src="user.image_url" alt="avatar-img" />
         </v-avatar>
-        <div v-else>
-          <router-link to="/auth">Login</router-link>
+        <div class="link" @click="logout">
+          <v-icon color="grey" large>mdi-logout</v-icon>
         </div>
+      </div>
+      <div v-else>
+        <router-link class="link" to="/auth">Login</router-link>
       </div>
     </div>
   </div>
@@ -21,6 +24,11 @@ export default {
   computed: {
     user() {
       return this.$store.getters.user;
+    },
+  },
+  methods: {
+    logout() {
+      this.$store.commit("LOGOUT");
     },
   },
 };
@@ -59,6 +67,20 @@ export default {
 
     .action {
       margin-right: 5px;
+      display: flex;
+      flex-direction: row;
+
+      .avatar {
+        cursor: pointer;
+        margin-right: 20px;
+      }
+    }
+    .link {
+      font-weight: 600;
+      text-decoration: none;
+      margin-right: 20px;
+      font-size: 19px;
+      margin: auto;
       cursor: pointer;
     }
   }

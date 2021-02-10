@@ -53,7 +53,7 @@
               rounded
               :color="!report ? 'error' : 'primary'"
               dark
-              @click="report ? submitReport() : report = true"
+              @click="report ? submitReport() : (report = true)"
             >
               {{ report ? "Submit" : "Report something ?" }}
             </v-btn>
@@ -85,26 +85,36 @@ export default {
       item: null,
       current: 0,
       description: null,
-			votes: [],
+      votes: [],
     };
   },
   created() {
-		if (this.meal)
-    this.setItem();
+    if (this.meal) this.setItem();
   },
   methods: {
     nextItem() {
       this.current++;
       this.setItem();
+			this.description = null;
+      this.report = false;
     },
     submitVote(vote) {
-			this.votes.push({meal_item_id: this.item._id, vote: vote, report: null});
+      this.votes.push({
+        meal_item_id: this.item._id,
+        vote: vote,
+        report: "",
+      });
       this.nextItem();
     },
     submitReport() {
-			this.votes.push({meal_item_id: this.item._id, vote: 'down', report: this.description});
+      this.votes.push({
+        meal_item_id: this.item._id,
+        vote: "down",
+        report: this.description,
+      });
       this.nextItem();
       this.description = null;
+      this.report = false;
     },
     closeVoting() {
       this.$emit("closeVoting");
@@ -112,10 +122,13 @@ export default {
     setItem() {
       if (this.current == this.meal.meals.length) this.showFinish();
       else this.item = this.meal.meals[this.current];
-			this.description = null;
+      this.description = null;
     },
     showFinish() {
-			this.$store.dispatch("submitVotes", {votes: this.votes, meal: this.meal._id});
+      this.$store.dispatch("submitVotes", {
+        votes: this.votes,
+        meal: this.meal._id,
+      });
       this.closeVoting();
     },
   },

@@ -49,11 +49,12 @@ export default {
         if (index != i) return item;
       });
     },
-    submit() {
-      this.$store.dispatch("addMeal", {
+    async submit() {
+      await this.$store.dispatch("addMeal", {
         meal_name: this.meal_name,
         items: this.items,
       });
+			this.$router.push("/");
     },
   },
   components: {

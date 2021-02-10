@@ -1,16 +1,20 @@
 <template>
   <v-app>
     <navbar />
+		<loader />
+		<!-- <notification /> -->
     <transition name="fade-out">
       <router-view></router-view>
     </transition>
-    <!-- <Footer></Footer> -->
+		<!-- <footer-layout /> -->
   </v-app>
 </template>
 
 <script>
 import Navbar from "./components/Navbar";
-import Footer from "./components/Footer";
+import Loader from "./components/Loader";
+import Notification from "./components/Notification";
+import FooterLayout from './components/FooterLayout.vue';
 
 export default {
   name: "main-app",
@@ -36,7 +40,9 @@ export default {
   },
   components: {
     Navbar,
-    Footer,
+    FooterLayout,
+		Loader,
+		Notification
   },
 };
 </script>

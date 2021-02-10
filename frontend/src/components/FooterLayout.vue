@@ -1,7 +1,7 @@
 <template>
-  <div class="footer">
+  <footer class="footer">
     Made with <v-icon color="red lighten-1"> mdi-heart </v-icon> for 1337
-  </div>
+  </footer>
 </template>
 
 <script>
@@ -17,6 +17,6 @@ export default {};
   bottom: 0;
   left: 0;
   text-align: center;
-	margin-top: 25px;
+  margin-top: 25px;
 }
 </style>

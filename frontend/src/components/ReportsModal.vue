@@ -55,7 +55,7 @@
         >
           <div class="user-data">
             <v-avatar color="primary" class="avatar" size="40">
-              <img src="https://cdn.vuetifyjs.com/images/john.jpg" alt="John" />
+              <img :src="report.user.image_url" alt="John" />
             </v-avatar>
             <div class="user-name">{{ report.user.username }}</div>
           </div>

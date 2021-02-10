@@ -22,11 +22,14 @@ export default {
 		user: state => state.user,
 		currentUser: state => state.currentUser,
 		isLogged: state => state.isLogged,
+		notification: state => state.notification,
+		notification_msg: state => state.notification_msg,
+		loading: state => state.loading,
 	},
 	mutations: {
 		LOGIN(state, payload) {
 			state.isLogged = true;
-			state.currentUser = Object.assign({}, {id: payload.user._id}, { token: payload.token });
+			state.currentUser = Object.assign({}, { id: payload.user._id }, { token: payload.token });
 			state.user = payload.user;
 			localStorage.setItem("user", JSON.stringify(state.currentUser));
 			axios.defaults.headers.common["Authorization"] = `Bearer ${state.currentUser.token}`
@@ -64,6 +67,7 @@ export default {
 	actions: {
 		async getMeals({ commit }) {
 			try {
+				commit("UPDATE_LOADING")
 				const res = await axios({
 					url: 'http://localhost:3000/graphql',
 					method: 'post',
@@ -99,10 +103,12 @@ export default {
 					}
 				});
 				commit('UPDATE_MEALS', res.data.data.getMeals.meals);
+				commit("UPDATE_LOADING")
 				return "success";
 			} catch (error) {
 				console.log(error)
 			}
+			commit("UPDATE_LOADING")
 		},
 		async getReports({ commit }, id) {
 			try {
@@ -126,6 +132,7 @@ export default {
 									}
 									user {
 										username
+										image_url
 									}
 								}
 							}
@@ -140,52 +147,78 @@ export default {
 			}
 		},
 		async addMeal({ commit }, data) {
-
-			const formdata = new FormData();
-			let mutationParams = `mutation (`;
-			let variables = `"variables": {`;
-			let items = `[`;
-			let map = `{`
-			data.items.forEach((item, index) => {
-				mutationParams += `$file${index}: Upload!`
-				items += `{name: \\"${item.name}\\", image: $file${index}}`
-				variables += `"file${index}": null`;
-				map += `"${index}": ["variables.file${index}"]`;
-
-				if (index != data.items.length - 1) {
-					mutationParams += ',';
-					items += `,`;
-					variables += `,`;
-					map += `,`;
-				}
-			});
-			items += `]`;
-			mutationParams += `)`;
-			variables += `}`;
-			map += `}`;
-
-			const query = `{ "query": "${mutationParams} { createMeal( mealInput: { name: \\"${data.meal_name}\\", items: ${items} } ) { name createdAt user {username} meals {_id name image_url votes_up votes_down votes { user { _id }}} } }", ${variables} }`;
-			formdata.append("operations", query)
-			formdata.append("map", map)
-			data.items.forEach((item, index) => {
-				formdata.append(`${index}`, item.file)
-			})
-
+			// commit("UPDATE_LOADING")
 			try {
-				const res = await axios({
+				const createdMeal = await axios({
 					url: 'http://localhost:3000/graphql',
 					method: 'post',
-					data: formdata
+					data: {
+						query: `
+						mutation { 
+							createMeal (mealName: "${data.meal_name}"){
+								_id
+							}
+						}`
+					}
 				});
+				const id = createdMeal.data.data.createMeal._id;
+				await data.items.forEach(async item => {
+					const query = `{"query": "mutation ($file: Upload!){ createMealItem (input: {meal: \\"${id}\\", name: \\"${item.name}\\", image: $file })}", "variables": {"file": null}}`;
+					const map = `{"0": ["variables.file"]}`;
+					const formdata = new FormData();
+					formdata.append("operations", query)
+					formdata.append("map", map)
+					formdata.append("0", item.file);
+
+					await axios({
+						url: 'http://localhost:3000/graphql',
+						method: 'post',
+						data: formdata
+					});
+				});
+
+				// let mutationParams = `mutation (`;
+				// let variables = `"variables": {`;
+				// let items = `[`;
+				// let map = `{`
+
+				// mutationParams += `$file${index}: Upload!`
+				// items += `{name: \\"${item.name}\\", image: $file${index}}`
+				// variables += `"file${index}": null`;
+				// map += `"${index}": ["variables.file${index}"]`;
+
+				// if (index != data.items.length - 1) {
+				// 	mutationParams += ',';
+				// 	items += `,`;
+				// 	variables += `,`;
+				// 	map += `,`;
+				// }
+				// items += `]`;
+				// mutationParams += `)`;
+				// variables += `}`;
+				// map += `}`;
+
+				// const query = `{ "query": "${mutationParams} { createMeal( mealInput: { name: \\"${data.meal_name}\\", items: ${items} } ) { name createdAt user {username} meals {_id name image_url votes_up votes_down votes { user { _id }}} } }", ${variables} }`;
+				// formdata.append("operations", query)
+				// formdata.append("map", map)
+				// data.items.forEach((item, index) => {
+				// 	formdata.append(`${index}`, item.file)
+				// })
+
+
 				commit('ADD_MEAL', res.data);
-				console.log(res);
+				// commit("UPDATE_LOADING");
+
 			} catch (error) {
 				console.log(error)
 			}
+			// commit("UPDATE_LOADING");
 		},
 		async submitVotes({ commit }, data) {
 			try {
 				// console.log(data);
+				commit("UPDATE_LOADING")
+
 				let votes = "[";
 				data.votes.forEach(vote => {
 					votes += `{vote: "${vote.vote}", meal_item_id: "${vote.meal_item_id}", report: "${vote.report}"}`
@@ -216,13 +249,18 @@ export default {
 					}
 				});
 				commit('UPDATE_MEAL', "");
+				commit("UPDATE_LOADING")
+
 				return "success";
 			} catch (error) {
 				console.log(error);
 			}
+			commit("UPDATE_LOADING")
+
 		},
 		async createUser({ commit }, code) {
 			try {
+				commit("UPDATE_LOADING")
 				const res = await axios({
 					url: 'http://localhost:3000/graphql',
 					method: 'post',
@@ -246,13 +284,19 @@ export default {
 				});
 				console.log(res);
 				commit("LOGIN", res.data.data.createUser)
+				commit("UPDATE_LOADING")
+
 				return "1";
 			} catch (error) {
 				console.log(error)
 			}
+			commit("UPDATE_LOADING")
+
 		},
 		async getUser({ commit }, id) {
 			try {
+				commit("UPDATE_LOADING")
+
 				const res = await axios({
 					url: 'http://localhost:3000/graphql',
 					method: 'post',
@@ -272,10 +316,14 @@ export default {
 					}
 				});
 				commit("SET_USER", res.data.data.getUser);
+				commit("UPDATE_LOADING")
+
 				return "1";
 			} catch (error) {
 				console.log(error)
 			}
+			commit("UPDATE_LOADING")
+
 		}
 
 	}
