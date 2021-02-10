@@ -1,23 +1,31 @@
 <template>
-  <div class="container">
+  <div class="container add-meal">
+    <div class="text-title">Adding today's meal</div>
     <form>
       <v-text-field
         v-model="meal_name"
         label="Meal Name"
         class="input mb-3"
         outlined
-				hide-details
+        hide-details
         required
       ></v-text-field>
-      <p class="">Meal items:</p>
+      <p class="text">Meal items:</p>
       <div class="meal-items mb-5">
         <meal-item-form @saved="addItem" ref="empty" />
         <template v-for="(item, index) in items">
-          <meal-item-form :key="item.name" :index="index" :item_data="item" @removeItem="removeItem" />
+          <meal-item-form
+            :key="item.name"
+            :index="index"
+            :item_data="item"
+            @removeItem="removeItem"
+          />
         </template>
       </div>
-      <v-btn class="mr-4" to="/"> cancel </v-btn>
-      <v-btn color="primary" @click="submit"> Create meal </v-btn>
+      <div class="actions">
+        <v-btn class="mr-4" to="/"> cancel </v-btn>
+        <v-btn color="success" @click="submit"> Create meal </v-btn>
+      </div>
     </form>
   </div>
 </template>
@@ -36,15 +44,17 @@ export default {
       this.items.push(data);
       this.$refs.empty.clearItem();
     },
-		removeItem(index) {
-			this.items = this.items.filter((item, i) => {
-				if (index != i)
-					return item;
-			})
-		},
-		submit() {
-			this.$store.dispatch("addMeal", {meal_name: this.meal_name, items: this.items})
-		}
+    removeItem(index) {
+      this.items = this.items.filter((item, i) => {
+        if (index != i) return item;
+      });
+    },
+    submit() {
+      this.$store.dispatch("addMeal", {
+        meal_name: this.meal_name,
+        items: this.items,
+      });
+    },
   },
   components: {
     MealItemForm,
@@ -53,16 +63,35 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.meal-items {
-  display: flex;
-  flex-direction: row;
-  margin: 10px 0;
-  padding: 10px;
-  box-shadow: 0px 0px 7px #22222227;
-  border-radius: 10px;
-  position: relative;
-  overflow-x: auto;
-  overflow-y: hidden;
+.add-meal {
+  margin-bottom: 100px;
+
+  .text-title {
+    font-size: 22px;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 25px;
+  }
+
+  .meal-items {
+    display: flex;
+    flex-direction: row;
+    margin: 10px 0;
+    padding: 10px;
+    box-shadow: 0px 0px 7px #22222227;
+    border-radius: 10px;
+    position: relative;
+    overflow-x: auto;
+    overflow-y: hidden;
+    transition: all 200ms;
+  }
+
+  .text {
+    font-weight: 600;
+    font-size: 19px;
+    margin: 0;
+    padding-left: 10px;
+  }
 }
 
 .input {

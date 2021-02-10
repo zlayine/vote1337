@@ -1,51 +1,53 @@
 <template>
-  <div class="item-form">
-    <transition name="fade">
+  <transition name="fade">
+    <div class="item-form">
       <div
         class="empty"
         :class="{ preview: url ? true : false }"
         @click="launchFilePicker"
       >
         <v-icon large v-if="!url" color="#2eb9ffd5"> mdi-plus-circle </v-icon>
-        <img :src="url" alt="" v-else />
-      </div>
-    </transition>
-    <input
-      type="file"
-      ref="file"
-      :name="file"
-      @change="onFileChange($event.target.files)"
-      style="display: none"
-    />
-    <div class="item-info" v-if="url">
-      <v-text-field
-        v-model="name"
-        dense
-        label="Name"
-        hide-details
-        outlined
-        class="my-2"
-      ></v-text-field>
-      <div class="actions">
-        <v-btn class="mx-2" @click="clearItem" fab dark small color="error">
-          <v-icon dark> mdi-close </v-icon>
-        </v-btn>
-        <transition name="fade">
-          <v-btn
-            class="mx-2"
-            v-if="!saved"
-            @click="saveItem"
-            fab
-            dark
-            small
-            color="success"
-          >
-            <v-icon dark> mdi-content-save </v-icon>
-          </v-btn>
+        <transition name="fade-out">
+          <img :src="url" alt="" v-if="url" />
         </transition>
       </div>
+      <input
+        type="file"
+        ref="file"
+        :name="file"
+        @change="onFileChange($event.target.files)"
+        style="display: none"
+      />
+      <div class="item-info" v-if="url">
+        <v-text-field
+          v-model="name"
+          dense
+          label="Name"
+          hide-details
+          outlined
+          class="my-2"
+        ></v-text-field>
+        <div class="actions">
+          <v-btn class="mx-2" @click="clearItem" fab dark small color="error">
+            <v-icon dark> mdi-close </v-icon>
+          </v-btn>
+          <transition name="fade">
+            <v-btn
+              class="mx-2"
+              v-if="!saved"
+              @click="saveItem"
+              fab
+              dark
+              small
+              color="success"
+            >
+              <v-icon dark> mdi-content-save </v-icon>
+            </v-btn>
+          </transition>
+        </div>
+      </div>
     </div>
-  </div>
+  </transition>
 </template>
 
 <script>
@@ -89,15 +91,15 @@ export default {
       }
     },
     clearItem() {
-			if (this.index != null)
-			{
-				this.$emit('removeItem', this.index);
-				return ;
-			}
+      if (this.index != null) {
+        this.$emit("removeItem", this.index);
+        return;
+      }
       this.url = null;
       this.data = null;
       this.name = null;
       this.saved = false;
+      this.$refs.file.value = null;
     },
     saveItem() {
       if (!this.name || this.name == "") return;
@@ -111,6 +113,8 @@ export default {
 <style lang="scss" scoped>
 .item-form {
   margin-right: 15px;
+  transition: 200ms all;
+
   .empty {
     width: 200px;
     height: 300px;
@@ -149,14 +153,5 @@ export default {
       position: relative;
     }
   }
-}
-
-.fade-enter-active,
-.fade-leave-active {
-  transition: all 0.2s;
-}
-.fade-enter,
-.fade-leave-to {
-  opacity: 0;
 }
 </style>

@@ -7,6 +7,8 @@ import Vuetify from 'vuetify';
 import App from './App.vue'
 import 'vuetify/dist/vuetify.min.css';
 
+import {initialize} from './auth.js'
+
 Vue.config.productionTip = false
 
 export default new Vuetify({
@@ -25,6 +27,8 @@ const router = new VueRouter({
 	routes,
 	mode: 'history'
 });
+
+initialize(store, router);
 
 new Vue({
 	router,

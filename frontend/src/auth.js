@@ -1,15 +1,30 @@
 /* eslint-disable */
 import axios from 'axios'
 
-export function login(credentials) {
-	return new Promise((res, rej) => {
-		axios.post('/api/auth/login', credentials).then((response) => {
-			res(response.data);
-		})
-			.catch((err) => {
-				rej("Wrong email or password");
-			})
-	})
+export async function login(user_id) {
+	const res = await axios({
+		url: 'http://localhost:3000/graphql',
+		method: 'post',
+		data: {
+			query: `
+					query { 
+						login (userId: "${user_id}") {
+							user {
+								_id
+								username
+								displayname
+								image_url
+								staff
+								campus
+							}
+							token
+						}
+					}
+				`
+		}
+	});
+	// console.log(res.data);
+	return res.data;
 }
 
 export function getLocalUser() {
@@ -21,21 +36,20 @@ export function getLocalUser() {
 }
 
 export function initialize(store, router) {
-	// store.commit('LOGOUT');
 	router.beforeEach((to, from, next) => {
 		const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
 		const currentUser = store.getters.currentUser;
 		if (requiresAuth && !currentUser)
-			next('/login');
-		else if (requiresAuth && !currentUser && to.path == '/login')
-			next('/login');
-		else if (to.path == '/login' && currentUser) {
-			next('/brands');
+			next('/auth');
+		else if (requiresAuth && !currentUser && to.path == '/auth')
+			next('/auth');
+		else if (to.path == '/auth' && currentUser) {
+			next('/');
 		} else {
 			axios.interceptors.response.use(null, (error) => {
-				if (error.response.status == 401 && to.path != '/login') {
-					store.commit('LOGOUT');
-					router.push('/login');
+				if (error.response.status == 401 && to.path != '/auth') {
+					// store.commit('LOGOUT');
+					router.push('/auth');
 				}
 				return Promise.reject(error);
 			});

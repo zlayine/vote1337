@@ -1,35 +1,41 @@
 import axios from 'axios'
 /* eslint-disable */
 
-// import { getLocalUser } from './auth.js';
+import { getLocalUser } from './auth.js';
 
-// const user = getLocalUser();
-const user = "";
+const user = getLocalUser();
 
 export default {
 	state: {
 		reports: [],
 		meals: [],
+		user: null,
 		currentUser: user,
 		isLogged: !!user,
+		loading: false,
+		notification: false,
+		notification_msg: "",
 	},
 	getters: {
 		reports: state => state.reports,
 		meals: state => state.meals,
+		user: state => state.user,
 		currentUser: state => state.currentUser,
 		isLogged: state => state.isLogged,
 	},
 	mutations: {
 		LOGIN(state, payload) {
 			state.isLogged = true;
-			state.currentUser = Object.assign({}, payload.user, { token: payload.access_token });
+			state.currentUser = Object.assign({}, {id: payload.user._id}, { token: payload.token });
+			state.user = payload.user;
 			localStorage.setItem("user", JSON.stringify(state.currentUser));
-			// axios.defaults.headers.common["Authorization"] = `Bearer ${state.currentUser.token}`
+			axios.defaults.headers.common["Authorization"] = `Bearer ${state.currentUser.token}`
 		},
 		LOGOUT(state) {
 			localStorage.removeItem("user");
 			state.isLogged = false;
 			state.currentUser = null;
+			state.user = null;
 		},
 		UPDATE_REPORTS(state, payload) {
 			state.reports = payload;
@@ -38,6 +44,21 @@ export default {
 			state.meals = payload;
 		},
 		ADD_MEAL(state, payload) {
+		},
+		UPDATE_MEAL(state, payload) {
+		},
+		SET_USER(state, payload) {
+			state.user = payload;
+		},
+		UPDATE_LOADING(state) {
+			state.loading = !state.loading;
+		},
+		SET_NOTIFICATION(state, msg) {
+			state.notification = true;
+			state.notification_msg = msg;
+		},
+		CLOSE_NOTIFICATION(state) {
+			state.notification = false;
 		}
 	},
 	actions: {
@@ -194,10 +215,66 @@ export default {
 						}`
 					}
 				});
-				// commit('UPDATE_MEAL', "");
+				commit('UPDATE_MEAL', "");
 				return "success";
 			} catch (error) {
 				console.log(error);
+			}
+		},
+		async createUser({ commit }, code) {
+			try {
+				const res = await axios({
+					url: 'http://localhost:3000/graphql',
+					method: 'post',
+					data: {
+						query: `
+						mutation { 
+							createUser (code: "${code}") {
+								user{
+									_id
+									username
+									displayname
+									image_url
+									staff
+									campus
+								}
+								token
+							}
+						}
+						`
+					}
+				});
+				console.log(res);
+				commit("LOGIN", res.data.data.createUser)
+				return "1";
+			} catch (error) {
+				console.log(error)
+			}
+		},
+		async getUser({ commit }, id) {
+			try {
+				const res = await axios({
+					url: 'http://localhost:3000/graphql',
+					method: 'post',
+					data: {
+						query: `
+								query { 
+									getUser (userId: "${id}") {
+										_id
+										username
+										displayname
+										image_url
+										staff
+										campus
+									}
+								}
+							`
+					}
+				});
+				commit("SET_USER", res.data.data.getUser);
+				return "1";
+			} catch (error) {
+				console.log(error)
 			}
 		}
 

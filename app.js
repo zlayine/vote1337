@@ -8,7 +8,7 @@ const graphqlSchema = require('./graphql/schema')
 const graphqlResolvers = require('./graphql/resolvers')
 import { graphqlUploadExpress } from 'graphql-upload'
 
-// const isAuth = require('./middlewares/is-auth')
+const isAuth = require('./middlewares/auth')
 
 const app = express();
 
@@ -27,9 +27,7 @@ app.use((req, res, next) => {
 	next();
 })
 
-
-
-// app.use(isAuth);
+app.use(isAuth);
 
 app.use('/graphql',
 	graphqlUploadExpress({ maxFileSize: 10000000, maxFiles: 10 }),

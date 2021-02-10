@@ -7,14 +7,14 @@ export const routes = [
         path: "/",
         component: Home,
         meta: {
-            requiresAuth: false,
+            requiresAuth: true,
         }
     },
     {
         path: "/addmeal",
         component: AddMeal,
         meta: {
-            requiresAuth: false,
+            requiresAuth: true,
         }
     },
     {

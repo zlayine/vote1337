@@ -101,12 +101,12 @@ const transformReport = (report) => {
 
 const transformVote = (vote) => {
 	return {
-		...report._doc,
-		_id: report.id,
-		meal_item: mealItemResolver.bind(this, report._doc.meal_item),
-		user: userResolver.bind(this, report._doc.user),
-		createdAt: dateToString(report._doc.createdAt),
-		updatedAt: dateToString(report._doc.updatedAt),
+		...vote._doc,
+		_id: vote.id,
+		meal_item: mealItemResolver.bind(this, vote._doc.meal_item),
+		user: userResolver.bind(this, vote._doc.user),
+		createdAt: dateToString(vote._doc.createdAt),
+		updatedAt: dateToString(vote._doc.updatedAt),
 	}
 };
 

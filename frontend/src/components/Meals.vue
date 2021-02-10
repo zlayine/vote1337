@@ -10,13 +10,26 @@
       </div>
     </v-card>
     <template v-for="meal in meals">
-      <meal :key="meal._id" :meal="meal" @openReports="openReports" @openVoting="openVoting" />
+      <meal
+        :key="meal._id"
+        :meal="meal"
+        @openReports="openReports"
+        @openVoting="openVoting"
+      />
     </template>
     <transition name="fade">
-      <meal-item-voting v-if="voting" :meal="selectedMeal" @closeVoting="voting = false" />
+      <meal-item-voting
+        v-if="voting"
+        :meal="selectedMeal"
+        @closeVoting="voting = false"
+      />
     </transition>
     <transition name="fade">
-      <reports-modal v-if="reports" :meal="selectedMeal" @closeReports="reports = false" />
+      <reports-modal
+        v-if="reports"
+        :meal="selectedMeal"
+        @closeReports="reports = false"
+      />
     </transition>
   </div>
 </template>
@@ -31,7 +44,7 @@ export default {
     return {
       reports: false,
       voting: false,
-			selectedMeal: null,
+      selectedMeal: null,
     };
   },
   created() {
@@ -39,17 +52,17 @@ export default {
     this.$store.dispatch("getMeals");
   },
   methods: {
-		openReports(id){
-			this.selectedMeal = this.meals.filter(m => m._id == id)[0];
-			this.reports = true;
-			window.scrollTo(0, 0)
-		},
-		openVoting(id) {
-			this.selectedMeal = this.meals.filter(m => m._id == id)[0];
-			this.voting = true;
-			window.scrollTo(0, 0)
-		}
-	},
+    openReports(id) {
+      this.selectedMeal = this.meals.filter((m) => m._id == id)[0];
+      this.reports = true;
+      window.scrollTo(0, 0);
+    },
+    openVoting(id) {
+      this.selectedMeal = this.meals.filter((m) => m._id == id)[0];
+      this.voting = true;
+      window.scrollTo(0, 0);
+    },
+  },
   computed: {
     meals() {
       return this.$store.getters.meals;
@@ -76,6 +89,7 @@ export default {
     width: 80%;
     box-shadow: 0px 0px 7px #22222227;
     border-radius: 28px;
+		overflow: hidden;
     background-color: #2eb9ff;
     position: relative;
     cursor: pointer;
@@ -89,6 +103,7 @@ export default {
       flex-direction: column;
       justify-content: center;
       align-items: center;
+
       .text {
         text-align: center;
         color: #fff;

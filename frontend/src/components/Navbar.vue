@@ -5,16 +5,25 @@
     </div>
     <div class="nav_actions">
       <div class="action avatar">
-        <v-avatar color="primary" class="avatar" size="50">
-          <img src="https://cdn.vuetifyjs.com/images/john.jpg" alt="John" />
+        <v-avatar color="primary" class="avatar" size="50" v-if="user">
+          <img :src="user.image_url" alt="avatar-img" />
         </v-avatar>
+        <div v-else>
+          <router-link to="/auth">Login</router-link>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-export default {};
+export default {
+  computed: {
+    user() {
+      return this.$store.getters.user;
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>
@@ -25,10 +34,10 @@ export default {};
   justify-content: space-between;
   padding: 0 5px;
   height: 80px;
-	box-shadow: 0 0 5px #02020270;
+  box-shadow: 0 0 5px #02020270;
 
   .nav_logo {
-		margin-left: 25px;
+    margin-left: 25px;
     h1 {
       font-size: 30px;
       font-weight: 700;

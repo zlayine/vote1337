@@ -1,5 +1,4 @@
 const { buildSchema } = require("graphql")
-
 module.exports = buildSchema(`
 scalar Upload
 
@@ -69,6 +68,11 @@ type ReportData {
 	totalPages: Int
 }
 
+type LoginData {
+	user: User!
+	token: String!
+}
+
 input MealItemInput {
 	name: String!
 	image: Upload!
@@ -91,25 +95,18 @@ input VoteInput {
 	report: String!
 }
 
-input UserInput {
-	username: String!
-    displayname: String!
-	intra_id: String!
-	image_url: String!
-	staff: Boolean!
-	campus: String!
-}
-
 type RootQuery {
     getMeals(page: Int): MealData!
     getReports(page: Int, meal: String!): ReportData!
+	login(userId: String!): LoginData!
+	getUser(userId: String!): User!
 }
 
 type RootMutation {
 	createMeal(mealInput: MealInput): Meal
 	deleteMeal(mealId: String!): String
 	createReport(reportInput: ReportInput): Report
-	createUser(userInput: UserInput): User
+	createUser(code: String!): LoginData
 	addVotes(voteInput: [VoteInput!]!, meal: String!): Meal
 }
 

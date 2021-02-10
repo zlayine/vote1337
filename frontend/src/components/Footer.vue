@@ -5,8 +5,7 @@
 </template>
 
 <script>
-export default {
-};
+export default {};
 </script>
 
 <style lang="scss" scoped>
@@ -14,7 +13,10 @@ export default {
   padding: 20px;
   box-shadow: 0 0 5px #0202021a;
   width: 100%;
-
-	
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  text-align: center;
+	margin-top: 25px;
 }
 </style>
