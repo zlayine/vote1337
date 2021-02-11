@@ -2,7 +2,7 @@
   <v-app>
     <navbar />
 		<loader />
-		<!-- <notification /> -->
+		<notification />
     <transition name="fade-out">
       <router-view></router-view>
     </transition>

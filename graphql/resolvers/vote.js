@@ -1,32 +1,32 @@
 const models = require('../../models/index')
 const { transformVote, transformMeal } = require("./merge");
 
-const createReport = async (data, meal) => {
+const createReport = async (data, meal, userId) => {
 	try {
 		const reportData = new models.Report({
 			description: data.report,
 			meal_item: data.meal_item_id,
 			meal: meal,
-			user: "60200e78d89b4f1f4b27105b",
-			// user: req.userId
+			user: userId
 		});
 		await reportData.save();
-		return "1"
+		return "1";
 	} catch (error) {
 		console.log(error);
 	}
 }
 
-const createVote = async (data) => {
+const createVote = async (data, userId) => {
 	try {
 		const voteData = new models.Vote({
 			vote: data.vote,
 			meal_item: data.meal_item_id,
-			user: "60200e78d89b4f1f4b27105b",
-			// user: req.userId
+			user: userId
 		});
-		await voteData.save();
-		await updateMealItemVote(data.vote, data.meal_item_id);
+		const resVote = await voteData.save();
+		const mealItem = await updateMealItemVote(data.vote, data.meal_item_id);
+		mealItem.votes.push(resVote);
+		await mealItem.save();
 		return "1";
 	} catch (error) {
 		console.log(error)
@@ -40,22 +40,23 @@ const updateMealItemVote = async (vote, id) => {
 			mealitem.votes_up += 1;
 		else
 			mealitem.votes_down += 1;
-		await mealitem.save();
-		return "1";
+		return await mealitem.save();;
 	} catch (error) {
 		console.log(error);
 	}
 }
 
 module.exports = {
-	addVotes: async (args) => {
-		// if (!req.isAuth)
-		// 	throw new Error('Unauthenticated');
+	addVotes: async (args, req) => {
+		if (!req.isAuth)
+			throw new Error('Unauthenticated');
 		try {
-			args.voteInput.forEach(async item => {
-				await createVote(item);
-				await createReport(item, args.meal);
-			});
+			let items = args.voteInput;
+			for (let i = 0; i < items.length; i++) {
+				await createVote(items[i], req.userId);
+				if (items[i].report != "")
+					await createReport(items[i], args.meal, req.userId);
+			}
 			const result = await models.Meal.findById(args.meal);
 			return transformMeal(result);
 		} catch (err) {

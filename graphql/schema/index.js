@@ -74,13 +74,9 @@ type LoginData {
 }
 
 input MealItemInput {
+	meal: String!
 	name: String!
 	image: Upload!
-}
-
-input MealInput {
-    name: String!
-	items: [MealItemInput!]!
 }
 
 input ReportInput {
@@ -92,18 +88,20 @@ input ReportInput {
 input VoteInput {
 	vote: String!
 	meal_item_id: String!
-	report: String!
+	report: String
 }
 
 type RootQuery {
     getMeals(page: Int): MealData!
+	getMeal(mealId: String!): Meal!
     getReports(page: Int, meal: String!): ReportData!
 	login(userId: String!): LoginData!
 	getUser(userId: String!): User!
 }
 
 type RootMutation {
-	createMeal(mealInput: MealInput): Meal
+	createMeal(mealName: String): Meal
+	createMealItem(input: MealItemInput): String
 	deleteMeal(mealId: String!): String
 	createReport(reportInput: ReportInput): Report
 	createUser(code: String!): LoginData

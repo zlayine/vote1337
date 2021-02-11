@@ -1,9 +1,37 @@
 import axios from 'axios'
+import moment from 'moment'
 /* eslint-disable */
 
 import { getLocalUser } from './auth.js';
 
 const user = getLocalUser();
+
+const meal_enabler = (meal) => {
+	var now = moment();
+	var mealDate = moment(new Date(meal.createdAt));
+	let diff = now.diff(mealDate, 'hours');
+	if (diff > 3)
+		meal.enabled = false;
+	else
+		meal.enabled = true;
+	return meal;
+}
+
+const createMealItems = async (items, id) => {
+	for (let i = 0; i < items.length; i++) {
+		const query = `{"query": "mutation ($file: Upload!){ createMealItem (input: {meal: \\"${id}\\", name: \\"${items[i].name}\\", image: $file })}", "variables": {"file": null}}`;
+		const map = `{"0": ["variables.file"]}`;
+		const formdata = new FormData();
+		formdata.append("operations", query)
+		formdata.append("map", map)
+		formdata.append("0", items[i].file);
+		await axios({
+			url: 'http://localhost:3000/graphql',
+			method: 'post',
+			data: formdata
+		});
+	}
+}
 
 export default {
 	state: {
@@ -13,7 +41,7 @@ export default {
 		currentUser: user,
 		isLogged: !!user,
 		loading: false,
-		notification: false,
+		notification: 0,
 		notification_msg: "",
 	},
 	getters: {
@@ -39,16 +67,28 @@ export default {
 			state.isLogged = false;
 			state.currentUser = null;
 			state.user = null;
+			commit("SET_NOTIFICATION", { msg: "Logged out!", error: 0 });
 		},
 		UPDATE_REPORTS(state, payload) {
 			state.reports = payload;
 		},
 		UPDATE_MEALS(state, payload) {
+			if (payload.length)
+				payload[0] = meal_enabler(payload[0]);
 			state.meals = payload;
 		},
 		ADD_MEAL(state, payload) {
+			payload = meal_enabler(payload)
+			if (state.meals.length)
+				state.meals[0].enabled = false;
+			state.meals.unshift(payload);
 		},
 		UPDATE_MEAL(state, payload) {
+			state.meals = state.meals.map(m => {
+				if (m._id == payload._id)
+					m.meals = payload.meals;
+				return m;
+			})
 		},
 		SET_USER(state, payload) {
 			state.user = payload;
@@ -56,12 +96,12 @@ export default {
 		UPDATE_LOADING(state) {
 			state.loading = !state.loading;
 		},
-		SET_NOTIFICATION(state, msg) {
-			state.notification = true;
-			state.notification_msg = msg;
+		SET_NOTIFICATION(state, data) {
+			state.notification = 1 + data.error;
+			state.notification_msg = data.msg;
 		},
 		CLOSE_NOTIFICATION(state) {
-			state.notification = false;
+			state.notification = 0;
 		}
 	},
 	actions: {
@@ -103,12 +143,13 @@ export default {
 					}
 				});
 				commit('UPDATE_MEALS', res.data.data.getMeals.meals);
-				commit("UPDATE_LOADING")
+				commit("UPDATE_LOADING");
 				return "success";
 			} catch (error) {
 				console.log(error)
+				commit("SET_NOTIFICATION", { msg: "Server error", error: 1 });
+				commit("UPDATE_LOADING")
 			}
-			commit("UPDATE_LOADING")
 		},
 		async getReports({ commit }, id) {
 			try {
@@ -143,11 +184,12 @@ export default {
 				commit('UPDATE_REPORTS', res.data.data.getReports.reports);
 				return "success";
 			} catch (error) {
-
+				console.log(error)
+				commit("SET_NOTIFICATION", { msg: "Could not get reports", error: 1 });
 			}
 		},
 		async addMeal({ commit }, data) {
-			// commit("UPDATE_LOADING")
+			commit("UPDATE_LOADING")
 			try {
 				const createdMeal = await axios({
 					url: 'http://localhost:3000/graphql',
@@ -162,63 +204,51 @@ export default {
 					}
 				});
 				const id = createdMeal.data.data.createMeal._id;
-				await data.items.forEach(async item => {
-					const query = `{"query": "mutation ($file: Upload!){ createMealItem (input: {meal: \\"${id}\\", name: \\"${item.name}\\", image: $file })}", "variables": {"file": null}}`;
-					const map = `{"0": ["variables.file"]}`;
-					const formdata = new FormData();
-					formdata.append("operations", query)
-					formdata.append("map", map)
-					formdata.append("0", item.file);
-
-					await axios({
-						url: 'http://localhost:3000/graphql',
-						method: 'post',
-						data: formdata
-					});
+				await createMealItems(data.items, id);
+				const res = await axios({
+					url: 'http://localhost:3000/graphql',
+					method: 'post',
+					data: {
+						query: `
+						query { 
+							getMeal (mealId: "${id}") {
+								_id
+								name
+								createdAt
+								user {
+									username
+								}
+								meals {
+									_id
+									name 
+									image_url 
+									votes_up 
+									votes_down
+									votes {
+										user {
+											_id
+										}
+									}
+								}
+							}
+						}
+						`
+					}
 				});
-
-				// let mutationParams = `mutation (`;
-				// let variables = `"variables": {`;
-				// let items = `[`;
-				// let map = `{`
-
-				// mutationParams += `$file${index}: Upload!`
-				// items += `{name: \\"${item.name}\\", image: $file${index}}`
-				// variables += `"file${index}": null`;
-				// map += `"${index}": ["variables.file${index}"]`;
-
-				// if (index != data.items.length - 1) {
-				// 	mutationParams += ',';
-				// 	items += `,`;
-				// 	variables += `,`;
-				// 	map += `,`;
-				// }
-				// items += `]`;
-				// mutationParams += `)`;
-				// variables += `}`;
-				// map += `}`;
-
-				// const query = `{ "query": "${mutationParams} { createMeal( mealInput: { name: \\"${data.meal_name}\\", items: ${items} } ) { name createdAt user {username} meals {_id name image_url votes_up votes_down votes { user { _id }}} } }", ${variables} }`;
-				// formdata.append("operations", query)
-				// formdata.append("map", map)
-				// data.items.forEach((item, index) => {
-				// 	formdata.append(`${index}`, item.file)
-				// })
-
-
-				commit('ADD_MEAL', res.data);
-				// commit("UPDATE_LOADING");
-
+				commit('ADD_MEAL', res.data.data.getMeal);
+				commit("SET_NOTIFICATION", { msg: "Meal added successfully!", error: 0 });
+				commit("UPDATE_LOADING");
+				return 1;
 			} catch (error) {
 				console.log(error)
+				commit("SET_NOTIFICATION", { msg: "Could not add the meal", error: 1 });
+				commit("UPDATE_LOADING");
+				return 0;
 			}
-			// commit("UPDATE_LOADING");
 		},
 		async submitVotes({ commit }, data) {
 			try {
-				// console.log(data);
 				commit("UPDATE_LOADING")
-
 				let votes = "[";
 				data.votes.forEach(vote => {
 					votes += `{vote: "${vote.vote}", meal_item_id: "${vote.meal_item_id}", report: "${vote.report}"}`
@@ -248,15 +278,16 @@ export default {
 						}`
 					}
 				});
-				commit('UPDATE_MEAL', "");
+				console.log(res.data.data.addVotes);
+				commit('UPDATE_MEAL', res.data.data.addVotes);
 				commit("UPDATE_LOADING")
-
+				commit("SET_NOTIFICATION", { msg: "Votes submited successfully!", error: 0 });
 				return "success";
 			} catch (error) {
 				console.log(error);
+				commit("SET_NOTIFICATION", { msg: "Could not submit the votes", error: 1 });
+				commit("UPDATE_LOADING")
 			}
-			commit("UPDATE_LOADING")
-
 		},
 		async createUser({ commit }, code) {
 			try {
@@ -285,13 +316,13 @@ export default {
 				console.log(res);
 				commit("LOGIN", res.data.data.createUser)
 				commit("UPDATE_LOADING")
-
+				commit("SET_NOTIFICATION", { msg: "Account created successfully! Welcome!", error: 0 });
 				return "1";
 			} catch (error) {
 				console.log(error)
+				commit("UPDATE_LOADING")
+				commit("SET_NOTIFICATION", { msg: error, error: 1 });
 			}
-			commit("UPDATE_LOADING")
-
 		},
 		async getUser({ commit }, id) {
 			try {
@@ -321,9 +352,9 @@ export default {
 				return "1";
 			} catch (error) {
 				console.log(error)
+				commit("UPDATE_LOADING")
+				commit("SET_NOTIFICATION", { msg: "Server error", error: 1 });
 			}
-			commit("UPDATE_LOADING")
-
 		}
 
 	}

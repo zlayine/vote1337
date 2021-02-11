@@ -20,15 +20,14 @@ module.exports = {
 		}
 	},
 	createReport: async (args) => {
-		// if (!req.isAuth)
-		// 	throw new Error('Unauthenticated');
+		if (!req.isAuth)
+			throw new Error('Unauthenticated');
 		try {
 			const reportData = new models.Report({
 				description: args.reportInput.description,
 				meal_item: args.reportInput.meal_item,
 				meal: args.reportInput.meal,
-				user: "60200e78d89b4f1f4b27105b",
-				// user: req.userId
+				user: req.userId
 			});
 			const result = await reportData.save();
 			return transformReport(result);

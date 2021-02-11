@@ -5,7 +5,7 @@
         <div class="meal_title">{{ this.meal.name }}</div>
         <div class="meal_user">{{ this.meal.user.username }}</div>
       </div>
-      <div class="meal_action">
+      <div class="meal_action" v-if="user.staff">
         <div class="reports">
           <v-btn class="ma-2" plain color="primary" @click="openReports">
             <v-icon left> mdi-poll </v-icon> Reports
@@ -40,12 +40,13 @@ export default {
   props: ["meal"],
   data() {
     return {
-      voted: false,
       loading: false,
     };
   },
   created() {
-    this.userVoted();
+    // if (this.meal.enabled) this.userVoted();
+    // else this.voted = true;
+    // this.voted = false;
   },
   methods: {
     openReports() {
@@ -54,19 +55,23 @@ export default {
     openVoting() {
       this.$emit("openVoting", this.meal._id);
     },
-    userVoted() {
-      if (this.currentUser) {
-        const res = this.meal.meals[0].votes.filter((v) => {
-          if (v.user._id == this.currentUser.id) return v;
-        });
-        if (res.length == 0) this.voted = false;
-        else this.voted = true;
-      } else this.voted = true;
-    },
   },
   computed: {
     currentUser() {
       return this.$store.getters.currentUser;
+    },
+    user() {
+      return this.$store.getters.user;
+    },
+    voted() {
+      if (!this.meal.enabled) return true;
+      if (this.currentUser && this.meal.meals[0].votes) {
+        const res = this.meal.meals[0].votes.filter((v) => {
+          if (v.user._id == this.currentUser.id) return v;
+        });
+        if (res.length == 0) return false;
+        else return true;
+      } else return true;
     },
   },
   components: {
@@ -87,11 +92,12 @@ export default {
   .meal_title {
     font-size: 28px;
     font-weight: 700;
-    line-height: 22px;
+    line-height: 28px;
+    margin-bottom: 5px;
   }
 
   .meal_user {
-    font-size: 20px;
+    font-size: 18px;
     font-weight: 700;
     color: grey;
   }

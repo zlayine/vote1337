@@ -16,13 +16,21 @@
       <div class="text-title">{{ meal.name }}</div>
       <div class="items_carrousel">
         <div class="edge left"></div>
-        <div class="item">
+        <div class="item" v-if="finish">
+          <transition name="slide-hide">
+            <div class="finish">
+              <v-icon x-large color="success">fas fa-check-circle</v-icon>
+              <p>Thank you for your time!</p>
+            </div>
+          </transition>
+        </div>
+        <div class="item" v-else>
           <transition name="slide-hide">
             <div :key="item._id" class="image">
               <img :src="item.image_url" alt="img" />
             </div>
           </transition>
-          <div class="actions">
+          <div class="actions" v-if="!finish">
             <div class="likes" v-if="!report">
               <v-btn
                 class="mx-2"
@@ -86,6 +94,7 @@ export default {
       current: 0,
       description: null,
       votes: [],
+      finish: false,
     };
   },
   created() {
@@ -95,7 +104,7 @@ export default {
     nextItem() {
       this.current++;
       this.setItem();
-			this.description = null;
+      this.description = null;
       this.report = false;
     },
     submitVote(vote) {
@@ -125,11 +134,15 @@ export default {
       this.description = null;
     },
     showFinish() {
-      this.$store.dispatch("submitVotes", {
-        votes: this.votes,
-        meal: this.meal._id,
-      });
-      this.closeVoting();
+      this.finish = true;
+      this.item = null;
+      setTimeout(async () => {
+        await this.$store.dispatch("submitVotes", {
+          votes: this.votes,
+          meal: this.meal._id,
+        });
+        this.closeVoting();
+      }, 2000);
     },
   },
 };
@@ -197,6 +210,24 @@ export default {
         margin: auto;
         width: 400px;
         position: relative;
+
+        .finish {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-direction: column;
+          margin-top: 20px;
+          height: 400px;
+          transition: 300ms all;
+
+          i {
+            font-size: 80px !important;
+          }
+          p {
+            margin-top: 20px;
+            font-size: 22px;
+          }
+        }
 
         .image {
           height: 400px;

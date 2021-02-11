@@ -1,7 +1,7 @@
 <template>
   <div class="meals_container">
     <!-- <div class="welcome-message">welcome message</div> -->
-    <v-card class="add-meal-holder" to="/addmeal">
+    <v-card class="add-meal-holder" to="/addmeal" v-if="add_meal_enabler">
       <div class="add-meal">
         <div class="text">ADD TODAY'S MEAL</div>
         <v-btn class="mx-2" fab small color="white">
@@ -38,6 +38,7 @@
 import Meal from "./Meal.vue";
 import ReportsModal from "./ReportsModal.vue";
 import MealItemVoting from "./MealItemVoting.vue";
+import moment from "moment";
 
 export default {
   data() {
@@ -70,6 +71,34 @@ export default {
     currentUser() {
       return this.$store.getters.currentUser;
     },
+    add_meal_enabler() {
+      // let now = moment();
+      let now = moment(moment("17:45:00", "HH:mm:ss").toDate());
+      if (this.meals.length) {
+        let mealDate = moment(new Date(this.meals[0].createdAt));
+        let mealStart = moment(moment("12:00:00", "HH:mm:ss").toDate());
+        let mealToStartDiff = mealDate.diff(mealStart, "minutes");
+        if (mealToStartDiff >= 0) {
+          mealStart = moment(moment("17:45:00", "HH:mm:ss").toDate());
+          mealToStartDiff = mealDate.diff(mealStart, "minutes");
+        }
+        let nowToStartDiff = now.diff(mealStart, "minutes");
+        if (nowToStartDiff >= 0 && mealToStartDiff < 0) {
+          return true;
+        }
+        return false;
+      } else {
+        let mealStart = moment(moment("12:00:00", "HH:mm:ss").toDate());
+        let nowToStartDiff = now.diff(mealStart, "minutes");
+        if (nowToStartDiff >= 0 && nowToStartDiff < 4 * 60) return true;
+        else {
+          mealStart = moment(moment("17:45:00", "HH:mm:ss").toDate());
+          nowToStartDiff = now.diff(mealStart, "minutes");
+          if (nowToStartDiff >= 0 && nowToStartDiff < 3 * 60) return true;
+        }
+      }
+      return false;
+    },
   },
   components: {
     Meal,
@@ -81,6 +110,7 @@ export default {
 
 <style lang="scss" scoped>
 .meals_container {
+	margin-top: 25px;
   .welcome-message {
     text-align: center;
   }

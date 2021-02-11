@@ -76,8 +76,8 @@ module.exports = {
 			const user = await models.User.findOne({ _id: args.userId });
 			if (!user)
 				throw new Error('User does not exist');
-			console.log(user);
-			return transformUser(user);
+			else
+				return transformUser(user);
 		} catch (err) {
 			console.log(err)
 			throw err;

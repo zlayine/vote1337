@@ -64,6 +64,7 @@ const userResolver = async userId => {
 };
 
 const transformMeal = (meal) => {
+
 	return {
 		...meal._doc,
 		_id: meal.id,
