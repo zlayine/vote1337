@@ -26,7 +26,7 @@ const createMealItems = async (items, id) => {
 		formdata.append("map", map)
 		formdata.append("0", items[i].file);
 		await axios({
-			url: 'http://localhost:3000/graphql',
+			url: process.env.VUE_APP_GRAPHQL_API,
 			method: 'post',
 			data: formdata
 		});
@@ -67,7 +67,6 @@ export default {
 			state.isLogged = false;
 			state.currentUser = null;
 			state.user = null;
-			commit("SET_NOTIFICATION", { msg: "Logged out!", error: 0 });
 		},
 		UPDATE_REPORTS(state, payload) {
 			state.reports = payload;
@@ -109,7 +108,7 @@ export default {
 			try {
 				commit("UPDATE_LOADING")
 				const res = await axios({
-					url: 'http://localhost:3000/graphql',
+					url: process.env.VUE_APP_GRAPHQL_API,
 					method: 'post',
 					data: {
 						query: `
@@ -154,7 +153,7 @@ export default {
 		async getReports({ commit }, id) {
 			try {
 				const res = await axios({
-					url: 'http://localhost:3000/graphql',
+					url: process.env.VUE_APP_GRAPHQL_API,
 					method: 'post',
 					data: {
 						query: `
@@ -192,7 +191,7 @@ export default {
 			commit("UPDATE_LOADING")
 			try {
 				const createdMeal = await axios({
-					url: 'http://localhost:3000/graphql',
+					url: process.env.VUE_APP_GRAPHQL_API,
 					method: 'post',
 					data: {
 						query: `
@@ -206,7 +205,7 @@ export default {
 				const id = createdMeal.data.data.createMeal._id;
 				await createMealItems(data.items, id);
 				const res = await axios({
-					url: 'http://localhost:3000/graphql',
+					url: process.env.VUE_APP_GRAPHQL_API,
 					method: 'post',
 					data: {
 						query: `
@@ -255,7 +254,7 @@ export default {
 				});
 				votes += "]";
 				const res = await axios({
-					url: 'http://localhost:3000/graphql',
+					url: process.env.VUE_APP_GRAPHQL_API,
 					method: 'post',
 					data: {
 						query: `
@@ -278,7 +277,7 @@ export default {
 						}`
 					}
 				});
-				console.log(res.data.data.addVotes);
+				// console.log(res.data.data.addVotes);
 				commit('UPDATE_MEAL', res.data.data.addVotes);
 				commit("UPDATE_LOADING")
 				commit("SET_NOTIFICATION", { msg: "Votes submited successfully!", error: 0 });
@@ -293,7 +292,7 @@ export default {
 			try {
 				commit("UPDATE_LOADING")
 				const res = await axios({
-					url: 'http://localhost:3000/graphql',
+					url: process.env.VUE_APP_GRAPHQL_API,
 					method: 'post',
 					data: {
 						query: `
@@ -316,7 +315,7 @@ export default {
 				console.log(res);
 				commit("LOGIN", res.data.data.createUser)
 				commit("UPDATE_LOADING")
-				commit("SET_NOTIFICATION", { msg: "Account created successfully! Welcome!", error: 0 });
+				commit("SET_NOTIFICATION", { msg: "Logged in successfully!", error: 0 });
 				return "1";
 			} catch (error) {
 				console.log(error)
@@ -329,7 +328,7 @@ export default {
 				commit("UPDATE_LOADING")
 
 				const res = await axios({
-					url: 'http://localhost:3000/graphql',
+					url: process.env.VUE_APP_GRAPHQL_API,
 					method: 'post',
 					data: {
 						query: `
@@ -356,6 +355,5 @@ export default {
 				commit("SET_NOTIFICATION", { msg: "Server error", error: 1 });
 			}
 		}
-
 	}
 }

@@ -7,10 +7,10 @@ const request_token = async (code) => {
 	try {
 		const res = await axios.post("https://api.intra.42.fr/oauth/token", {
 			grant_type: "authorization_code",
-			client_id: "112d563acce9f5f0ea1be2f74995194a18e3a3f9e3128d3c7906443679f633bf",
-			client_secret: "1b3ee8bf4e04fc2af2e4bb8218fb8c335027b41d4b84fe9d886b7b8aed4a6920",
+			client_id: process.env.CLIENT_ID_42,
+			client_secret: process.env.CLIENT_SECRET_42,
 			code: code,
-			redirect_uri: "http://localhost:8080/auth"
+			redirect_uri: process.env.CLIENT_REDIRECT_42
 		})
 		return res.data.access_token;
 	} catch (err) {

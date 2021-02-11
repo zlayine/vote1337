@@ -20,9 +20,7 @@ export default {
   },
   methods: {
     signin() {
-      if (!this.currentUser)
-        window.location.href =
-          "https://api.intra.42.fr/oauth/authorize?client_id=112d563acce9f5f0ea1be2f74995194a18e3a3f9e3128d3c7906443679f633bf&redirect_uri=http%3A%2F%2Flocalhost%3A8080%2Fauth&response_type=code";
+      if (!this.currentUser) window.location.href = process.env.VUE_APP_AUTH_42;
       else login(this.currentUser.user);
     },
     async accessData() {

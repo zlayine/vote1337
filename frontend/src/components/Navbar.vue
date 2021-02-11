@@ -29,6 +29,8 @@ export default {
   methods: {
     logout() {
       this.$store.commit("LOGOUT");
+      this.$store.commit("SET_NOTIFICATION", { msg: "Logged out!", error: 0 });
+			this.$router.push("/auth")
     },
   },
 };

@@ -5,9 +5,9 @@
         <div class="meal_title">{{ this.meal.name }}</div>
         <div class="meal_user">{{ this.meal.user.username }}</div>
       </div>
-      <div class="meal_action" v-if="user.staff">
+      <div class="meal_action" v-if="user && user.staff">
         <div class="reports">
-          <v-btn class="ma-2" plain color="primary" @click="openReports">
+          <v-btn class="my-2" plain color="primary" @click="openReports">
             <v-icon left> mdi-poll </v-icon> Reports
           </v-btn>
         </div>
