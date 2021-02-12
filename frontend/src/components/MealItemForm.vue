@@ -75,15 +75,10 @@ export default {
       this.$refs.file.click();
     },
     onFileChange(file) {
-      const maxSize = 1024;
       let imageFile = file[0];
       if (file.length > 0) {
-        let size = imageFile.size / maxSize / maxSize;
         if (!imageFile.type.match("image.*")) {
           this.errorText = "Please choose an image file";
-        } else if (size > 1) {
-          this.errorText =
-            "Your file is too big! Please select an image under 1MB";
         } else {
           this.file = imageFile;
           this.url = URL.createObjectURL(imageFile);
