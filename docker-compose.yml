@@ -1,7 +1,7 @@
 version: '3'
 services:
   app:
-    container_name: vue
+    container_name: app
     image: nginx:1.17
     build:
         context: ./frontend
