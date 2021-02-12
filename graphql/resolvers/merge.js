@@ -63,14 +63,14 @@ const userResolver = async userId => {
 	}
 };
 
-const transformMeal = (meal) => {
-
+const transformMeal = (meal, enabled = false) => {
 	return {
 		...meal._doc,
 		_id: meal.id,
 		meals: mealItemsResolver.bind(this, meal._doc.meals),
 		reports: reportsResolver.bind(this, meal._doc.reports),
 		user: userResolver.bind(this, meal._doc.user),
+		enabled: enabled,
 		createdAt: dateToString(meal.createdAt),
 		updatedAt: dateToString(meal.updatedAt),
 	}

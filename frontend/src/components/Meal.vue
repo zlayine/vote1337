@@ -14,7 +14,7 @@
       </div>
     </div>
     <div class="meal_items_holder">
-      <div class="btn-delete">
+      <div class="btn-delete" v-if="mealOwner">
         <v-btn icon color="white" @click="deleteMeal">
           <v-icon> mdi-delete </v-icon>
         </v-btn>
@@ -22,7 +22,7 @@
       <div class="overlay" v-if="!voted"></div>
 
       <div class="start-vote" v-if="!voted">
-        <v-btn x-large rounded color="primary" dark @click="openVoting">
+        <v-btn x-large rounded color="#2eb9ff" dark @click="openVoting">
           Start voting
         </v-btn>
       </div>
@@ -85,6 +85,11 @@ export default {
         else return true;
       } else return true;
     },
+		mealOwner(){
+			if (this.meal && this.currentUser && this.meal.user._id == this.currentUser.id)
+				return true;
+			return false;
+		}
   },
   components: {
     MealItem,
@@ -130,7 +135,7 @@ export default {
       top: -12px;
       border-radius: 40%;
       background-color: red;
-      z-index: 20;
+      z-index: 50;
       cursor: pointer;
       transition: 200ms all;
       box-shadow: 0 0 0px #02020220;

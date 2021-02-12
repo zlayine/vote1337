@@ -20,7 +20,10 @@ const storeFS = ({ stream, generatedName }) => {
 	);
 }
 
-const enableVoting = (meal) => {
+const enableVoting = async (meal) => {
+	const latest = await models.Meal.findOne().sort({ createdAt: 'desc' });
+	if (latest.id != meal._id)
+		return false;
 	let now = moment();
 	let mealDate = moment(new Date(meal.createdAt));
 	let diff = now.diff(mealDate, 'hours');
@@ -29,15 +32,38 @@ const enableVoting = (meal) => {
 	return true;
 }
 
-const checkMeal = async () => {
+const checkAddMeal = async () => {
+	return true;
 	try {
 		const meal = await models.Meal.findOne().sort({ createdAt: 'desc' });
 		let now = moment();
-		let mealDate = moment(new Date(meal.createdAt));
-		let diff = now.diff(mealDate, 'hours');
-		if (diff > 3)
-			return true;
-		return false;
+		// let now = moment(moment("17:45:00", "HH:mm:ss").toDate());
+		if (meal) {
+			let mealDate = moment(new Date(meal.createdAt));
+			let mealStart = moment(moment("12:00:00", "HH:mm:ss").toDate());
+			let mealToStartDiff = mealDate.diff(mealStart, "minutes");
+			if (mealToStartDiff >= 0) {
+				mealStart = moment(moment("17:45:00", "HH:mm:ss").toDate());
+				mealToStartDiff = mealDate.diff(mealStart, "minutes");
+			}
+			let nowToStartDiff = now.diff(mealStart, "minutes");
+			console.log(nowToStartDiff);
+			console.log(mealToStartDiff);
+			if (nowToStartDiff >= 0 && mealToStartDiff < 0) {
+				return true;
+			}
+			return false;
+		} else {
+			let mealStart = moment(moment("12:00:00", "HH:mm:ss").toDate());
+			let nowToStartDiff = now.diff(mealStart, "minutes");
+			if (nowToStartDiff >= 0 && nowToStartDiff < 4 * 60) return true;
+			else {
+				mealStart = moment(moment("17:45:00", "HH:mm:ss").toDate());
+				nowToStartDiff = now.diff(mealStart, "minutes");
+				if (nowToStartDiff >= 0 && nowToStartDiff < 3 * 60) return true;
+			}
+			return false;
+		}
 	} catch (error) {
 		console.log(error);
 		return false;
@@ -54,7 +80,7 @@ module.exports = {
 				return transformMeal(e)
 			});
 			if (res.length)
-				res[0] = enableVoting(res[0]);
+				res[0].enabled = await enableVoting(res[0]);
 			return {
 				page: +page,
 				meals: res,
@@ -68,7 +94,7 @@ module.exports = {
 	getMeal: async (args) => {
 		try {
 			const meal = await models.Meal.findById(args.mealId);
-			return transformMeal(meal);
+			return transformMeal(meal, await enableVoting(meal));
 		} catch (err) {
 			console.log(err);
 			throw err;
@@ -78,14 +104,14 @@ module.exports = {
 		if (!req.isAuth)
 			throw new Error('Unauthenticated');
 		try {
-			if (await checkAddMeal())
+			if (!await checkAddMeal())
 				throw new Error('Today\'s meal already exists.');
 			const meal = new models.Meal({
 				name: args.mealName,
 				user: req.userId
 			});
 			const result = await meal.save();
-			return transformMeal(result);
+			return transformMeal(result, enableVoting(result));
 		} catch (err) {
 			console.log(err);
 			throw err;
@@ -118,41 +144,22 @@ module.exports = {
 		}
 	},
 	checkAddMeal: async (args, req) => {
+		return true;
 		if (!req.isAuth)
 			return false;
+		return await checkAddMeal();
+	},
+	deleteMeal: async (args, req) => {
+		if (!req.isAuth)
+			throw new Error('Unauthenticated');
 		try {
-			const meal = await models.Meal.findOne().sort({ createdAt: 'desc' });
-			let now = moment();
-			// let now = moment(moment("17:45:00", "HH:mm:ss").toDate());
-			if (meal) {
-				let mealDate = moment(new Date(meal.createdAt));
-				let mealStart = moment(moment("12:00:00", "HH:mm:ss").toDate());
-				let mealToStartDiff = mealDate.diff(mealStart, "minutes");
-				if (mealToStartDiff >= 0) {
-					mealStart = moment(moment("17:45:00", "HH:mm:ss").toDate());
-					mealToStartDiff = mealDate.diff(mealStart, "minutes");
-				}
-				let nowToStartDiff = now.diff(mealStart, "minutes");
-				console.log(nowToStartDiff);
-				console.log(mealToStartDiff);
-				if (nowToStartDiff >= 0 && mealToStartDiff < 0) {
-					return true;
-				}
+			const meal = await models.Meal.findOneAndDelete({ _id: args.mealId, user: req.userId });
+			if (meal)
+				return true;
+			else
 				return false;
-			} else {
-				let mealStart = moment(moment("12:00:00", "HH:mm:ss").toDate());
-				let nowToStartDiff = now.diff(mealStart, "minutes");
-				if (nowToStartDiff >= 0 && nowToStartDiff < 4 * 60) return true;
-				else {
-					mealStart = moment(moment("17:45:00", "HH:mm:ss").toDate());
-					nowToStartDiff = now.diff(mealStart, "minutes");
-					if (nowToStartDiff >= 0 && nowToStartDiff < 3 * 60) return true;
-				}
-			}
-			return false;
 		} catch (err) {
-			console.log(err);
-			return false;
+			throw err;
 		}
 	}
 

@@ -6,7 +6,7 @@
     <transition name="fade-out">
       <router-view></router-view>
     </transition>
-		<!-- <footer-layout /> -->
+		<footer-layout />
   </v-app>
 </template>
 

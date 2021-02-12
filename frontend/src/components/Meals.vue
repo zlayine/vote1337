@@ -1,11 +1,11 @@
 <template>
   <div class="meals_container">
     <!-- <div class="welcome-message">welcome message</div> -->
-    <v-card class="add-meal-holder" to="/addmeal" v-if="add_meal_enabler">
+    <v-card class="add-meal-holder" to="/addmeal" v-if="addMeal">
       <div class="add-meal">
         <div class="text">ADD TODAY'S MEAL</div>
-        <v-btn class="mx-2" fab small color="white">
-          <v-icon dark> mdi-plus </v-icon>
+        <v-btn class="mx-2" fab small color="#2eb9ff">
+          <v-icon dark color="white"> mdi-plus </v-icon>
         </v-btn>
       </div>
     </v-card>
@@ -86,6 +86,7 @@ export default {
 <style lang="scss" scoped>
 .meals_container {
 	margin-top: 25px;
+	margin-bottom: 100px;
   .welcome-message {
     text-align: center;
   }
@@ -95,7 +96,8 @@ export default {
     box-shadow: 0px 0px 7px #22222227;
     border-radius: 28px;
     overflow: hidden;
-    background-color: #2eb9ff;
+		background-color: #cbf5ff;
+    color: #2eb9ff;
     position: relative;
     cursor: pointer;
 
@@ -111,7 +113,7 @@ export default {
 
       .text {
         text-align: center;
-        color: #fff;
+        // color: #fff;
       }
     }
   }

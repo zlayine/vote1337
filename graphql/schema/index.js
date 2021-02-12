@@ -20,6 +20,7 @@ type Meal {
     user: User!
 	reports: [Report!]
 	meals: [MealItem!]!
+	enabled: Boolean
 	createdAt: String!
     updatedAt: String!
 }
@@ -103,7 +104,7 @@ type RootQuery {
 type RootMutation {
 	createMeal(mealName: String): Meal
 	createMealItem(input: MealItemInput): String
-	deleteMeal(mealId: String!): String
+	deleteMeal(mealId: String!): Boolean
 	createUser(code: String!): LoginData
 	addVotes(voteInput: [VoteInput!]!, meal: String!): Meal
 }

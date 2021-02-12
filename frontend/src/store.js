@@ -89,6 +89,9 @@ export default {
 		},
 		SET_ADDMEAL(state, data) {
 			state.addMeal = data;
+		},
+		DELETE_MEAL(state, id) {
+			state.meals = state.meals.filter(m => m._id != id);
 		}
 	},
 	actions: {
@@ -107,9 +110,11 @@ export default {
 								meals {
 									_id
 									name
+									enabled
 									createdAt
 									user {
 										username
+										_id
 									}
 									meals {
 										_id
@@ -201,9 +206,11 @@ export default {
 							getMeal (mealId: "${id}") {
 								_id
 								name
+								enabled
 								createdAt
 								user {
 									username
+									_id
 								}
 								meals {
 									_id
@@ -350,7 +357,27 @@ export default {
 		async deleteMeal({ commit }, id) {
 			try {
 				commit("UPDATE_LOADING")
-
+				const res = await axios({
+					url: process.env.VUE_APP_GRAPHQL_API,
+					method: 'post',
+					data: {
+						query: `
+						mutation { 
+							deleteMeal (mealId: "${id}")
+						}
+						`
+					}
+				});
+				if (res.data.errors)
+					commit("SET_NOTIFICATION", { msg: res.data.errors, error: 1 });
+				else {
+					if (res.data.data.deleteMeal) {
+						commit("DELETE_MEAL", id)
+						commit("SET_NOTIFICATION", { msg: "Meal deleted Successfully!", error: 0 });
+					}
+					else
+						commit("SET_NOTIFICATION", { msg: "Cannot delete this meal..", error: 1 });
+				}
 				commit("UPDATE_LOADING")
 			} catch (error) {
 				commit("UPDATE_LOADING")
@@ -370,9 +397,9 @@ export default {
 							`
 					}
 				});
-				commit("SET_ADDMEAL", res.data.data);
+				commit("SET_ADDMEAL", res.data.data.checkAddMeal);
 			} catch (error) {
-
+				commit("SET_NOTIFICATION", { msg: "Server error", error: 1 });
 			}
 		}
 	}

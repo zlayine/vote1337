@@ -4,7 +4,7 @@
       :timeout="3000"
       :value="notification"
       top
-      :color=" notification == 1 ? 'deep-purple accent-4' : 'red darken-2'"
+      :color="notification == 1 ? 'success' : 'red darken-2'"
       elevation="10"
     >
       <div class="text">

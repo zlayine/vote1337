@@ -27,17 +27,25 @@
         <v-btn color="success" @click="submit"> Create meal </v-btn>
       </div>
     </form>
+    <DialogItem ref="d" />
   </div>
 </template>
 
 <script>
 import MealItemForm from "../components/MealItemForm.vue";
+
 export default {
   data() {
     return {
       meal_name: null,
       items: [],
     };
+  },
+  async created() {
+    await this.$store.dispatch("checkAddMeal");
+    setTimeout(() => {
+      if (!this.addMeal && this.$refs.d) this.showDialog();
+    }, 1000);
   },
   methods: {
     addItem(data) {
@@ -50,15 +58,27 @@ export default {
       });
     },
     async submit() {
-      await this.$store.dispatch("addMeal", {
-        meal_name: this.meal_name,
-        items: this.items,
-      });
-			this.$router.push("/");
+      if (this.addMeal) {
+        await this.$store.dispatch("addMeal", {
+          meal_name: this.meal_name,
+          items: this.items,
+        });
+        this.$router.push("/");
+      } else this.showDialog();
+    },
+    async showDialog() {
+      await this.$refs.d.open("Information", "Today's meal is already added..");
+      this.$router.push("/");
+    },
+  },
+  computed: {
+    addMeal() {
+      return this.$store.getters.addMeal;
     },
   },
   components: {
     MealItemForm,
+    DialogItem: () => import("../components/DialogItem"),
   },
 };
 </script>

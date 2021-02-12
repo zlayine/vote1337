@@ -30,7 +30,7 @@ export default {
     logout() {
       this.$store.commit("LOGOUT");
       this.$store.commit("SET_NOTIFICATION", { msg: "Logged out!", error: 0 });
-			this.$router.push("/auth")
+      this.$router.push("/auth");
     },
   },
 };
@@ -66,9 +66,9 @@ export default {
 
   .nav_actions {
     display: flex;
+		padding: 0 10px;
 
     .action {
-      margin-right: 5px;
       display: flex;
       flex-direction: row;
 
@@ -86,5 +86,16 @@ export default {
       cursor: pointer;
     }
   }
+}
+
+@media (max-width: 768px) {
+	.nav {
+		.nav_logo {
+			margin-left: 10px;
+			h1 {
+				font-size: 24px;
+			}
+		}
+	}
 }
 </style>
