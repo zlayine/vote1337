@@ -37,7 +37,18 @@ app.use('/graphql',
 		graphiql: true,
 	}));
 
-mongoose.connect(process.env.MONGODB_URL)
+const {
+	MONGO_USERNAME,
+	MONGO_PASSWORD,
+	MONGO_HOSTNAME,
+	MONGO_PORT,
+	MONGO_DB
+} = process.env;
+
+let url = `mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@${MONGO_HOSTNAME}:${MONGO_PORT}/${MONGO_DB}?authSource=admin`;
+if (process.env.NODE_ENV == "development")
+	url = "mongodb://localhost:27017/vote1337"
+mongoose.connect(url)
 	.then(() => {
 		app.listen(3000);
 	}).catch(err => {

@@ -1,9 +1,14 @@
 {
 	"env": {
-		"MONGODB_URL": "mongodb://localhost:27017/vote1337",
+		"NODE_ENV": "production",
 		"SERVER_URL": "http://localhost:3000/",
 		"CLIENT_ID_42": "112d563acce9f5f0ea1be2f74995194a18e3a3f9e3128d3c7906443679f633bf",
 		"CLIENT_SECRET_42": "1b3ee8bf4e04fc2af2e4bb8218fb8c335027b41d4b84fe9d886b7b8aed4a6920",
-		"CLIENT_REDIRECT_42": "http://localhost:8080/auth"
+		"CLIENT_REDIRECT_42": "http://localhost:8080/auth",
+		"MONGO_USERNAME": "useradmin",
+		"MONGO_PASSWORD": "user1337",
+		"MONGO_HOSTNAME": "db",
+		"MONGO_PORT": "27017",
+		"MONGO_DB": "vote1337"
 	}
 }

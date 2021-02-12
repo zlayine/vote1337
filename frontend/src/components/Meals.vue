@@ -1,6 +1,5 @@
 <template>
   <div class="meals_container">
-    <!-- <div class="welcome-message">welcome message</div> -->
     <v-card class="add-meal-holder" to="/addmeal" v-if="addMeal">
       <div class="add-meal-img">
         <img :src="add_meal_img" alt="add meal image" />
@@ -180,7 +179,7 @@ export default {
       width: 100%;
       border-radius: 20px;
       flex-direction: column;
-			
+
       .add-meal-img {
         width: 60%;
         position: absolute;
