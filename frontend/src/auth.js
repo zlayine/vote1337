@@ -48,7 +48,7 @@ export function initialize(store, router) {
 		} else {
 			axios.interceptors.response.use(null, (error) => {
 				if (error.response.status == 401 && to.path != '/auth') {
-					// store.commit('LOGOUT');
+					store.commit('LOGOUT');
 					router.push('/auth');
 				}
 				return Promise.reject(error);

@@ -19,21 +19,4 @@ module.exports = {
 			throw err
 		}
 	},
-	createReport: async (args) => {
-		if (!req.isAuth)
-			throw new Error('Unauthenticated');
-		try {
-			const reportData = new models.Report({
-				description: args.reportInput.description,
-				meal_item: args.reportInput.meal_item,
-				meal: args.reportInput.meal,
-				user: req.userId
-			});
-			const result = await reportData.save();
-			return transformReport(result);
-		} catch (err) {
-			console.log(err);
-			throw err;
-		}
-	},
 }

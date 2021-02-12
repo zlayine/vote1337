@@ -1,5 +1,5 @@
 const models = require('../../models/index')
-const { transformVote, transformMeal } = require("./merge");
+const { transformMeal } = require("./merge");
 
 const createReport = async (data, meal, userId) => {
 	try {
@@ -46,12 +46,43 @@ const updateMealItemVote = async (vote, id) => {
 	}
 }
 
+const checkMeal = async (id) => {
+	try {
+		const meal = await models.Meal.findById(id);
+		let now = moment();
+		let mealDate = moment(new Date(meal.createdAt));
+		let diff = now.diff(mealDate, 'hours');
+		if (diff > 3)
+			return false;
+		return true;
+	} catch (error) {
+		console.log(error);
+		return false;
+	}
+}
+
+const checkUserVoted = async (meal, userId) => {
+	try {
+		const vote = await (await models.MealItem.findOne({ meal: meal })).populate({ path: 'votes', match: { user: userId } })
+		if (vote)
+			return true;
+		return false;
+	} catch (error) {
+		console.log(error);
+		return true;
+	}
+}
+
 module.exports = {
 	addVotes: async (args, req) => {
 		if (!req.isAuth)
-			throw new Error('Unauthenticated');
+			throw new Error('Unauthenticated.');
 		try {
 			let items = args.voteInput;
+			if (!(await checkMeal(args.meal)))
+				throw new Error('Meal does not accept votes.')
+			if (await checkUserVoted(args.meal, req.userId))
+				throw new Error('You\'ve already voted for this meal.')
 			for (let i = 0; i < items.length; i++) {
 				await createVote(items[i], req.userId);
 				if (items[i].report != "")

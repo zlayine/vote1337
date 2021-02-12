@@ -1,21 +1,7 @@
 import axios from 'axios'
-import moment from 'moment'
-/* eslint-disable */
-
 import { getLocalUser } from './auth.js';
 
 const user = getLocalUser();
-
-const meal_enabler = (meal) => {
-	var now = moment();
-	var mealDate = moment(new Date(meal.createdAt));
-	let diff = now.diff(mealDate, 'hours');
-	if (diff > 3)
-		meal.enabled = false;
-	else
-		meal.enabled = true;
-	return meal;
-}
 
 const createMealItems = async (items, id) => {
 	for (let i = 0; i < items.length; i++) {
@@ -43,6 +29,7 @@ export default {
 		loading: false,
 		notification: 0,
 		notification_msg: "",
+		addMeal: false,
 	},
 	getters: {
 		reports: state => state.reports,
@@ -53,6 +40,7 @@ export default {
 		notification: state => state.notification,
 		notification_msg: state => state.notification_msg,
 		loading: state => state.loading,
+		addMeal: state => state.addMeal
 	},
 	mutations: {
 		LOGIN(state, payload) {
@@ -72,12 +60,9 @@ export default {
 			state.reports = payload;
 		},
 		UPDATE_MEALS(state, payload) {
-			if (payload.length)
-				payload[0] = meal_enabler(payload[0]);
 			state.meals = payload;
 		},
 		ADD_MEAL(state, payload) {
-			payload = meal_enabler(payload)
 			if (state.meals.length)
 				state.meals[0].enabled = false;
 			state.meals.unshift(payload);
@@ -101,6 +86,9 @@ export default {
 		},
 		CLOSE_NOTIFICATION(state) {
 			state.notification = 0;
+		},
+		SET_ADDMEAL(state, data) {
+			state.addMeal = data;
 		}
 	},
 	actions: {
@@ -312,10 +300,14 @@ export default {
 						`
 					}
 				});
-				console.log(res);
-				commit("LOGIN", res.data.data.createUser)
+				if (res.data.errors)
+					commit("SET_NOTIFICATION", { msg: res.data.errors, error: 1 });
+
+				else {
+					commit("LOGIN", res.data.data.createUser)
+					commit("SET_NOTIFICATION", { msg: "Logged in successfully!", error: 0 });
+				}
 				commit("UPDATE_LOADING")
-				commit("SET_NOTIFICATION", { msg: "Logged in successfully!", error: 0 });
 				return "1";
 			} catch (error) {
 				console.log(error)
@@ -353,6 +345,34 @@ export default {
 				console.log(error)
 				commit("UPDATE_LOADING")
 				commit("SET_NOTIFICATION", { msg: "Server error", error: 1 });
+			}
+		},
+		async deleteMeal({ commit }, id) {
+			try {
+				commit("UPDATE_LOADING")
+
+				commit("UPDATE_LOADING")
+			} catch (error) {
+				commit("UPDATE_LOADING")
+				commit("SET_NOTIFICATION", { msg: "Cannot delete this item..", error: 1 });
+			}
+		},
+		async checkAddMeal({ commit }) {
+			try {
+				const res = await axios({
+					url: process.env.VUE_APP_GRAPHQL_API,
+					method: 'post',
+					data: {
+						query: `
+								query { 
+									checkAddMeal 
+								}
+							`
+					}
+				});
+				commit("SET_ADDMEAL", res.data.data);
+			} catch (error) {
+
 			}
 		}
 	}

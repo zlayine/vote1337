@@ -38,7 +38,6 @@
 import Meal from "./Meal.vue";
 import ReportsModal from "./ReportsModal.vue";
 import MealItemVoting from "./MealItemVoting.vue";
-import moment from "moment";
 
 export default {
   data() {
@@ -51,6 +50,7 @@ export default {
   async created() {
     if (this.meals.length > 0) return;
     await this.$store.dispatch("getMeals");
+		await this.$store.dispatch("checkAddMeal");
   },
   methods: {
     openReports(id) {
@@ -71,34 +71,9 @@ export default {
     currentUser() {
       return this.$store.getters.currentUser;
     },
-    add_meal_enabler() {
-      // let now = moment();
-      let now = moment(moment("17:45:00", "HH:mm:ss").toDate());
-      if (this.meals.length) {
-        let mealDate = moment(new Date(this.meals[0].createdAt));
-        let mealStart = moment(moment("12:00:00", "HH:mm:ss").toDate());
-        let mealToStartDiff = mealDate.diff(mealStart, "minutes");
-        if (mealToStartDiff >= 0) {
-          mealStart = moment(moment("17:45:00", "HH:mm:ss").toDate());
-          mealToStartDiff = mealDate.diff(mealStart, "minutes");
-        }
-        let nowToStartDiff = now.diff(mealStart, "minutes");
-        if (nowToStartDiff >= 0 && mealToStartDiff < 0) {
-          return true;
-        }
-        return false;
-      } else {
-        let mealStart = moment(moment("12:00:00", "HH:mm:ss").toDate());
-        let nowToStartDiff = now.diff(mealStart, "minutes");
-        if (nowToStartDiff >= 0 && nowToStartDiff < 4 * 60) return true;
-        else {
-          mealStart = moment(moment("17:45:00", "HH:mm:ss").toDate());
-          nowToStartDiff = now.diff(mealStart, "minutes");
-          if (nowToStartDiff >= 0 && nowToStartDiff < 3 * 60) return true;
-        }
-      }
-      return false;
-    },
+		addMeal() {
+			return this.$store.getters.addMeal;
+		}
   },
   components: {
     Meal,

@@ -66,24 +66,6 @@ export default {
     height: 300px;
     overflow: hidden;
 
-    // .btn-report {
-    // 	position: absolute;
-    // 	padding: 5px;
-    // 	right: -52px;
-    // 	top: -52px;
-    // 	border-radius: 40%;
-    // 	background-color: red;
-    // 	z-index: 20;
-    // 	cursor: pointer;
-    // 	transition: 200ms all;
-
-    // 	button {
-    // 		position: relative;
-    // 		bottom: -3px;
-    // 		left: -3px;
-    // 	}
-    // }
-
     .image {
       border-radius: 10px;
       // max-height: 300px;

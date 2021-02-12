@@ -97,13 +97,13 @@ type RootQuery {
     getReports(page: Int, meal: String!): ReportData!
 	login(userId: String!): LoginData!
 	getUser(userId: String!): User!
+	checkAddMeal: Boolean!
 }
 
 type RootMutation {
 	createMeal(mealName: String): Meal
 	createMealItem(input: MealItemInput): String
 	deleteMeal(mealId: String!): String
-	createReport(reportInput: ReportInput): Report
 	createUser(code: String!): LoginData
 	addVotes(voteInput: [VoteInput!]!, meal: String!): Meal
 }

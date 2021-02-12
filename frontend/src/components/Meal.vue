@@ -14,6 +14,11 @@
       </div>
     </div>
     <div class="meal_items_holder">
+      <div class="btn-delete">
+        <v-btn icon color="white" @click="deleteMeal">
+          <v-icon> mdi-delete </v-icon>
+        </v-btn>
+      </div>
       <div class="overlay" v-if="!voted"></div>
 
       <div class="start-vote" v-if="!voted">
@@ -30,6 +35,7 @@
         ></meal-item>
       </div>
     </div>
+    <ConfirmDialog ref="confirm" />
   </div>
 </template>
 
@@ -43,17 +49,23 @@ export default {
       loading: false,
     };
   },
-  created() {
-    // if (this.meal.enabled) this.userVoted();
-    // else this.voted = true;
-    // this.voted = false;
-  },
+  created() {},
   methods: {
     openReports() {
       this.$emit("openReports", this.meal._id);
     },
     openVoting() {
       this.$emit("openVoting", this.meal._id);
+    },
+    async deleteMeal() {
+      if (
+        await this.$refs.confirm.open(
+          "Confirm",
+          "Are you sure you want to delete this meal?"
+        )
+      ) {
+        this.$store.dispatch("deleteMeal", this.meal._id);
+      }
     },
   },
   computed: {
@@ -76,6 +88,7 @@ export default {
   },
   components: {
     MealItem,
+    ConfirmDialog: () => import("./ConfirmDialog"),
   },
 };
 </script>
@@ -87,7 +100,7 @@ export default {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    padding: 0 10px;
+    padding: 0 0px 0 10px;
   }
   .meal_title {
     font-size: 28px;
@@ -108,6 +121,32 @@ export default {
     box-shadow: 0px 0px 7px #22222227;
     border-radius: 10px;
     position: relative;
+    overflow: hidden;
+
+    .btn-delete {
+      position: absolute;
+      padding: 5px;
+      right: -12px;
+      top: -12px;
+      border-radius: 40%;
+      background-color: red;
+      z-index: 20;
+      cursor: pointer;
+      transition: 200ms all;
+      box-shadow: 0 0 0px #02020220;
+
+      button {
+        position: relative;
+        bottom: -5px;
+        left: -5px;
+      }
+    }
+
+    &:hover {
+      .btn-delete {
+        box-shadow: 0 0 5px #020202ba;
+      }
+    }
 
     .overlay {
       position: absolute;

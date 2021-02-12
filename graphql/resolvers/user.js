@@ -15,6 +15,7 @@ const request_token = async (code) => {
 		return res.data.access_token;
 	} catch (err) {
 		console.log(err);
+		return null;
 	}
 }
 
@@ -28,6 +29,7 @@ const request_data = async (token) => {
 		return res.data;
 	} catch (err) {
 		console.log(err);
+		return null
 	}
 }
 
@@ -41,12 +43,13 @@ const loginUser = async (userId) => {
 	return { user: transformUser(user), token: token }
 }
 
-
 module.exports = {
 	createUser: async (args) => {
 		try {
 			const token = await request_token(args.code);
 			const data = await request_data(token);
+			if (!token || !data)
+				throw new Error("User creation failed");
 			const user = await models.User.findOne({ username: data.login })
 			if (!user) {
 				const userData = new models.User({
