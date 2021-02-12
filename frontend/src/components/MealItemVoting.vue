@@ -19,7 +19,9 @@
         <div class="item" v-if="finish">
           <transition name="slide-hide">
             <div class="finish">
-              <v-icon x-large color="success">fas fa-check-circle</v-icon>
+              <div class="finish-img">
+                <img :src="thankyou_img" alt="image thank you" />
+              </div>
               <p>Thank you for your time!</p>
             </div>
           </transition>
@@ -85,6 +87,8 @@
 </template>
 
 <script>
+import thankyou_img from "../assets/thankyou_img.svg";
+
 export default {
   props: ["meal"],
   data() {
@@ -95,6 +99,7 @@ export default {
       description: null,
       votes: [],
       finish: false,
+      thankyou_img: thankyou_img,
     };
   },
   created() {
@@ -220,12 +225,17 @@ export default {
           height: 400px;
           transition: 300ms all;
 
-          i {
-            font-size: 80px !important;
+          .finish-img {
+            width: 70%;
+
+            img {
+              width: 100%;
+            }
           }
           p {
             margin-top: 20px;
             font-size: 22px;
+						font-weight: 600;
           }
         }
 

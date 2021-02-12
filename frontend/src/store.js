@@ -272,10 +272,13 @@ export default {
 						}`
 					}
 				});
-				// console.log(res.data.data.addVotes);
-				commit('UPDATE_MEAL', res.data.data.addVotes);
+				if (res.data.errors)
+					commit("SET_NOTIFICATION", { msg: res.data.errors[0].message, error: 1 });
+				else {
+					commit('UPDATE_MEAL', res.data.data.addVotes);
+					commit("SET_NOTIFICATION", { msg: "Votes submited successfully!", error: 0 });
+				}
 				commit("UPDATE_LOADING")
-				commit("SET_NOTIFICATION", { msg: "Votes submited successfully!", error: 0 });
 				return "success";
 			} catch (error) {
 				console.log(error);
@@ -308,8 +311,7 @@ export default {
 					}
 				});
 				if (res.data.errors)
-					commit("SET_NOTIFICATION", { msg: res.data.errors, error: 1 });
-
+					commit("SET_NOTIFICATION", { msg: res.data.errors[0].message, error: 1 });
 				else {
 					commit("LOGIN", res.data.data.createUser)
 					commit("SET_NOTIFICATION", { msg: "Logged in successfully!", error: 0 });

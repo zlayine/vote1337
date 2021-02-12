@@ -113,9 +113,26 @@ export default {
     margin: 0;
     padding-left: 10px;
   }
+
+  .input {
+    width: 300px;
+  }
 }
 
-.input {
-  width: 300px;
+@media (max-width: 768px) {
+	.add-meal {
+		.input {
+			width: 100%;
+		}
+
+		.actions {
+			display: flex;
+			justify-content: space-between;
+
+			button {
+				font-weight: 600;
+			}
+		}
+	}
 }
 </style>

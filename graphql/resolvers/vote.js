@@ -1,5 +1,6 @@
 const models = require('../../models/index')
 const { transformMeal } = require("./merge");
+const moment = require('moment');
 
 const createReport = async (data, meal, userId) => {
 	try {
@@ -64,7 +65,7 @@ const checkMeal = async (id) => {
 const checkUserVoted = async (meal, userId) => {
 	try {
 		const vote = await (await models.MealItem.findOne({ meal: meal })).populate({ path: 'votes', match: { user: userId } })
-		if (vote)
+		if (vote.votes.length)
 			return true;
 		return false;
 	} catch (error) {
