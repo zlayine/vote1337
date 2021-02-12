@@ -77,7 +77,7 @@ export default {
     },
     voted() {
       if (!this.meal.enabled) return true;
-      if (this.currentUser && this.meal.meals[0].votes) {
+      if (this.currentUser && this.meal.meals[0]) {
         const res = this.meal.meals[0].votes.filter((v) => {
           if (v.user._id == this.currentUser.id) return v;
         });
@@ -85,11 +85,15 @@ export default {
         else return true;
       } else return true;
     },
-		mealOwner(){
-			if (this.meal && this.currentUser && this.meal.user._id == this.currentUser.id)
-				return true;
-			return false;
-		}
+    mealOwner() {
+      if (
+        this.meal &&
+        this.currentUser &&
+        this.meal.user._id == this.currentUser.id
+      )
+        return true;
+      return false;
+    },
   },
   components: {
     MealItem,
