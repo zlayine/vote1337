@@ -9,7 +9,7 @@ RUN npm run build
 
 FROM nginx:stable-alpine as production-stage
 
-COPY --from=build-stage ./dist /usr/share/nginx/html
+COPY --from=build-stage . /usr/share/nginx/html
 RUN rm /etc/nginx/conf.d/default.conf
 COPY nginx.conf /etc/nginx/conf.d
 
