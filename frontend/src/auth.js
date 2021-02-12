@@ -3,7 +3,7 @@ import axios from 'axios'
 
 export async function login(user_id) {
 	const res = await axios({
-		url: 'http://localhost:3000/graphql',
+		url: process.env.VUE_APP_GRAPHQL_API,
 		method: 'post',
 		data: {
 			query: `
