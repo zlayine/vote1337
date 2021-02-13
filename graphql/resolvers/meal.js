@@ -21,7 +21,7 @@ const storeFS = ({ stream, generatedName }) => {
 }
 
 const enableVoting = async (meal) => {
-	return true;
+	// return true;
 	const latest = await models.Meal.findOne().sort({ createdAt: 'desc' });
 	if (latest.id != meal._id)
 		return false;
@@ -34,7 +34,7 @@ const enableVoting = async (meal) => {
 }
 
 const checkAddMeal = async () => {
-	return true;
+	// return true;
 	try {
 		const meal = await models.Meal.findOne().sort({ createdAt: 'desc' });
 		let now = moment();
@@ -148,7 +148,7 @@ module.exports = {
 		}
 	},
 	checkAddMeal: async (args, req) => {
-		return true;
+		// return true;
 		if (!req.isAuth)
 			return false;
 		return await checkAddMeal();
