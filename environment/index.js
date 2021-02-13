@@ -8,4 +8,7 @@ const configuration = {
 	production
 };
 
+console.log(process.env);
+console.log(configuration);
+
 exports.process = { ...configuration[mode], mode };
