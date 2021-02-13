@@ -14,7 +14,7 @@
       </div>
     </div>
     <div class="meal_items_holder">
-      <div class="btn-delete" >
+      <div class="btn-delete" v-if="mealOwner">
         <v-btn icon color="white" @click="deleteMeal">
           <v-icon> mdi-delete </v-icon>
         </v-btn>

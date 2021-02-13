@@ -37,7 +37,7 @@ const checkAddMeal = async () => {
 	// return true;
 	try {
 		const meal = await models.Meal.findOne().sort({ createdAt: 'desc' });
-		let now = moment();
+		let now = moment().add(1, 'hours');
 		// let now = moment(moment("17:45:00", "HH:mm:ss").toDate());
 		if (meal) {
 			let mealDate = moment(new Date(meal.createdAt));
@@ -48,12 +48,6 @@ const checkAddMeal = async () => {
 				mealToStartDiff = mealDate.diff(mealStart, "minutes");
 			}
 			let nowToStartDiff = now.diff(mealStart, "minutes");
-			console.log("createed at", meal.createdAt);
-			console.log("meal start", mealStart);
-			console.log("now", now);
-			console.log("now diff", nowToStartDiff);
-			console.log("meal diff", mealToStartDiff);
-
 			if (nowToStartDiff >= 0 && mealToStartDiff < 0) {
 				return true;
 			}
