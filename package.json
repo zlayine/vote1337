@@ -27,7 +27,6 @@
     "graphql-tools": "^7.0.2",
     "graphql-upload": "^11.0.0",
     "imagemin": "^7.0.1",
-    "imagemin-mozjpeg": "^9.0.0",
     "jsonwebtoken": "^8.5.1",
     "moment": "^2.29.1",
     "mongoose": "^5.11.15"
