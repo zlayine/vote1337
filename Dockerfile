@@ -1,6 +1,6 @@
 FROM node:10-alpine
 
-RUN apk add --no-cache autoconf automake libtool
+RUN apk add --no-cache autoconf automake libtool make gcc musl-dev nasm
 
 RUN mkdir -p /home/node/app/node_modules && chown -R node:node /home/node/app
 
