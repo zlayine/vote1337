@@ -6,7 +6,7 @@
     @keydown.esc="cancel"
   >
     <v-card>
-      <v-toolbar dark :color="options.color" dense flat>
+      <v-toolbar dark color="#2eb9ff" dense flat>
         <v-toolbar-title class="text-body-2 font-weight-bold grey--text">
           {{ title }}
         </v-toolbar-title>
@@ -68,3 +68,15 @@ export default {
   },
 };
 </script>
+
+<style lang="scss" scoped>
+.header {
+	background-color: #2eb9ff;
+	color: #fff;
+}
+
+.btn-submit {
+	color: #2eb9ff;
+	background-color: #cbf5ff;
+}
+</style>

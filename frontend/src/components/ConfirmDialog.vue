@@ -6,8 +6,8 @@
     @keydown.esc="cancel"
   >
     <v-card>
-      <v-toolbar dark :color="options.color" dense flat>
-        <v-toolbar-title class="text-body-2 font-weight-bold grey--text">
+      <v-toolbar dark color="#2eb9ff" dense flat>
+        <v-toolbar-title class="text-body-2 font-weight-bold">
           {{ title }}
         </v-toolbar-title>
       </v-toolbar>
@@ -27,11 +27,12 @@
           >Cancel</v-btn
         >
         <v-btn
-          color="primary"
-          class="body-2 font-weight-bold"
-          outlined
+          color="#cbf5ff"
+          class="body-2 font-weight-bold btn-submit"
+					flat
+					elevation="0"
           @click.native="agree"
-          >OK</v-btn
+          >Yes</v-btn
         >
       </v-card-actions>
     </v-card>
@@ -79,3 +80,11 @@ export default {
   },
 };
 </script>
+
+<style lang="scss" scoped>
+
+
+.btn-submit {
+  color: #2eb9ff;
+}
+</style>
