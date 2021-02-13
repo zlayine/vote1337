@@ -11,12 +11,15 @@ const createMealItems = async (items, id) => {
 		formdata.append("operations", query)
 		formdata.append("map", map)
 		formdata.append("0", items[i].file);
-		await axios({
+		const res = await axios({
 			url: process.env.VUE_APP_GRAPHQL_API,
 			method: 'post',
 			data: formdata
 		});
+		if (res.data.errors)
+			return 0;
 	}
+	return 1;
 }
 
 export default {
@@ -195,8 +198,18 @@ export default {
 						}`
 					}
 				});
+				if (createdMeal.data.errors) {
+					commit("SET_NOTIFICATION", { msg: "Failed to add meal", error: 1 });
+					commit("UPDATE_LOADING");
+					return 0;
+				}
 				const id = createdMeal.data.data.createMeal._id;
-				await createMealItems(data.items, id);
+				const items = await createMealItems(data.items, id);
+				if (!items) {
+					commit("SET_NOTIFICATION", { msg: "Failed to add meal items", error: 1 });
+					commit("UPDATE_LOADING");
+					return 0;
+				}
 				const res = await axios({
 					url: process.env.VUE_APP_GRAPHQL_API,
 					method: 'post',
@@ -229,8 +242,14 @@ export default {
 						`
 					}
 				});
-				commit('ADD_MEAL', res.data.data.getMeal);
-				commit("SET_NOTIFICATION", { msg: "Meal added successfully!", error: 0 });
+
+				if (res.data.errors) {
+					commit("SET_NOTIFICATION", { msg: "Failed to add meal", error: 1 });
+				}
+				else {
+					commit('ADD_MEAL', res.data.data.getMeal);
+					commit("SET_NOTIFICATION", { msg: "Meal added successfully!", error: 0 });
+				}
 				commit("UPDATE_LOADING");
 				return 1;
 			} catch (error) {

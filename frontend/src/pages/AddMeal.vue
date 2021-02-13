@@ -59,11 +59,18 @@ export default {
     },
     async submit() {
       if (this.addMeal) {
-        await this.$store.dispatch("addMeal", {
-          meal_name: this.meal_name,
-          items: this.items,
-        });
-        this.$router.push("/");
+        if (this.meal_name && this.meal_name != "") {
+          const res = await this.$store.dispatch("addMeal", {
+            meal_name: this.meal_name,
+            items: this.items,
+          });
+          if (res) this.$router.push("/");
+        } else {
+          this.$store.commit("SET_NOTIFICATION", {
+            msg: "Meal name is required",
+            error: 1,
+          });
+        }
       } else this.showDialog();
     },
     async showDialog() {
@@ -120,19 +127,19 @@ export default {
 }
 
 @media (max-width: 768px) {
-	.add-meal {
-		.input {
-			width: 100%;
-		}
+  .add-meal {
+    .input {
+      width: 100%;
+    }
 
-		.actions {
-			display: flex;
-			justify-content: space-between;
+    .actions {
+      display: flex;
+      justify-content: space-between;
 
-			button {
-				font-weight: 600;
-			}
-		}
-	}
+      button {
+        font-weight: 600;
+      }
+    }
+  }
 }
 </style>

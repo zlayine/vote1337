@@ -107,6 +107,8 @@ module.exports = {
 		try {
 			if (!await checkAddMeal())
 				throw new Error('Today\'s meal already exists.');
+			if (args.mealName == "null" || args.mealName == "")
+				throw new Error('Meal name is required');
 			const meal = new models.Meal({
 				name: args.mealName,
 				user: req.userId
@@ -142,6 +144,7 @@ module.exports = {
 			return "success";
 		} catch (err) {
 			console.log(err)
+			throw err;
 		}
 	},
 	checkAddMeal: async (args, req) => {

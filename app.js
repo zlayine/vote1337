@@ -46,7 +46,8 @@ const {
 
 let url = `mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@${MONGO_HOSTNAME}:${MONGO_PORT}/${MONGO_DB}?authSource=admin`;
 if (process.env.NODE_ENV == "development")
-	url = "mongodb://localhost:27017/vote1337"
+	url = `mongodb://${MONGO_HOSTNAME}:${MONGO_PORT}/${MONGO_DB}`;
+	
 mongoose.connect(url)
 	.then(() => {
 		app.listen(3000);

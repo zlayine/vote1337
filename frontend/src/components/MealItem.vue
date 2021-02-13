@@ -8,8 +8,8 @@
       <div class="info">
         <div class="info_title">{{ item.name }}</div>
         <div class="stats">
-          <div class="text">-{{ item.votes_down }}</div>
-          <div class="text">+{{ item.votes_up }}</div>
+          <div class="text">{{ item.votes_down | vote_text }}</div>
+          <div class="text">{{ item.votes_up | vote_text }}</div>
         </div>
         <div class="bar">
           <v-progress-linear
@@ -38,12 +38,20 @@ export default {
       }
     },
   },
+  filters: {
+    vote_text(val) {
+      if (val < 0) return "-" + val;
+      else if (val > 0) return "+" + val;
+      return val;
+    },
+  },
 };
 </script>
 
 <style lang="scss" scoped>
 .meal_item {
-  width: 300px;
+  // width: 300px;
+  overflow: hidden;
   border-radius: 10px;
   margin: 0 15px 0 0;
 
@@ -67,13 +75,15 @@ export default {
     overflow: hidden;
 
     .image {
-      border-radius: 10px;
       // max-height: 300px;
+      display: flex;
       height: 100%;
+      max-width: 300px;
       overflow: hidden;
 
       img {
         // width: 100%;
+        margin: auto;
         width: auto;
         height: 100%;
       }
@@ -84,10 +94,12 @@ export default {
       top: 0;
       left: 0;
       right: 0;
+      border-radius: 4px;
+
       bottom: 0;
       background-image: linear-gradient(
         to top,
-        #2eb9ffd5,
+        #2eb9ff,
         rgba(0, 255, 0, 0) 50%,
         transparent 60%
       );
