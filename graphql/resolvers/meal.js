@@ -48,6 +48,12 @@ const checkAddMeal = async () => {
 				mealToStartDiff = mealDate.diff(mealStart, "minutes");
 			}
 			let nowToStartDiff = now.diff(mealStart, "minutes");
+			console.log("createed at", meal.createdAt);
+			console.log("meal start", mealStart);
+			console.log("now", now);
+			console.log("now diff", nowToStartDiff);
+			console.log("meal diff", mealToStartDiff);
+
 			if (nowToStartDiff >= 0 && mealToStartDiff < 0) {
 				return true;
 			}
