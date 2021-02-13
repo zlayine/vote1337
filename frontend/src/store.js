@@ -87,6 +87,9 @@ export default {
 		SET_NOTIFICATION(state, data) {
 			state.notification = 1 + data.error;
 			state.notification_msg = data.msg;
+			setTimeout(() => {
+				state.notification = 0;
+			}, 4000)
 		},
 		CLOSE_NOTIFICATION(state) {
 			state.notification = 0;

@@ -64,7 +64,7 @@ const checkMeal = async (id) => {
 
 const checkUserVoted = async (meal, userId) => {
 	try {
-		const vote = await (await models.MealItem.findOne({ meal: meal })).populate({ path: 'votes', match: { user: userId } })
+		const vote = await models.MealItem.findOne({ meal: meal}).populate({ path: 'votes', match: { user: userId } })
 		if (vote.votes.length)
 			return true;
 		return false;
