@@ -1,6 +1,6 @@
 FROM node:10-alpine
 
-RUN apk add --no-cache autoconf
+RUN apk add --no-cache automake
 
 RUN mkdir -p /home/node/app/node_modules && chown -R node:node /home/node/app
 
