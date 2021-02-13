@@ -3,9 +3,37 @@ const fs = require('fs');
 const patho = require('path');
 const { transformMeal } = require('./merge');
 const moment = require('moment');
+const imagemin = require("imagemin");
+const imageminMozjpeg = require("imagemin-mozjpeg");
+
+//clean database;
+// const t = await models.MealItem.find().populate('votes');
+// 			for (let i = 0; i < t.length; i++) {
+// 				for (let j = 0; j < t[i].votes.length; j++) {
+// 					await t[i].votes[j].delete();
+// 				}
+// 				await t[i].delete();
+// 			}
+
+const compressImage = async (dir, name) => {
+	const file = await imagemin([dir + "tmp/" + name], {
+		destination: dir,
+		plugins: [
+			imageminMozjpeg({ quality: 50 })
+		]
+	});
+	const path = dir + "tmp/" + name;
+	try {
+		fs.unlinkSync(path)
+	} catch (err) {
+		console.error(err)
+		throw err;
+	}
+	return file;
+};
 
 const storeFS = ({ stream, generatedName }) => {
-	const uploadDir = patho.resolve("./public/meals");
+	const uploadDir = patho.resolve("./public/meals/tmp");
 	const path = `${uploadDir}/${generatedName}`;
 	return new Promise((resolve, reject) =>
 		stream
@@ -37,8 +65,8 @@ const checkAddMeal = async () => {
 	// return true;
 	try {
 		const meal = await models.Meal.findOne().sort({ createdAt: 'desc' });
-		let now = moment();
-		// let now = moment(moment("17:45:00", "HH:mm:ss").toDate());
+		// let now = moment();
+		let now = moment(moment("17:45:00", "HH:mm:ss").toDate());
 		if (meal) {
 			let mealDate = moment(new Date(meal.createdAt));
 			let mealStart = moment(moment("11:00:00", "HH:mm:ss").toDate());
@@ -66,6 +94,7 @@ const checkAddMeal = async () => {
 				mealStart = moment(moment("17:45:00", "HH:mm:ss").toDate());
 				nowToStartDiff = now.diff(mealStart, "minutes");
 				if (nowToStartDiff >= 0 && nowToStartDiff < 3 * 60) return true;
+
 			}
 			return false;
 		}
@@ -78,6 +107,7 @@ const checkAddMeal = async () => {
 module.exports = {
 	getMeals: async (args) => {
 		try {
+
 			const page = args.page;
 			const count = await models.Meal.count();
 			const meals = await models.Meal.find().sort({ createdAt: 'desc' }).skip((page - 1) * 10).limit(10);
@@ -135,11 +165,11 @@ module.exports = {
 
 			const stream = createReadStream();
 			await storeFS({ stream, generatedName });
-			const dir = "public/meals/" + generatedName;
-
+			const dir = "public/meals/";
+			await compressImage(dir, generatedName)
 			const mealItem = new models.MealItem({
 				name: args.input.name,
-				image_url: dir,
+				image_url: dir + generatedName,
 				meal: args.input.meal
 			});
 			const res = await mealItem.save();
@@ -161,7 +191,27 @@ module.exports = {
 		if (!req.isAuth)
 			throw new Error('Unauthenticated');
 		try {
-			const meal = await models.Meal.findOneAndDelete({ _id: args.mealId, user: req.userId });
+			const meal = await models.Meal.findById({ _id: args.mealId, user: req.userId }).populate({
+				path: 'meals',
+				populate: {
+					path: 'votes',
+				}
+			});
+			for (let i = 0; i < meal.meals.length; i++) {
+				let item = meal.meals[i];
+				for (let j = 0; j < item.votes.length; j++) {
+					let vote = item.votes[j];
+					await vote.delete();
+				}
+				try {
+					fs.unlinkSync(item.image_url);
+				} catch (err) {
+					console.error(err)
+					throw err;
+				}
+				await item.delete();
+			}
+			await meal.delete();
 			if (meal)
 				return true;
 			else

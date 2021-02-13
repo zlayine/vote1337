@@ -50,8 +50,8 @@ export default {
 
 <style lang="scss" scoped>
 .meal_item {
-  // width: 300px;
-  overflow: hidden;
+  width: 300px;
+  // overflow: hidden;
   border-radius: 10px;
   margin: 0 15px 0 0;
 
@@ -75,17 +75,19 @@ export default {
     overflow: hidden;
 
     .image {
-      // max-height: 300px;
-      display: flex;
+      max-height: 300px;
+      // display: flex;
       height: 100%;
       max-width: 300px;
-      overflow: hidden;
+      min-width: 300px;
+			display: flex;
+      // overflow: hidden;
 
       img {
         // width: 100%;
         margin: auto;
-        width: auto;
-        height: 100%;
+				width: 100%;
+        // height: 100%;
       }
     }
 
@@ -94,8 +96,6 @@ export default {
       top: 0;
       left: 0;
       right: 0;
-      border-radius: 4px;
-
       bottom: 0;
       background-image: linear-gradient(
         to top,
