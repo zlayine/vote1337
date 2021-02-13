@@ -2,15 +2,16 @@ const models = require('../../models/index')
 const { transformUser } = require("./merge");
 const axios = require('axios');
 const jwt = require('jsonwebtoken')
+const env = require('../../environment')
 
 const request_token = async (code) => {
 	try {
 		const res = await axios.post("https://api.intra.42.fr/oauth/token", {
 			grant_type: "authorization_code",
-			client_id: process.env.CLIENT_ID_42,
-			client_secret: process.env.CLIENT_SECRET_42,
+			client_id: env.process.CLIENT_ID_42,
+			client_secret: env.process.CLIENT_SECRET_42,
 			code: code,
-			redirect_uri: process.env.CLIENT_REDIRECT_42
+			redirect_uri: env.process.CLIENT_REDIRECT_42
 		})
 		return res.data.access_token;
 	} catch (err) {

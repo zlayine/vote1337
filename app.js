@@ -3,12 +3,11 @@ const bodyParser = require('body-parser')
 const graphqlHttp = require('express-graphql').graphqlHTTP
 const mongoose = require('mongoose')
 const path = require('path');
-
 const graphqlSchema = require('./graphql/schema')
 const graphqlResolvers = require('./graphql/resolvers')
 import { graphqlUploadExpress } from 'graphql-upload'
-
 const isAuth = require('./middlewares/auth')
+const env = require('./environment')
 
 const app = express();
 
@@ -30,7 +29,7 @@ app.use((req, res, next) => {
 app.use(isAuth);
 
 app.use('/graphql',
-	graphqlUploadExpress({ maxFileSize: 10000000, maxFiles: 10 }),
+	graphqlUploadExpress({ maxFileSize: '10M', maxFiles: 10 }),
 	graphqlHttp({
 		schema: graphqlSchema,
 		rootValue: graphqlResolvers,
@@ -43,7 +42,7 @@ const {
 	MONGO_HOSTNAME,
 	MONGO_PORT,
 	MONGO_DB
-} = process.env;
+} = env.process;
 
 let url = `mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@${MONGO_HOSTNAME}:${MONGO_PORT}/${MONGO_DB}?authSource=admin`;
 if (process.env.NODE_ENV == "development")
