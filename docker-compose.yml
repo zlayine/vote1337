@@ -31,7 +31,7 @@ services:
     volumes:
       - .:/home/node/app
       - node_modules:/home/node/app/node_modules
-    command: ./wait-for.sh db:27017 -- /home/node/app/node_modules/.bin/nodemon --exec npm run babel-node -- app.js
+    command: ./wait-for.sh db:27017 -- NODE_ENV=production /home/node/app/node_modules/.bin/nodemon --exec npm run babel-node -- app.js
     networks:
       - app-network
   db:

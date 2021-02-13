@@ -9,7 +9,6 @@ import { graphqlUploadExpress } from 'graphql-upload'
 const isAuth = require('./middlewares/auth')
 const env = require('./environment')
 
-console.log(env);
 const app = express();
 
 app.use(bodyParser.urlencoded({ extended: true }));
