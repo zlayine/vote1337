@@ -49,7 +49,7 @@ const storeFS = ({ stream, generatedName }) => {
 }
 
 const enableVoting = async (meal) => {
-	// return true;
+	return true;
 	const latest = await models.Meal.findOne().sort({ createdAt: 'desc' });
 	if (latest.id != meal._id)
 		return false;
@@ -62,7 +62,7 @@ const enableVoting = async (meal) => {
 }
 
 const checkAddMeal = async () => {
-	// return true;
+	return true;
 	try {
 		const meal = await models.Meal.findOne().sort({ createdAt: 'desc' });
 		// let now = moment();
@@ -110,7 +110,7 @@ module.exports = {
 
 			const page = args.page;
 			const count = await models.Meal.count();
-			const meals = await models.Meal.find().sort({ createdAt: 'desc' }).skip((page - 1) * 10).limit(10);
+			const meals = await models.Meal.find().sort({ createdAt: 'desc' }).skip((page - 1) * 2).limit(2);
 			const res = meals.map(e => {
 				return transformMeal(e)
 			});
@@ -119,7 +119,7 @@ module.exports = {
 			return {
 				page: +page,
 				meals: res,
-				totalPages: parseInt(count / 10) + 1
+				totalPages: parseInt(count / 2) + 1
 			}
 		} catch (err) {
 			console.log(err);
@@ -182,7 +182,7 @@ module.exports = {
 		}
 	},
 	checkAddMeal: async (args, req) => {
-		// return true;
+		return true;
 		if (!req.isAuth)
 			return false;
 		return await checkAddMeal();
@@ -191,12 +191,15 @@ module.exports = {
 		if (!req.isAuth)
 			throw new Error('Unauthenticated');
 		try {
-			const meal = await models.Meal.findById({ _id: args.mealId, user: req.userId }).populate({
+			const user = await models.User.findById(req.userId);
+			const meal = await models.Meal.findById({ _id: args.mealId}).populate({
 				path: 'meals',
 				populate: {
 					path: 'votes',
 				}
 			});
+			if (meal.user != req.userId && !user.staff)
+				throw new Error('You are not the owner of the meal')
 			for (let i = 0; i < meal.meals.length; i++) {
 				let item = meal.meals[i];
 				for (let j = 0; j < item.votes.length; j++) {

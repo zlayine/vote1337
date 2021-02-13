@@ -90,7 +90,7 @@ export default {
       if (
         this.meal &&
         this.currentUser &&
-        this.meal.user._id == this.currentUser.id
+        (this.meal.user._id == this.currentUser.id || (this.user && this.user.staff))
       )
         return true;
       return false;

@@ -25,7 +25,9 @@ const createMealItems = async (items, id) => {
 export default {
 	state: {
 		reports: [],
+		reportTotalPages: 1,
 		meals: [],
+		mealTotalPages: 1,
 		user: null,
 		currentUser: user,
 		isLogged: !!user,
@@ -43,7 +45,9 @@ export default {
 		notification: state => state.notification,
 		notification_msg: state => state.notification_msg,
 		loading: state => state.loading,
-		addMeal: state => state.addMeal
+		addMeal: state => state.addMeal,
+		mealTotalPages: state => state.mealTotalPages,
+		reportTotalPages: state => state.reportTotalPages,
 	},
 	mutations: {
 		LOGIN(state, payload) {
@@ -60,10 +64,12 @@ export default {
 			state.user = null;
 		},
 		UPDATE_REPORTS(state, payload) {
-			state.reports = payload;
+			state.reports = payload.reports;
+			state.reportTotalPages = payload.totalPages;
 		},
 		UPDATE_MEALS(state, payload) {
-			state.meals = payload;
+			state.meals = payload.meals;
+			state.mealTotalPages = payload.totalPages;
 		},
 		ADD_MEAL(state, payload) {
 			if (state.meals.length)
@@ -102,7 +108,7 @@ export default {
 		}
 	},
 	actions: {
-		async getMeals({ commit }) {
+		async getMeals({ commit }, page) {
 			try {
 				commit("UPDATE_LOADING")
 				const res = await axios({
@@ -111,8 +117,7 @@ export default {
 					data: {
 						query: `
 						query { 
-							getMeals (page: 1) {
-								page
+							getMeals (page: ${page}) {
 								totalPages
 								meals {
 									_id
@@ -141,7 +146,7 @@ export default {
 						`
 					}
 				});
-				commit('UPDATE_MEALS', res.data.data.getMeals.meals);
+				commit('UPDATE_MEALS', res.data.data.getMeals);
 				commit("UPDATE_LOADING");
 				return "success";
 			} catch (error) {
@@ -180,7 +185,7 @@ export default {
 						`
 					}
 				});
-				commit('UPDATE_REPORTS', res.data.data.getReports.reports);
+				commit('UPDATE_REPORTS', res.data.data.getReports);
 				return "success";
 			} catch (error) {
 				console.log(error)

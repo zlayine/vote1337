@@ -60,6 +60,10 @@ export default {
     margin-right: 20px;
     .item {
       height: 200px;
+			.image {
+				max-width: 200px;
+				min-width: 200px;
+			}
     }
 
     .info {

@@ -11,6 +11,12 @@
         </v-btn>
       </div>
     </v-card>
+    <div class="none" v-if="!meals.length && !addMeal">
+      <div class="image">
+        <img :src="nomeals_img" alt="no meals" />
+      </div>
+      <div class="text"></div>
+    </div>
     <template v-for="meal in meals">
       <meal
         :key="meal._id"
@@ -19,6 +25,16 @@
         @openVoting="openVoting"
       />
     </template>
+    <div class="text-center" v-if="!addMeal || meals.length">
+      <v-pagination
+        v-model="page"
+        :length="totalPages"
+        :total-visible="7"
+        prev-icon="mdi-menu-left"
+        next-icon="mdi-menu-right"
+        @input="changePage"
+      ></v-pagination>
+    </div>
     <transition name="fade">
       <meal-item-voting
         v-if="voting"
@@ -41,6 +57,7 @@ import Meal from "./Meal.vue";
 import ReportsModal from "./ReportsModal.vue";
 import MealItemVoting from "./MealItemVoting.vue";
 import add_meal_img from "../assets/addmeal_img.svg";
+import nomeals_img from "../assets/nomeals_img.svg";
 
 export default {
   data() {
@@ -49,11 +66,14 @@ export default {
       voting: false,
       selectedMeal: null,
       add_meal_img: add_meal_img,
+      page: 1,
+      nomeals_img: nomeals_img,
     };
   },
   async created() {
     if (this.meals.length > 0) return;
-    await this.$store.dispatch("getMeals");
+    let page = this.$route.query.page;
+    await this.$store.dispatch("getMeals", page ? page : 1);
     await this.$store.dispatch("checkAddMeal");
   },
   methods: {
@@ -67,6 +87,11 @@ export default {
       this.voting = true;
       window.scrollTo(0, 0);
     },
+    async changePage() {
+      this.$router.replace({ query: { page: this.page } });
+      await this.$store.dispatch("getMeals", this.page);
+      window.scrollTo(0, 0);
+    },
   },
   computed: {
     meals() {
@@ -77,6 +102,9 @@ export default {
     },
     addMeal() {
       return this.$store.getters.addMeal;
+    },
+    totalPages() {
+      return this.$store.getters.mealTotalPages;
     },
   },
   components: {
@@ -94,33 +122,18 @@ export default {
   .welcome-message {
     text-align: center;
   }
-  // .add-meal-holder {
-  //   margin: 20px auto;
-  //   width: 80%;
-  //   box-shadow: 0px 0px 7px #22222227;
-  //   border-radius: 28px;
-  //   overflow: hidden;
-  // 	background-color: #cbf5ff;
-  //   color: #2eb9ff;
-  //   position: relative;
-  //   cursor: pointer;
 
-  //   .add-meal {
-  //     padding: 10px;
-  //     font-size: 24px;
-  //     padding-bottom: 15px;
-  //     font-weight: 600;
-  //     display: flex;
-  //     flex-direction: column;
-  //     justify-content: center;
-  //     align-items: center;
-
-  //     .text {
-  //       text-align: center;
-  //       // color: #fff;
-  //     }
-  //   }
-  // }
+  .none {
+    width: 100%;
+    .image {
+      width: 30%;
+      margin: auto;
+      margin-bottom: 20px;
+      img {
+        width: 100%;
+      }
+    }
+  }
 
   .add-meal-holder {
     width: 100%;
@@ -191,6 +204,16 @@ export default {
 
       .add-meal {
         flex: 0;
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .meals_container {
+    .none {
+      .image {
+        width: 70%;
       }
     }
   }

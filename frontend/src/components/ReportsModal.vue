@@ -63,6 +63,16 @@
             {{ report.description }}
           </div>
         </v-card>
+        <div class="text-center" v-if="mealReports && mealReports.length">
+          <v-pagination
+            v-model="page"
+            :length="totalPages"
+            :total-visible="7"
+            prev-icon="mdi-menu-left"
+            next-icon="mdi-menu-right"
+            @input="changePage"
+          ></v-pagination>
+        </div>
       </div>
     </div>
   </div>
@@ -75,14 +85,23 @@ export default {
   data() {
     return {
       selected: null,
+      page: 1,
     };
   },
   created() {
-    this.$store.dispatch("getReports", this.meal._id);
+    let page = this.$route.query.page;
+    this.$store.dispatch("getReports", {
+      id: this.meal._id,
+      page: page ? page : 1,
+    });
   },
   methods: {
     closeReports() {
       this.$emit("closeReports");
+    },
+    async changePage() {
+      this.$router.replace({ query: { page: this.page } });
+      await this.$store.dispatch("getMeals", this.page);
     },
   },
   computed: {
@@ -96,6 +115,9 @@ export default {
         );
       }
       return null;
+    },
+    totalPages() {
+      return this.$store.getters.reportsTotalPages;
     },
   },
   components: { MealItem },

@@ -235,8 +235,8 @@ export default {
           p {
             margin-top: 20px;
             font-size: 18px;
-						font-weight: 600;
-						padding: 5px;
+            font-weight: 600;
+            padding: 5px;
           }
         }
 
@@ -245,11 +245,13 @@ export default {
           overflow: hidden;
           display: flex;
           transition: 500ms all;
+          max-width: 400px;
+          min-width: 400px;
 
           img {
             margin: auto;
             // width: 100%;
-						height: 100%;
+            height: 100%;
           }
         }
 
@@ -358,6 +360,8 @@ export default {
           width: 400px;
           .image {
             height: 300px;
+            max-width: 300px;
+            min-width: 300px;
           }
         }
       }
