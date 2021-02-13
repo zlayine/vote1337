@@ -29,7 +29,7 @@
         <v-btn
           color="#cbf5ff"
           class="body-2 font-weight-bold btn-submit"
-					flat
+					depressed
 					elevation="0"
           @click.native="agree"
           >Yes</v-btn

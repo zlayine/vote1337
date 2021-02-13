@@ -14,7 +14,7 @@
       </div>
     </div>
     <div class="meal_items_holder">
-      <div class="btn-delete" v-if="mealOwner">
+      <div class="btn-delete" >
         <v-btn icon color="white" @click="deleteMeal">
           <v-icon> mdi-delete </v-icon>
         </v-btn>
@@ -64,7 +64,8 @@ export default {
           "Are you sure you want to delete this meal?"
         )
       ) {
-        this.$store.dispatch("deleteMeal", this.meal._id);
+        await this.$store.dispatch("deleteMeal", this.meal._id);
+        await this.$store.dispatch("checkAddMeal");
       }
     },
   },

@@ -69,6 +69,7 @@ export default {
 			if (state.meals.length)
 				state.meals[0].enabled = false;
 			state.meals.unshift(payload);
+			state.addMeal = false;
 		},
 		UPDATE_MEAL(state, payload) {
 			state.meals = state.meals.map(m => {
