@@ -95,7 +95,7 @@ input VoteInput {
 type RootQuery {
     getMeals(page: Int): MealData!
 	getMeal(mealId: String!): Meal!
-    getReports(page: Int, meal: String!): ReportData!
+    getReports(meal: String!): [Report!]!
 	login(userId: String!): LoginData!
 	getUser(userId: String!): User!
 	checkAddMeal: Boolean!

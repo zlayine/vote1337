@@ -108,9 +108,8 @@ module.exports = {
 	getMeals: async (args) => {
 		try {
 			const page = args.page;
-			const count = parseInt(await models.Meal.count() / 2);
-			console.log(count);
-			const meals = await models.Meal.find().sort({ createdAt: 'desc' }).skip((page - 1) * 2).limit(2);
+			const count = parseInt(await models.Meal.count() / 10);
+			const meals = await models.Meal.find().sort({ createdAt: 'desc' }).skip((page - 1) * 10).limit(10);
 			const res = meals.map(e => {
 				return transformMeal(e)
 			});

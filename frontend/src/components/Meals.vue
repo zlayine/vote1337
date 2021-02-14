@@ -17,15 +17,17 @@
       </div>
       <div class="text"></div>
     </div>
-    <template v-for="meal in meals">
-      <meal
-        :key="meal._id"
-        :meal="meal"
-        @openReports="openReports"
-				@preview="enablePreview"
-        @openVoting="openVoting"
-      />
-    </template>
+    <transition-group name="fade">
+        <meal
+          :key="meal._id"
+          :meal="meal"
+          v-for="meal in meals"
+          @openReports="openReports"
+          @preview="enablePreview"
+          @openVoting="openVoting"
+        />
+    </transition-group>
+
     <div class="text-center" v-if="!addMeal || meals.length">
       <v-pagination
         v-model="page"
@@ -51,7 +53,11 @@
       />
     </transition>
     <transition name="fade">
-      <image-preview v-if="preview"  :image="preview" @closePreview="preview = null" />
+      <image-preview
+        v-if="preview"
+        :image="preview"
+        @closePreview="preview = null"
+      />
     </transition>
   </div>
 </template>
@@ -73,7 +79,7 @@ export default {
       add_meal_img: add_meal_img,
       page: 1,
       nomeals_img: nomeals_img,
-			preview: null,
+      preview: null,
     };
   },
   async created() {
@@ -98,9 +104,9 @@ export default {
       await this.$store.dispatch("getMeals", this.page);
       window.scrollTo(0, 0);
     },
-		enablePreview(url){
-			this.preview = url;
-		}
+    enablePreview(url) {
+      this.preview = url;
+    },
   },
   computed: {
     meals() {

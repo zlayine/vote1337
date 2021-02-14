@@ -25,7 +25,6 @@ const createMealItems = async (items, id) => {
 export default {
 	state: {
 		reports: [],
-		reportTotalPages: 1,
 		meals: [],
 		mealTotalPages: 1,
 		user: null,
@@ -47,7 +46,6 @@ export default {
 		loading: state => state.loading,
 		addMeal: state => state.addMeal,
 		mealTotalPages: state => state.mealTotalPages,
-		reportTotalPages: state => state.reportTotalPages,
 	},
 	mutations: {
 		LOGIN(state, payload) {
@@ -64,8 +62,7 @@ export default {
 			state.user = null;
 		},
 		UPDATE_REPORTS(state, payload) {
-			state.reports = payload.reports;
-			state.reportTotalPages = payload.totalPages;
+			state.reports = payload;
 		},
 		UPDATE_MEALS(state, payload) {
 			state.meals = payload.meals;
@@ -155,7 +152,7 @@ export default {
 				commit("UPDATE_LOADING")
 			}
 		},
-		async getReports({ commit }, data) {
+		async getReports({ commit }, id) {
 			try {
 				const res = await axios({
 					url: process.env.VUE_APP_GRAPHQL_API,
@@ -163,22 +160,18 @@ export default {
 					data: {
 						query: `
 						query { 
-							getReports (page: ${data.page}, meal: "${data.id}") {
-								page
-								totalPages
-								reports {
+							getReports (meal: "${id}") {
+								_id
+								description
+								meal_item {
 									_id
-									description
-									meal_item {
-										_id
-									}
-									meal {
-										_id
-									}
-									user {
-										username
-										image_url
-									}
+								}
+								meal {
+									_id
+								}
+								user {
+									username
+									image_url
 								}
 							}
 						}
