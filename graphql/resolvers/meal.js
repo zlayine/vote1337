@@ -49,7 +49,7 @@ const storeFS = ({ stream, generatedName }) => {
 }
 
 const enableVoting = async (meal) => {
-	return true;
+	// return true;
 	const latest = await models.Meal.findOne().sort({ createdAt: 'desc' });
 	if (latest.id != meal._id)
 		return false;
@@ -62,11 +62,11 @@ const enableVoting = async (meal) => {
 }
 
 const checkAddMeal = async () => {
-	return true;
+	// return true;
 	try {
 		const meal = await models.Meal.findOne().sort({ createdAt: 'desc' });
-		// let now = moment();
-		let now = moment(moment("17:45:00", "HH:mm:ss").toDate());
+		let now = moment().add(1, 'hours');
+		// let now = moment(moment("17:45:00", "HH:mm:ss").toDate());
 		if (meal) {
 			let mealDate = moment(new Date(meal.createdAt));
 			let mealStart = moment(moment("11:00:00", "HH:mm:ss").toDate());
@@ -182,7 +182,7 @@ module.exports = {
 		}
 	},
 	checkAddMeal: async (args, req) => {
-		return true;
+		// return true;
 		if (!req.isAuth)
 			return false;
 		return await checkAddMeal();
@@ -192,7 +192,7 @@ module.exports = {
 			throw new Error('Unauthenticated');
 		try {
 			const user = await models.User.findById(req.userId);
-			const meal = await models.Meal.findById({ _id: args.mealId}).populate({
+			const meal = await models.Meal.findById({ _id: args.mealId }).populate({
 				path: 'meals',
 				populate: {
 					path: 'votes',
