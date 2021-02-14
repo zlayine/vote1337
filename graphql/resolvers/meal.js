@@ -65,7 +65,7 @@ const checkAddMeal = async () => {
 	// return true;
 	try {
 		const meal = await models.Meal.findOne().sort({ createdAt: 'desc' });
-		let now = moment().add(1, 'hours');
+		let now = moment();
 		// let now = moment(moment("17:45:00", "HH:mm:ss").toDate());
 		if (meal) {
 			let mealDate = moment(new Date(meal.createdAt));

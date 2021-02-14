@@ -59,15 +59,18 @@ export default {
     },
     async submit() {
       if (this.addMeal) {
-        if (this.meal_name && this.meal_name != "") {
+        if (this.meal_name && this.meal_name != "" && this.items.length) {
           const res = await this.$store.dispatch("addMeal", {
             meal_name: this.meal_name,
             items: this.items,
           });
           if (res) this.$router.push("/");
         } else {
+          let msg = "";
+          if (this.items.length) msg = "Meal name is required!";
+          else msg = "Meal items are required!";
           this.$store.commit("SET_NOTIFICATION", {
-            msg: "Meal name is required",
+            msg: msg,
             error: 1,
           });
         }
