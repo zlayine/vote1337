@@ -8,7 +8,7 @@ import App from './App.vue'
 import 'vuetify/dist/vuetify.min.css';
 import '@fortawesome/fontawesome-free/css/all.css'
 
-import {initialize} from './auth.js'
+import { initialize } from './auth.js'
 
 Vue.config.productionTip = false
 
@@ -26,7 +26,10 @@ const store = new Vuex.Store(StoreData);
 
 const router = new VueRouter({
 	routes,
-	mode: 'history'
+	mode: 'history',
+	scrollBehavior(to, from, savedPosition) {
+		return { x: 0, y: 0 }
+	}
 });
 
 initialize(store, router);

@@ -31,6 +31,7 @@
         <meal-item
           :key="item._id"
           :item="item"
+					@preview="enablePreview"
           v-for="item in this.meal.meals"
         ></meal-item>
       </div>
@@ -68,6 +69,9 @@ export default {
         await this.$store.dispatch("checkAddMeal");
       }
     },
+		enablePreview(url){
+			this.$emit('preview', url);
+		}
   },
   computed: {
     currentUser() {

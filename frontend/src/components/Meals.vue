@@ -22,6 +22,7 @@
         :key="meal._id"
         :meal="meal"
         @openReports="openReports"
+				@preview="enablePreview"
         @openVoting="openVoting"
       />
     </template>
@@ -49,6 +50,9 @@
         @closeReports="reports = false"
       />
     </transition>
+    <transition name="fade">
+      <image-preview v-if="preview"  :image="preview" @closePreview="preview = null" />
+    </transition>
   </div>
 </template>
 
@@ -56,6 +60,7 @@
 import Meal from "./Meal.vue";
 import ReportsModal from "./ReportsModal.vue";
 import MealItemVoting from "./MealItemVoting.vue";
+import ImagePreview from "./ImagePreview.vue";
 import add_meal_img from "../assets/addmeal_img.svg";
 import nomeals_img from "../assets/nomeals_img.svg";
 
@@ -68,6 +73,7 @@ export default {
       add_meal_img: add_meal_img,
       page: 1,
       nomeals_img: nomeals_img,
+			preview: null,
     };
   },
   async created() {
@@ -92,6 +98,9 @@ export default {
       await this.$store.dispatch("getMeals", this.page);
       window.scrollTo(0, 0);
     },
+		enablePreview(url){
+			this.preview = url;
+		}
   },
   computed: {
     meals() {
@@ -111,6 +120,7 @@ export default {
     Meal,
     ReportsModal,
     MealItemVoting,
+    ImagePreview,
   },
 };
 </script>

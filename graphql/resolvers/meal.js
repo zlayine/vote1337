@@ -107,10 +107,10 @@ const checkAddMeal = async () => {
 module.exports = {
 	getMeals: async (args) => {
 		try {
-
 			const page = args.page;
-			const count = await models.Meal.count();
-			const meals = await models.Meal.find().sort({ createdAt: 'desc' }).skip((page - 1) * 10).limit(10);
+			const count = parseInt(await models.Meal.count() / 2);
+			console.log(count);
+			const meals = await models.Meal.find().sort({ createdAt: 'desc' }).skip((page - 1) * 2).limit(2);
 			const res = meals.map(e => {
 				return transformMeal(e)
 			});
@@ -119,7 +119,7 @@ module.exports = {
 			return {
 				page: +page,
 				meals: res,
-				totalPages: parseInt(count / 10) + 1
+				totalPages: !count ? 1 : count + 1
 			}
 		} catch (err) {
 			console.log(err);

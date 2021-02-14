@@ -1,10 +1,10 @@
 <template>
   <v-card class="meal_item" :class="{ small: small }" elevation="3">
     <div class="item">
-      <div class="image">
+      <div class="image" >
         <img :src="item.image_url" alt="img" />
       </div>
-      <div class="overlay"></div>
+      <div class="overlay" @click="enablePreview"></div>
       <div class="info">
         <div class="info_title">{{ item.name }}</div>
         <div class="stats">
@@ -30,6 +30,11 @@ export default {
     small: String,
     item: Object,
   },
+	methods: {
+		enablePreview(){
+			this.$emit('preview', this.item.image_url);
+		}
+	},
   computed: {
     votePercent() {
       let total = this.item.votes.length;
