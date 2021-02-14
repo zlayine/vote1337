@@ -155,7 +155,7 @@ export default {
 				commit("UPDATE_LOADING")
 			}
 		},
-		async getReports({ commit }, id) {
+		async getReports({ commit }, data) {
 			try {
 				const res = await axios({
 					url: process.env.VUE_APP_GRAPHQL_API,
@@ -163,7 +163,7 @@ export default {
 					data: {
 						query: `
 						query { 
-							getReports (page: 1, meal: "${id}") {
+							getReports (page: ${data.page}, meal: "${data.id}") {
 								page
 								totalPages
 								reports {
