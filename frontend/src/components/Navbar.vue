@@ -1,7 +1,10 @@
 <template>
   <div class="nav">
     <div class="nav_logo">
-      <h1>Voting 1337</h1>
+      <div class="logo">
+				<img :src="logo" alt="1337 logo">
+      </div>
+      <h1>EATING</h1>
     </div>
     <div class="nav_actions">
       <div class="action" v-if="user">
@@ -20,7 +23,14 @@
 </template>
 
 <script>
+import logo from "../assets/1337.svg";
+
 export default {
+  data() {
+    return {
+			logo: logo
+		};
+  },
   computed: {
     user() {
       return this.$store.getters.user;
@@ -48,9 +58,18 @@ export default {
 
   .nav_logo {
     margin-left: 25px;
+    display: flex;
+    flex-direction: row;
+
+    .logo {
+      // height: 80%;
+      width: 100px;
+      margin-right: 15px;
+    }
     h1 {
-      font-size: 30px;
-      font-weight: 700;
+      font-size: 35px;
+      margin-top: 17px;
+      font-weight: 500;
     }
   }
 
@@ -66,7 +85,7 @@ export default {
 
   .nav_actions {
     display: flex;
-		padding: 0 10px;
+    padding: 0 10px;
 
     .action {
       display: flex;
@@ -89,13 +108,21 @@ export default {
 }
 
 @media (max-width: 768px) {
-	.nav {
-		.nav_logo {
-			margin-left: 10px;
-			h1 {
-				font-size: 24px;
-			}
-		}
-	}
+  .nav {
+    .nav_logo {
+      margin-left: 10px;
+
+      .logo {
+				width: 70px;
+        img {
+          width: 70px;
+        }
+      }
+      h1 {
+				margin-top: 12px;
+        font-size: 24px;
+      }
+    }
+  }
 }
 </style>

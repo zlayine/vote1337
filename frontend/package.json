@@ -21,6 +21,7 @@
     "vue-cropperjs": "^4.2.0",
     "vue-moment": "^4.1.0",
     "vue-router": "^3.5.1",
+    "vue-svg-loader": "^0.16.0",
     "vuetify": "^2.4.3",
     "vuex": "^3.6.2"
   },

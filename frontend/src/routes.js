@@ -8,7 +8,7 @@ export const routes = [
 		path: "/",
 		component: Home,
 		meta: {
-			requiresAuth: false,
+			requiresAuth: true,
 		}
 	},
 	{
