@@ -56,7 +56,7 @@ const enableVoting = async (meal) => {
 	let now = moment();
 	let mealDate = moment(new Date(meal.createdAt));
 	let diff = now.diff(mealDate, 'hours');
-	if (diff > 3)
+	if (diff > 23)
 		return false;
 	return true;
 }
