@@ -49,20 +49,20 @@ const storeFS = ({ stream, generatedName }) => {
 }
 
 const enableVoting = async (meal) => {
-	return true;
+	// return true;
 	const latest = await models.Meal.findOne().sort({ createdAt: 'desc' });
 	if (latest.id != meal._id)
 		return false;
 	let now = moment();
 	let mealDate = moment(new Date(meal.createdAt));
 	let diff = now.diff(mealDate, 'hours');
-	if (diff > 3)
+	if (diff > 23)
 		return false;
 	return true;
 }
 
 const checkAddMeal = async () => {
-	return true;
+	// return true;
 	try {
 		const meal = await models.Meal.findOne().sort({ createdAt: 'desc' });
 		let now = moment();
