@@ -24,13 +24,17 @@
     "express": "^4.17.1",
     "express-graphql": "^0.12.0",
     "graphql": "^15.5.0",
+    "graphql-server-express": "^1.4.1",
+    "graphql-subscriptions": "^1.2.0",
     "graphql-tools": "^7.0.2",
     "graphql-upload": "^11.0.0",
+    "http": "^0.0.1-security",
     "imagemin": "^7.0.1",
     "imagemin-mozjpeg": "^9.0.0",
     "jsonwebtoken": "^8.5.1",
     "moment": "^2.29.1",
-    "mongoose": "^5.11.15"
+    "mongoose": "^5.11.15",
+    "subscriptions-transport-ws": "^0.9.18"
   },
   "devDependencies": {
     "nodemon": "^2.0.7"

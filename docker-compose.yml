@@ -1,21 +1,20 @@
 version: '3'
 services:
   app:
-    container_name: app
-    image: nginx:1.17
     build:
-        context: ./frontend
+      context: ./frontend
+    image: nginx
+    container_name: app
+    ports:
+      - "80:80"
     volumes:
         - ./frontend:/app
         - /app/node_modules
-    ports:
-        - "80:80"
     networks:
       - app-network
   nodejs:
     build:
       context: .
-      dockerfile: Dockerfile
     image: nodejs
     container_name: nodejs
     restart: unless-stopped

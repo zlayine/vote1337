@@ -5,6 +5,7 @@ const { transformMeal } = require('./merge');
 const moment = require('moment');
 const imagemin = require("imagemin");
 const imageminMozjpeg = require("imagemin-mozjpeg");
+const socket = require('../../socket')
 
 //clean database;
 // const t = await models.MealItem.find().populate('votes');
@@ -105,6 +106,53 @@ const checkAddMeal = async () => {
 }
 
 module.exports = {
+	RootQuery: {
+		getMeals: async (root, args) => {
+			try {
+				const page = args.page;
+				const count = parseInt(await models.Meal.count() / 10);
+				const meals = await models.Meal.find().sort({ createdAt: 'desc' }).skip((page - 1) * 10).limit(10);
+				const res = meals.map(e => {
+					return transformMeal(e)
+				});
+				if (res.length)
+					res[0].enabled = await enableVoting(res[0]);
+				return {
+					page: +page,
+					meals: res,
+					totalPages: !count ? 1 : count + 1
+				}
+			} catch (err) {
+				console.log(err);
+				throw err
+			}
+		},
+	},
+	RootMutation: {
+		createMeal: async (args, req) => {
+			if (!req.isAuth)
+				throw new Error('Unauthenticated');
+			try {
+
+				if (!await checkAddMeal())
+					throw new Error('Today\'s meal already exists.');
+				if (args.mealName == "null" || args.mealName == "")
+					throw new Error('Meal name is required');
+				const meal = new models.Meal({
+					name: args.mealName,
+					user: req.userId
+				});
+				const result = await meal.save();
+				socket.publish('EVENT_CREATED', {
+					mealCreated: transformMeal(result, enableVoting(result))
+				})
+				return transformMeal(result, enableVoting(result));
+			} catch (err) {
+				console.log(err);
+				throw err;
+			}
+		},
+	},
 	getMeals: async (args) => {
 		try {
 			const page = args.page;
@@ -138,6 +186,7 @@ module.exports = {
 		if (!req.isAuth)
 			throw new Error('Unauthenticated');
 		try {
+
 			if (!await checkAddMeal())
 				throw new Error('Today\'s meal already exists.');
 			if (args.mealName == "null" || args.mealName == "")
@@ -147,6 +196,9 @@ module.exports = {
 				user: req.userId
 			});
 			const result = await meal.save();
+			socket.publish('EVENT_CREATED', {
+				mealCreated: transformMeal(result, enableVoting(result))
+			})
 			return transformMeal(result, enableVoting(result));
 		} catch (err) {
 			console.log(err);
@@ -221,7 +273,15 @@ module.exports = {
 		} catch (err) {
 			throw err;
 		}
-	}
+	},
+	mealCreated: {
+		// resolve: (payload) => {
+		// 	return {
+		// 		customData: payload,
+		// 	};
+		// },
+		subscribe: () => socket.asyncIterator('MEAL_CREATED')
+	},
 
 
 }

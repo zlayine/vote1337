@@ -131,11 +131,7 @@ export default {
       .text {
         display: flex;
         flex-direction: column;
-          margin-top: 15px;
-
-        h1 {
-          // font-size: 24px;
-        }
+        margin-top: 15px;
       }
     }
   }

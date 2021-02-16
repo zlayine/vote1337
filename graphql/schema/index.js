@@ -1,5 +1,5 @@
 const { buildSchema } = require("graphql")
-module.exports = buildSchema(`
+module.exports = `
 scalar Upload
 
 type User {
@@ -109,8 +109,13 @@ type RootMutation {
 	addVotes(voteInput: [VoteInput!]!, meal: String!): Meal
 }
 
+type RootSubscription {
+	mealCreated: Meal
+}
+
 schema {
     query: RootQuery
     mutation: RootMutation
+	subscription: RootSubscription
 }
-`);
+`;

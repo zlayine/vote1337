@@ -47,7 +47,12 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss">
+$primary: #2eb9ff;
+$secondary: #cbf5ff;
+$shadow-color: #22222227;
+$brdr-radius: 4px;
+
 html {
   height: 100%;
 }

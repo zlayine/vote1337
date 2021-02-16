@@ -109,7 +109,7 @@ export default {
       background-image: linear-gradient(
         to top,
         #2eb9ff,
-        rgba(0, 255, 0, 0) 50%,
+        #2eb9ff00 50%,
         transparent 60%
       );
       margin: auto;

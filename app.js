@@ -2,12 +2,24 @@ const express = require('express');
 const bodyParser = require('body-parser')
 const graphqlHttp = require('express-graphql').graphqlHTTP
 const mongoose = require('mongoose')
+
+const { SubscriptionServer } = require('subscriptions-transport-ws')
+const { subscribe, execute } = require('graphql')
+const { makeExecutableSchema } = require('graphql-tools');
+
+const { createServer } = require('http');
+
 const path = require('path');
 const graphqlSchema = require('./graphql/schema')
 const graphqlResolvers = require('./graphql/resolvers')
 import { graphqlUploadExpress } from 'graphql-upload'
 const isAuth = require('./middlewares/auth')
 const env = require('./environment')
+
+const schema = makeExecutableSchema({
+	typeDefs: graphqlSchema,
+	resolvers: graphqlResolvers,
+});
 
 const app = express();
 
@@ -31,10 +43,15 @@ app.use(isAuth);
 app.use('/graphql',
 	graphqlUploadExpress({ maxFileSize: '10M', maxFiles: 10 }),
 	graphqlHttp({
-		schema: graphqlSchema,
-		rootValue: graphqlResolvers,
-		graphiql: false,
+		schema: schema,
+		// rootValue: graphqlResolvers,
+		graphiql: { subscriptionEndpoint: `ws://localhost:3000/subscriptions` },
+		// graphiql: true,
 	}));
+
+const ws = createServer(app);
+
+
 
 const {
 	MONGO_USERNAME,
@@ -50,9 +67,25 @@ if (process.env.NODE_ENV == "development")
 
 mongoose.connect(url)
 	.then(() => {
-		app.listen(3000);
+		// app.listen(3000);
+
+		ws.listen(3000, () => {
+			new SubscriptionServer(
+				{
+					execute,
+					subscribe,
+					schema,
+					onConnect: () => console.log('Client connected')
+				},
+				{
+					server: ws,
+					path: '/subscriptions',
+				},
+			);
+		});
 	}).catch(err => {
 		console.log(err)
 	})
+
 
 
