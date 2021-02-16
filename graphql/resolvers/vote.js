@@ -80,10 +80,10 @@ module.exports = {
 			throw new Error('Unauthenticated.');
 		try {
 			let items = args.voteInput;
-			if (!(await checkMeal(args.meal)))
-				throw new Error('Meal does not accept votes.')
-			if (await checkUserVoted(args.meal, req.userId))
-				throw new Error('You\'ve already voted for this meal.')
+			// if (!(await checkMeal(args.meal)))
+			// 	throw new Error('Meal does not accept votes.')
+			// if (await checkUserVoted(args.meal, req.userId))
+			// 	throw new Error('You\'ve already voted for this meal.')
 			for (let i = 0; i < items.length; i++) {
 				await createVote(items[i], req.userId);
 				if (items[i].report != "")
