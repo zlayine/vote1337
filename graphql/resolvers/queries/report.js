@@ -8,19 +8,47 @@ module.exports = {
 		try {
 			// const count = parseInt(await models.Report.count() / 10);
 			// const reports = await models.Report.find({ meal: args.meal }).skip((page - 1) * 10).limit(10);
-			console.log(args.meal)
-			const reports = await models.Vote.aggregate([
+			// console.log(args.meal)
+			// const reports = await models.Vote.aggregate([
+			// 	{ $match: { "report": { "$ne": '' } } },
+			// 	{
+			// 		$lookup: {
+			// 			from: 'mealitems', pipeline: [
+			// 				{ $match: { "meal": ObjectId(args.meal) } }
+			// 			], as: "mealitems"
+			// 		},
+			// 	},
+			// 	{ $project: { meal_item: 1, report: 1, createdAt: 1, user: 1, _id: 1 } }
+			// ]);
+
+			const reports = await models.Meal.aggregate([
+				{ $match: { _id: ObjectId(args.meal) } },
 				{
 					$lookup: {
-						from: 'mealitems', let: { "mealitems": "$mealitems" }, pipeline: [
-							{ $match: { meal: ObjectId(args.meal) } }
-						], as: "mealitems"
+						from: 'mealitems',
+						let: { meals: "$meals" },
+						pipeline: [
+							{ $match: { $expr: { $in: ["$_id", "$$meals"] } } }
+						], as: "meals"
 					},
 				},
-				{ $match: { "report": { "$ne": '' } } },
-				{ $project: { meal_item: 1, report: 1, createdAt: 1, user: 1, _id: 1 } }
+				{ $unwind: "$meals" },
+				{
+					$lookup: {
+						from: 'votes',
+						let: { votes: "$meals.votes" },
+						pipeline: [
+							{ $match: { $expr: { $in: ["$_id", "$$votes"] } } },
+						], as: "votes"
+					}
+				},
+				{ $unwind: "$votes" },
+				{ $lookup: { from: 'users', localField: 'votes.user', foreignField: '_id', as: 'user' } },
+				// { $unwind: "$user" },
+				{ $match: { "votes.report": { "$ne": '' } } },
+				{ $project: { "votes.meal_item": 1, "votes.report": 1, "votes.createdAt": 1, "user": 1, "votes._id": 1 } }
 			]);
-			console.log(reports);
+			console.log("reports", reports);
 			return reports.map(e => {
 				return transformReport(e)
 			});

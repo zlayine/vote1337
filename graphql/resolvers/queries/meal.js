@@ -1,5 +1,7 @@
 const models = require('../../../models')
-const { transformMeal } = require('../merge');
+const mongoose = require('mongoose')
+const ObjectId = mongoose.Types.ObjectId;
+const { transformMeal, transformExport } = require('../merge');
 const { enableMealVoting, checkAddMeal } = require('../utils');
 const socket = require('../../../socket')
 
@@ -15,9 +17,9 @@ module.exports = {
 			const res = meals.map(e => {
 				return transformMeal(e)
 			});
-			socket.publish('MEAL_FETCH', {
-				mealFetched: "hello"
-			})
+			// socket.publish('MEAL_FETCH', {
+			// 	mealFetched: "hello"
+			// })
 			if (res.length)
 				res[0].enabled = await enableMealVoting(res[0]);
 			return {
@@ -52,17 +54,23 @@ module.exports = {
 		// 	throw new Error('Unauthenticated');
 		try {
 			const res = await models.Vote.aggregate([
-				{ $lookup: {from: 'users', localField: 'user', foreignField: '_id', as: 'user'} },
+				{ $lookup: { from: 'users', localField: 'user', foreignField: '_id', as: 'user' } },
 				{ $unwind: "$user" },
-				{ $lookup: {from: 'mealitems', localField: 'meal_item', foreignField: '_id', as: 'meal_item'} },
+				{
+					$lookup: {
+						from: 'mealitems', let: { "mealitems": "$mealitems" }, pipeline: [
+							{ $match: { "meal": ObjectId(args.meal) } }
+						], as: "meal_item"
+					},
+				},
 				{ $unwind: "$meal_item" },
-				{ $lookup: {from: 'meals', localField: 'meal_item.meal', foreignField: '_id', as: 'meal'} },
+				{ $lookup: { from: 'meals', localField: 'meal_item.meal', foreignField: '_id', as: 'meal' } },
 				{ $unwind: "$meal" },
-
-
 			]);
 			console.log(res);
-			// return transformExport(res);
+			return res.map(v => {
+				return transformExport(v)
+			});
 		} catch (err) {
 			console.log(err);
 			throw err;

@@ -110,6 +110,7 @@ export default {
 		},
 		EXPORT_CSV(state, payload) {
 			let data = payload
+			console.log(Object.keys(data[0]).join(";"));
 			let csvContent = "";
 			csvContent += [
 				Object.keys(data[0]).join(";"),
@@ -461,6 +462,7 @@ export default {
 							`
 					}
 				});
+				commit("EXPORT_CSV", res.data.data.getMealExport);
 			} catch (error) {
 				commit("SET_NOTIFICATION", { msg: "Server error", error: 1 });
 			}

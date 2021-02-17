@@ -91,22 +91,25 @@ const transformMealItem = (item) => {
 
 const transformReport = (report) => {
 	return {
-		...report,
 		_id: report._id,
 		user: userResolver.bind(this, report.user),
 		meal_item: mealItemResolver.bind(this, report.meal_item),
-		createdAt: dateToString(report.createdAt),
+		report: report.votes.report,
+		createdAt: dateToString(report.votes.createdAt),
 	}
 };
 
 const transformExport = (data) => {
 	return {
-		...data._doc,
-		meal: mealResolver.bind(this, data._doc.meal),
-		meal_item: mealItemResolver.bind(this, data._doc.meal_item),
-		user: userResolver.bind(this, data._doc.user),
-		createdAt: dateToString(data._doc.createdAt),
-		updatedAt: dateToString(data._doc.updatedAt),
+		mealName: data.meal.name,
+		itemName: data.meal_item.name,
+		votes_up: data.meal_item.votes_up,
+		votes_down: data.meal_item.votes_down,
+		user: data.user.username,
+		vote: data.vote,
+		report: data.report,
+		createdAt: data.createdAt,
+		mealDate: data.meal.createdAt,
 	}
 };
 
@@ -134,3 +137,4 @@ exports.transformMeal = transformMeal;
 exports.transformMealItem = transformMealItem;
 exports.transformReport = transformReport;
 exports.transformVote = transformVote;
+exports.transformExport = transformExport;
