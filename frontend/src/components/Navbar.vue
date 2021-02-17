@@ -2,9 +2,12 @@
   <div class="nav">
     <div class="nav_logo">
       <div class="logo">
-				<img :src="logo" alt="1337 logo">
+        <img :src="logo" alt="1337 logo" />
       </div>
-      <h1>EATING</h1>
+      <div class="text">
+        <h1>FOOD</h1>
+        <span>ASSESSMENT</span>
+      </div>
     </div>
     <div class="nav_actions">
       <div class="action" v-if="user">
@@ -28,8 +31,8 @@ import logo from "../assets/1337.svg";
 export default {
   data() {
     return {
-			logo: logo
-		};
+      logo: logo,
+    };
   },
   computed: {
     user() {
@@ -66,10 +69,17 @@ export default {
       width: 100px;
       margin-right: 15px;
     }
-    h1 {
-      font-size: 35px;
-      margin-top: 17px;
-      font-weight: 500;
+    .text {
+      display: flex;
+      margin-top: 30px;
+
+      h1 {
+        font-size: 17px;
+        font-weight: 500;
+        margin-right: 8px;
+      }
+      span {
+      }
     }
   }
 
@@ -113,14 +123,19 @@ export default {
       margin-left: 10px;
 
       .logo {
-				width: 70px;
+        width: 70px;
         img {
           width: 70px;
         }
       }
-      h1 {
-				margin-top: 12px;
-        font-size: 24px;
+      .text {
+        display: flex;
+        flex-direction: column;
+          margin-top: 15px;
+
+        h1 {
+          // font-size: 24px;
+        }
       }
     }
   }
