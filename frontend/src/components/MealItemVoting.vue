@@ -273,6 +273,7 @@ export default {
 
             textarea {
               resize: none;
+							background-color: #fff;
               width: 100%;
               padding: 5px;
               border: 1px solid #dbdbdb;

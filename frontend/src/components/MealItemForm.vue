@@ -10,6 +10,11 @@
         <transition name="fade-out">
           <img :src="url" alt="" v-if="url" />
         </transition>
+        <transition name="fade-out">
+          <div class="img-size" v-if="url">
+            {{ size | size_filter }}
+          </div>
+        </transition>
       </div>
       <input
         type="file"
@@ -21,9 +26,11 @@
       <div class="item-info" v-if="url">
         <v-text-field
           v-model="name"
+          :rules="nameRules"
           dense
           label="Name"
           hide-details
+          required
           outlined
           class="my-2"
         ></v-text-field>
@@ -31,9 +38,16 @@
           <v-btn class="mx-2" @click="clearItem" fab dark small color="error">
             <v-icon dark> mdi-close </v-icon>
           </v-btn>
-          <!-- <v-btn class="mx-2" @click="cropImage" fab dark small color="primary">
+          <v-btn
+            class="mx-2"
+            @click="crop = true"
+            fab
+            dark
+            small
+            color="primary"
+          >
             <v-icon dark> mdi-crop </v-icon>
-          </v-btn> -->
+          </v-btn>
           <transition name="fade">
             <v-btn
               class="mx-2"
@@ -49,20 +63,21 @@
           </transition>
         </div>
       </div>
-      <!-- <vue-cropper
-        class="mr-2 w-50"
-        ref="cropper"
-        :guides="false"
-        :src="url"
-				:zoom="null"
-      ></vue-cropper> -->
+      <transition name="fade">
+        <image-cropper
+          ref="cropper"
+          v-if="crop"
+          @cropImage="cropImage"
+          @closeCrop="crop = false"
+          :url="url"
+        />
+      </transition>
     </div>
   </transition>
 </template>
 
 <script>
-// import VueCropper from "vue-cropperjs";
-// import "cropperjs/dist/cropper.css";
+import ImageCropper from "./ImageCropper.vue";
 
 export default {
   props: ["item_data", "index"],
@@ -73,8 +88,11 @@ export default {
       name: null,
       errorDialog: null,
       errorText: null,
+      nameRules: [(v) => !!v || "Name is required"],
       saved: false,
       croppedImageSrc: "",
+      crop: false,
+      size: 0,
     };
   },
   created() {
@@ -89,30 +107,38 @@ export default {
       this.$refs.file.click();
     },
     onFileChange(file) {
+      const maxSize = 1024;
       let imageFile = file[0];
       if (file.length > 0) {
+        this.size = imageFile.size / maxSize / maxSize;
         if (!imageFile.type.match("image.*")) {
           this.errorText = "Please choose an image file";
         } else {
           this.file = imageFile;
           this.url = URL.createObjectURL(imageFile);
         }
-        // if (typeof FileReader === "function") {
-        //   const reader = new FileReader();
-        //   reader.onload = (event) => {
-        //     this.url = event.target.result;
-
-        //     this.$refs.cropper.replace(event.target.result);
-        //   };
-        //   reader.readAsDataURL(this.file);
-        // } else {
-        //   alert("Sorry, FileReader API not supported");
-        // }
+        if (typeof FileReader === "function") {
+          const reader = new FileReader();
+          reader.onload = (event) => {
+            this.url = event.target.result;
+          };
+          reader.readAsDataURL(this.file);
+        } else {
+          this.errorText = "FileReader API not supported";
+        }
       }
     },
-    // cropImage() {
-    //   this.croppedImageSrc = this.$refs.cropper.getCroppedCanvas().toDataURL();
-    // },
+    enableCropping() {
+      this.crop = true;
+      this.$refs.cropper.tool.replace(this.url);
+    },
+    cropImage(data) {
+      const maxSize = 1024;
+      this.crop = false;
+      this.url = data.url;
+      this.file = data.file;
+      this.size = data.file.size / maxSize / maxSize;
+    },
     clearItem() {
       if (this.index != null) {
         this.$emit("removeItem", this.index);
@@ -125,14 +151,27 @@ export default {
       this.$refs.file.value = null;
     },
     saveItem() {
-      if (!this.name || this.name == "") return;
+      if (!this.name || this.name == "") {
+				this.name = "";
+        this.$store.commit("SET_NOTIFICATION", {
+          msg: "Meal item name is required",
+          error: 1,
+        });
+        return;
+      }
       this.saved = true;
       this.$emit("saved", { file: this.file, name: this.name });
     },
   },
-  // components: {
-  //   VueCropper,
-  // },
+  filters: {
+    size_filter(val) {
+      if (val < 1) return parseInt(val * 1000) + "KB";
+      return parseFloat(val).toFixed(1) + "MB";
+    },
+  },
+  components: {
+    ImageCropper,
+  },
 };
 </script>
 
@@ -148,6 +187,7 @@ export default {
     border: 4px dotted #2eb9ffd5;
     border-radius: 10px;
     display: flex;
+    position: relative;
     justify-content: center;
 
     &.preview {
@@ -162,6 +202,16 @@ export default {
       img {
         width: 100%;
         margin: auto;
+      }
+
+      .img-size {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        padding: 2px 10px;
+        font-size: 14px;
+        color: #fff;
+        background-color: rgba(34, 34, 34, 0.788);
       }
     }
   }

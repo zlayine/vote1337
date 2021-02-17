@@ -6,16 +6,17 @@
         v-model="meal_name"
         label="Meal Name"
         class="input mb-3"
+        required
+        :rules="nameRules"
         outlined
         hide-details
-        required
       ></v-text-field>
       <p class="text">Meal items:</p>
       <div class="meal-items mb-5">
         <meal-item-form @saved="addItem" ref="empty" />
         <template v-for="(item, index) in items">
           <meal-item-form
-            :key="item.name"
+            :key="index"
             :index="index"
             :item_data="item"
             @removeItem="removeItem"
@@ -39,6 +40,7 @@ export default {
     return {
       meal_name: null,
       items: [],
+      nameRules: [(v) => !!v || "Name is required"],
     };
   },
   async created() {
@@ -67,7 +69,11 @@ export default {
           if (res) this.$router.push("/");
         } else {
           let msg = "";
-          if (this.items.length) msg = "Meal name is required!";
+
+          if (this.meal_name == "" || !this.meal_name || this.items.length){
+						this.meal_name = "";
+						msg = "Meal name is required!";
+					}
           else msg = "Meal items are required!";
           this.$store.commit("SET_NOTIFICATION", {
             msg: msg,
