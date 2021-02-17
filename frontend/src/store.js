@@ -183,6 +183,7 @@ export default {
 							getReports (meal: "${id}") {
 								_id
 								report
+								createdAt
 								meal_item {
 									_id
 								}

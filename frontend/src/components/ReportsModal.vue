@@ -62,8 +62,11 @@
             </v-avatar>
             <div class="user-name">{{ report.user.username }}</div>
           </div>
-          <div class="description">
+          <p class="description">
             {{ report.report }}
+          </p>
+          <div class="date">
+            {{ report.createdAt | formatDate }}
           </div>
         </v-card>
         <!-- <div class="text-center" v-if="mealReports && mealReports.length">
@@ -83,6 +86,8 @@
 
 <script>
 import MealItem from "./MealItem.vue";
+import moment from "moment";
+
 export default {
   props: ["meal"],
   data() {
@@ -106,8 +111,8 @@ export default {
     //   });
     // },
     async exportMeal() {
-			await this.$store.dispatch("exportMeal", this.meal._id);
-		},
+      await this.$store.dispatch("exportMeal", this.meal._id);
+    },
   },
   computed: {
     reports() {
@@ -120,6 +125,11 @@ export default {
         );
       }
       return null;
+    },
+  },
+  filters: {
+    formatDate(val) {
+      return moment(String(val)).format("DD/MM/YYYY hh:mm");
     },
   },
   components: { MealItem },
@@ -206,6 +216,7 @@ export default {
         display: flex;
         flex-direction: row;
         transition: 200ms all;
+        position: relative;
 
         .user-data {
           padding: 10px;
@@ -224,6 +235,14 @@ export default {
         .description {
           padding: 10px;
           border-left: 1px solid #e2e2e2af;
+        }
+        .date {
+          position: absolute;
+          right: 0;
+          bottom: 0;
+          padding: 5px;
+					color: grey;
+					font-size: 16px;
         }
       }
     }
@@ -249,6 +268,9 @@ export default {
 
       .reports {
         padding: 0 5px;
+				.report-info .date {
+					font-size: 14px;
+				}
       }
     }
   }

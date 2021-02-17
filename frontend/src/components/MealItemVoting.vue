@@ -15,7 +15,7 @@
     <div class="meals-container">
       <div class="text-title">{{ meal.name }}</div>
       <div class="items_carrousel">
-        <div class="edge left"></div>
+        <!-- <div class="edge left"></div> -->
         <div class="item" v-if="finish">
           <transition name="slide-hide">
             <div class="finish">
@@ -80,7 +80,7 @@
             </v-btn>
           </div>
         </div>
-        <div class="edge right"></div>
+        <!-- <div class="edge right"></div> -->
       </div>
     </div>
   </div>
