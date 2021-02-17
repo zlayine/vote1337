@@ -4,8 +4,9 @@ import { saveAs } from 'file-saver'
 
 const user = getLocalUser();
 
-const createMealItems = async (items, id) => {
+const createMealItems = async (commit, items, id) => {
 	for (let i = 0; i < items.length; i++) {
+		commit('UPDATE_PERCENTAGE', 0);
 		const query = `{"query": "mutation ($file: Upload!){ createMealItem (input: {meal: \\"${id}\\", name: \\"${items[i].name}\\", image: $file })}", "variables": {"file": null}}`;
 		const map = `{"0": ["variables.file"]}`;
 		const formdata = new FormData();
@@ -15,6 +16,10 @@ const createMealItems = async (items, id) => {
 		const res = await axios({
 			url: process.env.VUE_APP_GRAPHQL_API,
 			method: 'post',
+			onUploadProgress: function (progressEvent) {
+				let uploadPercentage = parseInt(Math.round((progressEvent.loaded * 100) / progressEvent.total));
+				commit('UPDATE_PERCENTAGE', uploadPercentage);
+			}.bind(this),
 			data: formdata
 		});
 		if (res.data.errors)
@@ -226,7 +231,7 @@ export default {
 					return 0;
 				}
 				const id = createdMeal.data.data.createMeal._id;
-				const items = await createMealItems(data.items, id);
+				const items = await createMealItems(commit, data.items, id);
 				if (!items) {
 					commit("SET_NOTIFICATION", { msg: "Failed to add meal items", error: 1 });
 					commit("UPDATE_LOADING");
@@ -235,10 +240,6 @@ export default {
 				const res = await axios({
 					url: process.env.VUE_APP_GRAPHQL_API,
 					method: 'post',
-					onUploadProgress: function (progressEvent) {
-						let uploadPercentage = parseInt(Math.round((progressEvent.loaded * 100) / progressEvent.total));
-						commit('UPDATE_PERCENTAGE', uploadPercentage);
-					}.bind(this),
 					data: {
 						query: `
 						query { 
