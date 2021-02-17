@@ -3,7 +3,7 @@
     <div class="meal_header">
       <div class="meal_info">
         <div class="meal_title">{{ this.meal.name }}</div>
-        <div class="meal_user">{{ this.meal.user.username }}</div>
+        <div class="meal_user">{{ this.meal.user.username }} <span class="date">{{this.meal.createdAt | formatDate}}</span></div>
       </div>
       <div class="meal_action" v-if="user && user.staff">
         <div class="reports">
@@ -42,6 +42,7 @@
 
 <script>
 import MealItem from "./MealItem.vue";
+import moment from "moment";
 
 export default {
   props: ["meal"],
@@ -101,6 +102,11 @@ export default {
       return false;
     },
   },
+	filters: {
+		formatDate(val){
+			return moment(String(val)).format('DD/MM/YYYY hh:mm');
+		}
+	},
   components: {
     MealItem,
     ConfirmDialog: () => import("./ConfirmDialog"),
@@ -128,6 +134,14 @@ export default {
     font-size: 18px;
     font-weight: 700;
     color: grey;
+
+		span {
+			font-size: 16px;
+			&::before {
+				content: "•";
+				margin-right: 5px;
+			}
+		}
   }
 
   .meal_items_holder {
@@ -203,10 +217,15 @@ export default {
   .meal_section {
     .meal_title {
       font-size: 20px;
+			line-height: 20px;
     }
 
     .meal_user {
-      font-size: 16px;
+      font-size: 14px;
+
+			span {
+				font-size: 12px;
+			}
     }
 
     .meal_items_holder {
@@ -216,7 +235,7 @@ export default {
     }
     .reports {
       button {
-        padding: 0;
+        padding: 0 8px;
         margin-right: 0 !important;
       }
     }

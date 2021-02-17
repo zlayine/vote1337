@@ -79,11 +79,11 @@ const checkAddMeal = async () => {
 			}
 			return false;
 		} else {
-			let mealStart = moment(moment("12:00:00", "HH:mm:ss").toDate());
+			let mealStart = moment(moment("11:00:00", "HH:mm:ss").toDate());
 			let nowToStartDiff = now.diff(mealStart, "minutes");
 			if (nowToStartDiff >= 0 && nowToStartDiff < 4 * 60) return true;
 			else {
-				mealStart = moment(moment("17:45:00", "HH:mm:ss").toDate());
+				mealStart = moment(moment("16:45:00", "HH:mm:ss").toDate());
 				nowToStartDiff = now.diff(mealStart, "minutes");
 				if (nowToStartDiff >= 0 && nowToStartDiff < 3 * 60) return true;
 
