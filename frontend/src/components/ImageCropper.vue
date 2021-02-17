@@ -16,7 +16,7 @@
         :zoomable="false"
       ></vue-cropper>
       <div class="actions">
-        <v-btn class="mx-2" fab dark small color="success">
+        <v-btn class="mx-2" fab dark color="success" @click="saveCrop">
           <v-icon dark> mdi-content-save </v-icon>
         </v-btn>
       </div>
@@ -33,6 +33,17 @@ export default {
   methods: {
     closeCrop() {
       this.$emit("closeCrop");
+    },
+    saveCrop() {
+      let img_url = this.$refs.tool.getCroppedCanvas().toDataURL();
+      this.$refs.tool.getCroppedCanvas().toBlob((blob) => {
+				this.$emit('cropImage', {url: img_url, file: this.blobToFile(blob)})
+      }, 'image/jpeg', 0.95);
+    },
+    blobToFile(theBlob) {
+      theBlob.lastModifiedDate = new Date();
+      theBlob.name = "croppedimg";
+      return theBlob;
     },
   },
   components: {
@@ -63,13 +74,14 @@ export default {
 
   .crop-holder {
     width: 40%;
+    height: 80%;
     margin: auto;
     display: flex;
     flex-direction: column;
     .cropper {
-      height: 100%;
+      height: auto;
       overflow: hidden;
-      margin: 100px auto;
+      margin: 30px auto;
     }
     .actions {
       margin: auto;
@@ -79,7 +91,7 @@ export default {
 
 @media (max-width: 768px) {
   .image-cropper {
-    .cropper {
+    .crop-holder {
       width: 90%;
     }
   }

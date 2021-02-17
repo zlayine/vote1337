@@ -114,7 +114,8 @@ export default {
           };
           reader.readAsDataURL(this.file);
         } else {
-          alert("Sorry, FileReader API not supported");
+          this.errorText = "FileReader API not supported";
+          // alert("Sorry, FileReader API not supported");
         }
       }
     },
@@ -122,8 +123,10 @@ export default {
       this.crop = true;
       this.$refs.cropper.tool.replace(this.url);
     },
-    cropImage() {
-      // this.croppedImageSrc = this.$refs.cropper.getCroppedCanvas().toDataURL();
+    cropImage(data) {
+			this.crop = false;
+			this.url = data.url;
+			this.file = data.file;
     },
     clearItem() {
       if (this.index != null) {
