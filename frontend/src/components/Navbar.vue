@@ -129,7 +129,7 @@ export default {
       .text {
         display: flex;
         flex-direction: column;
-        margin-top: 15px;
+        margin-top: 5px;
       }
     }
   }

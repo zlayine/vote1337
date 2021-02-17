@@ -12,8 +12,10 @@ module.exports = {
 		try {
 			const limit = 10;
 			const page = args.page;
+
+			const user = await models.User.findById(cntx.userId);
 			const count = parseInt(await models.Meal.count() / limit);
-			const meals = await models.Meal.find().sort({ createdAt: 'desc' }).skip((page - 1) * limit).limit(limit);
+			const meals = await models.Meal.find({campus: user.campus}).sort({ createdAt: 'desc' }).skip((page - 1) * limit).limit(limit);
 			const res = meals.map(e => {
 				return transformMeal(e)
 			});

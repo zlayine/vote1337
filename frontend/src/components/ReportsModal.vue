@@ -50,25 +50,27 @@
             }}
           </div>
         </transition>
-        <v-card
-          class="report-info"
-          elevation="1"
-          :key="report._id"
-          v-for="report in mealReports"
-        >
-          <div class="user-data">
-            <v-avatar color="primary" class="avatar" size="40">
-              <img :src="report.user.image_url" alt="John" />
-            </v-avatar>
-            <div class="user-name">{{ report.user.username }}</div>
-          </div>
-          <p class="description">
-            {{ report.report }}
-          </p>
-          <div class="date">
-            {{ report.createdAt | formatDate }}
-          </div>
-        </v-card>
+        <transition-group name="fade">
+          <v-card
+            class="report-info"
+            elevation="1"
+            :key="report._id"
+            v-for="report in mealReports"
+          >
+            <div class="user-data">
+              <v-avatar color="primary" class="avatar" size="40">
+                <img :src="report.user.image_url" alt="John" />
+              </v-avatar>
+              <div class="user-name">{{ report.user.username }}</div>
+            </div>
+            <p class="description">
+              {{ report.report }}
+            </p>
+            <div class="date">
+              {{ report.createdAt | formatDate }}
+            </div>
+          </v-card>
+        </transition-group>
         <!-- <div class="text-center" v-if="mealReports && mealReports.length">
           <v-pagination
             v-model="page"
@@ -201,6 +203,7 @@ export default {
       display: flex;
       flex-direction: column;
       justify-content: space-between;
+      position: relative;
 
       .none {
         font-size: 20px;
@@ -215,8 +218,8 @@ export default {
         margin-top: 15px;
         display: flex;
         flex-direction: row;
+				position: relative;
         transition: 200ms all;
-        position: relative;
 
         .user-data {
           padding: 10px;
@@ -241,8 +244,8 @@ export default {
           right: 0;
           bottom: 0;
           padding: 5px;
-					color: grey;
-					font-size: 16px;
+          color: grey;
+          font-size: 16px;
         }
       }
     }
@@ -268,9 +271,9 @@ export default {
 
       .reports {
         padding: 0 5px;
-				.report-info .date {
-					font-size: 14px;
-				}
+        .report-info .date {
+          font-size: 14px;
+        }
       }
     }
   }

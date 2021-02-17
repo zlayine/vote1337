@@ -14,6 +14,8 @@ const { checkAddMeal, enableMealVoting, storeFS, compressImage } = require('../u
 // 				await t[i].delete();
 // 			}
 
+// db.meals.updateMany({},{$set: {"campus": "Khouribga"}})
+
 module.exports = {
 	createMeal: async (root, args, cntx, req) => {
 		if (!cntx.isAuth)
@@ -23,9 +25,11 @@ module.exports = {
 				throw new Error('Today\'s meal already exists.');
 			if (args.mealName == "null" || args.mealName == "")
 				throw new Error('Meal name is required');
+			const user = await models.User.findById(cntx.userId);
 			const meal = new models.Meal({
 				name: args.mealName,
-				user: cntx.userId
+				user: cntx.userId,
+				campus: user.campus
 			});
 			const result = await meal.save();
 			// socket.publish('MEAL_CREATED', {

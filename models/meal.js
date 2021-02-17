@@ -15,6 +15,10 @@ const mealSchema = new Schema({
 		type: Schema.Types.ObjectId,
 		ref: 'MealItem'
 	}],
+	campus: {
+		type: String,
+		required: true
+	}
 }, {timestamps: true});
 
 module.exports = mongoose.model('Meal', mealSchema);
