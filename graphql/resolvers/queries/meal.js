@@ -1,6 +1,7 @@
 const models = require('../../../models')
 const { transformMeal } = require('../merge');
 const { enableMealVoting, checkAddMeal } = require('../utils');
+const socket = require('../../../socket')
 
 module.exports = {
 	getMeals: async (root, args) => {
@@ -12,6 +13,9 @@ module.exports = {
 			const res = meals.map(e => {
 				return transformMeal(e)
 			});
+			socket.publish('MEAL_FETCH', {
+				mealFetched: "hello"
+			})
 			if (res.length)
 				res[0].enabled = await enableMealVoting(res[0]);
 			return {

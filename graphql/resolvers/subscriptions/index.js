@@ -1,12 +1,9 @@
+const socket = require('../../../socket')
+
 module.exports = {
 	RootSubscription: {
-		mealCreated: {
-			// resolve: (payload) => {
-			// 	return {
-			// 		customData: payload,
-			// 	};
-			// },
-			subscribe: () => socket.asyncIterator('MEAL_CREATED')
-		},
+		mealFetched: {
+			subscribe: () => socket.asyncIterator('MEAL_FETCH')
+		}
 	},
 }

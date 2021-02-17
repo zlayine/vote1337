@@ -1,4 +1,3 @@
-const { buildSchema } = require("graphql")
 module.exports = `
 scalar Upload
 
@@ -111,6 +110,7 @@ type RootMutation {
 
 type RootSubscription {
 	mealCreated: Meal
+	mealFetched: String
 }
 
 schema {

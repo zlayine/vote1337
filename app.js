@@ -1,12 +1,14 @@
 const express = require('express');
 const bodyParser = require('body-parser')
-const graphqlHttp = require('express-graphql').graphqlHTTP
+
 const mongoose = require('mongoose')
 
+const graphqlHttp = require('express-graphql').graphqlHTTP
+
+import { graphqlExpress, graphiqlExpress } from 'graphql-server-express';
 const { SubscriptionServer } = require('subscriptions-transport-ws')
 const { subscribe, execute } = require('graphql')
 const { makeExecutableSchema } = require('graphql-tools');
-
 const { createServer } = require('http');
 
 const path = require('path');
@@ -44,14 +46,14 @@ app.use('/graphql',
 	graphqlUploadExpress({ maxFileSize: '10M', maxFiles: 10 }),
 	graphqlHttp({
 		schema: schema,
-		// rootValue: graphqlResolvers,
-		graphiql: { subscriptionEndpoint: `ws://localhost:3000/subscriptions` },
-		// graphiql: true,
 	}));
 
+app.use('/graphiql', graphiqlExpress({
+	endpointURL: '/graphql',
+	subscriptionsEndpoint: `ws://localhost:3000/subscriptions` // subscriptions endpoint.
+}));
+
 const ws = createServer(app);
-
-
 
 const {
 	MONGO_USERNAME,
@@ -67,22 +69,19 @@ if (process.env.NODE_ENV == "development")
 
 mongoose.connect(url)
 	.then(() => {
-		// app.listen(3000);
-
-		ws.listen(3000, () => {
-			new SubscriptionServer(
-				{
-					execute,
-					subscribe,
-					schema,
-					onConnect: () => console.log('Client connected')
-				},
-				{
-					server: ws,
-					path: '/subscriptions',
-				},
-			);
-		});
+		app.listen(3000);
+		// ws.listen(3000, () => {
+		// 	console.log(`GraphQL Server is now running`);
+		// 	new SubscriptionServer({
+		// 		execute,
+		// 		subscribe,
+		// 		schema,
+		// 		onConnect: () => console.log("client connected")
+		// 	}, {
+		// 		server: ws,
+		// 		path: '/subscriptions',
+		// 	});
+		// });
 	}).catch(err => {
 		console.log(err)
 	})

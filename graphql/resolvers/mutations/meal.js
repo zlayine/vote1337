@@ -28,7 +28,7 @@ module.exports = {
 				user: req.userId
 			});
 			const result = await meal.save();
-			socket.publish('EVENT_CREATED', {
+			socket.publish('MEAL_CREATED', {
 				mealCreated: transformMeal(result, enableVoting(result))
 			})
 			return transformMeal(result, enableVoting(result));
