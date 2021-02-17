@@ -85,18 +85,14 @@ export default {
 
     .image {
       max-height: 300px;
-      // display: flex;
       height: 100%;
       max-width: 300px;
       min-width: 300px;
 			display: flex;
-      // overflow: hidden;
 
       img {
-        // width: 100%;
         margin: auto;
 				width: 100%;
-        // height: 100%;
       }
     }
 

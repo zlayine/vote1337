@@ -133,7 +133,7 @@ export default {
   .meal_items_holder {
     margin-top: 10px;
     padding: 10px 10px 0 10px;
-    box-shadow: 0px 0px 7px #22222227;
+    box-shadow: 0px 0px 3px #22222227;
     border-radius: 10px;
     position: relative;
     overflow: hidden;
@@ -193,6 +193,8 @@ export default {
       border-radius: 10px;
       overflow-x: auto;
       padding-bottom: 15px;
+			padding-top: 5px;
+			padding-left: 5px;
     }
   }
 }
