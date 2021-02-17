@@ -6,10 +6,10 @@ const mongoose = require('mongoose')
 const graphqlHttp = require('express-graphql').graphqlHTTP
 
 // import { graphqlExpress, graphiqlExpress } from 'graphql-server-express';
-const { SubscriptionServer } = require('subscriptions-transport-ws')
-const { subscribe, execute } = require('graphql')
+// const { SubscriptionServer } = require('subscriptions-transport-ws')
+// const { subscribe, execute } = require('graphql')
 const { makeExecutableSchema } = require('graphql-tools');
-const { createServer } = require('http');
+// const { createServer } = require('http');
 
 const path = require('path');
 const graphqlSchema = require('./graphql/schema')
@@ -53,7 +53,7 @@ app.use('/graphql',
 // 	subscriptionsEndpoint: `ws://localhost:3000/subscriptions` // subscriptions endpoint.
 // }));
 
-const ws = createServer(app);
+// const ws = createServer(app);
 
 const {
 	MONGO_USERNAME,
