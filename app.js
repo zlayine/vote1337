@@ -5,7 +5,7 @@ const mongoose = require('mongoose')
 
 const graphqlHttp = require('express-graphql').graphqlHTTP
 
-import { graphqlExpress, graphiqlExpress } from 'graphql-server-express';
+// import { graphqlExpress, graphiqlExpress } from 'graphql-server-express';
 const { SubscriptionServer } = require('subscriptions-transport-ws')
 const { subscribe, execute } = require('graphql')
 const { makeExecutableSchema } = require('graphql-tools');
@@ -48,10 +48,10 @@ app.use('/graphql',
 		schema: schema,
 	}));
 
-app.use('/graphiql', graphiqlExpress({
-	endpointURL: '/graphql',
-	subscriptionsEndpoint: `ws://localhost:3000/subscriptions` // subscriptions endpoint.
-}));
+// app.use('/graphiql', graphiqlExpress({
+// 	endpointURL: '/graphql',
+// 	subscriptionsEndpoint: `ws://localhost:3000/subscriptions` // subscriptions endpoint.
+// }));
 
 const ws = createServer(app);
 
