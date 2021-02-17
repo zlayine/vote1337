@@ -26,9 +26,11 @@
       <div class="item-info" v-if="url">
         <v-text-field
           v-model="name"
+					:rules="nameRules"
           dense
           label="Name"
           hide-details
+					required
           outlined
           class="my-2"
         ></v-text-field>
@@ -86,6 +88,9 @@ export default {
       name: null,
       errorDialog: null,
       errorText: null,
+      nameRules: [
+        (v) => !!v || "Name is required",
+      ],
       saved: false,
       croppedImageSrc: "",
       crop: false,
@@ -153,13 +158,12 @@ export default {
       this.$emit("saved", { file: this.file, name: this.name });
     },
   },
-	filters: {
-		size_filter(val){
-			if (val < 1)
-				return parseInt(val * 1000) + "KB";
-			return parseFloat(val).toFixed(1) + "MB";
-		}
-	},
+  filters: {
+    size_filter(val) {
+      if (val < 1) return parseInt(val * 1000) + "KB";
+      return parseFloat(val).toFixed(1) + "MB";
+    },
+  },
   components: {
     ImageCropper,
   },

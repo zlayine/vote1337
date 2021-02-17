@@ -6,9 +6,10 @@
         v-model="meal_name"
         label="Meal Name"
         class="input mb-3"
+        required
+        :rules="nameRules"
         outlined
         hide-details
-        required
       ></v-text-field>
       <p class="text">Meal items:</p>
       <div class="meal-items mb-5">
@@ -39,6 +40,7 @@ export default {
     return {
       meal_name: null,
       items: [],
+      nameRules: [(v) => !!v || "Name is required"],
     };
   },
   async created() {
