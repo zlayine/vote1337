@@ -34,6 +34,7 @@ export default {
 		notification: 0,
 		notification_msg: "",
 		addMeal: false,
+		uploadPercent: null,
 	},
 	getters: {
 		reports: state => state.reports,
@@ -46,6 +47,7 @@ export default {
 		loading: state => state.loading,
 		addMeal: state => state.addMeal,
 		mealTotalPages: state => state.mealTotalPages,
+		uploadPercent: state => state.uploadPercent,
 	},
 	mutations: {
 		LOGIN(state, payload) {
@@ -102,6 +104,9 @@ export default {
 		},
 		DELETE_MEAL(state, id) {
 			state.meals = state.meals.filter(m => m._id != id);
+		},
+		UPDATE_PERCENTAGE(state, total) {
+			state.uploadPercent = total;
 		}
 	},
 	actions: {
@@ -188,9 +193,11 @@ export default {
 		async addMeal({ commit }, data) {
 			commit("UPDATE_LOADING")
 			try {
+				commit('UPDATE_PERCENTAGE', 0);
 				const createdMeal = await axios({
 					url: process.env.VUE_APP_GRAPHQL_API,
 					method: 'post',
+
 					data: {
 						query: `
 						mutation { 
@@ -215,6 +222,10 @@ export default {
 				const res = await axios({
 					url: process.env.VUE_APP_GRAPHQL_API,
 					method: 'post',
+					onUploadProgress: function (progressEvent) {
+						let uploadPercentage = parseInt(Math.round((progressEvent.loaded * 100) / progressEvent.total));
+						commit('UPDATE_PERCENTAGE', uploadPercentage);
+					}.bind(this),
 					data: {
 						query: `
 						query { 
@@ -244,7 +255,7 @@ export default {
 						`
 					}
 				});
-
+				commit('UPDATE_PERCENTAGE', null);
 				if (res.data.errors) {
 					commit("SET_NOTIFICATION", { msg: "Failed to add meal", error: 1 });
 				}
@@ -256,6 +267,7 @@ export default {
 				return 1;
 			} catch (error) {
 				console.log(error)
+				commit('UPDATE_PERCENTAGE', null);
 				commit("SET_NOTIFICATION", { msg: "Could not add the meal", error: 1 });
 				commit("UPDATE_LOADING");
 				return 0;

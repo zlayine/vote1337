@@ -16,7 +16,7 @@
         <meal-item-form @saved="addItem" ref="empty" />
         <template v-for="(item, index) in items">
           <meal-item-form
-            :key="item.name"
+            :key="index"
             :index="index"
             :item_data="item"
             @removeItem="removeItem"
