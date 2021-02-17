@@ -92,7 +92,7 @@ export default {
 			state.notification_msg = data.msg;
 			setTimeout(() => {
 				state.notification = 0;
-			}, 4000)
+			}, 3100)
 		},
 		CLOSE_NOTIFICATION(state) {
 			state.notification = 0;

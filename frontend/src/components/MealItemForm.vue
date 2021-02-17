@@ -26,11 +26,11 @@
       <div class="item-info" v-if="url">
         <v-text-field
           v-model="name"
-					:rules="nameRules"
+          :rules="nameRules"
           dense
           label="Name"
           hide-details
-					required
+          required
           outlined
           class="my-2"
         ></v-text-field>
@@ -88,9 +88,7 @@ export default {
       name: null,
       errorDialog: null,
       errorText: null,
-      nameRules: [
-        (v) => !!v || "Name is required",
-      ],
+      nameRules: [(v) => !!v || "Name is required"],
       saved: false,
       croppedImageSrc: "",
       crop: false,
@@ -153,7 +151,14 @@ export default {
       this.$refs.file.value = null;
     },
     saveItem() {
-      if (!this.name || this.name == "") return;
+      if (!this.name || this.name == "") {
+				this.name = "";
+        this.$store.commit("SET_NOTIFICATION", {
+          msg: "Meal item name is required",
+          error: 1,
+        });
+        return;
+      }
       this.saved = true;
       this.$emit("saved", { file: this.file, name: this.name });
     },
