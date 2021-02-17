@@ -38,7 +38,7 @@ export default {
       let img_url = this.$refs.tool.getCroppedCanvas().toDataURL();
       this.$refs.tool.getCroppedCanvas().toBlob((blob) => {
 				this.$emit('cropImage', {url: img_url, file: this.blobToFile(blob)})
-      }, 'image/jpeg', 0.95);
+      }, 'image/jpeg');
     },
     blobToFile(theBlob) {
       theBlob.lastModifiedDate = new Date();

@@ -10,6 +10,11 @@
         <transition name="fade-out">
           <img :src="url" alt="" v-if="url" />
         </transition>
+        <transition name="fade-out">
+          <div class="img-size" v-if="url">
+            {{ size | size_filter }}
+          </div>
+        </transition>
       </div>
       <input
         type="file"
@@ -61,7 +66,7 @@
           ref="cropper"
           v-if="crop"
           @cropImage="cropImage"
-					@closeCrop="crop = false"
+          @closeCrop="crop = false"
           :url="url"
         />
       </transition>
@@ -84,6 +89,7 @@ export default {
       saved: false,
       croppedImageSrc: "",
       crop: false,
+      size: 0,
     };
   },
   created() {
@@ -98,8 +104,10 @@ export default {
       this.$refs.file.click();
     },
     onFileChange(file) {
+      const maxSize = 1024;
       let imageFile = file[0];
       if (file.length > 0) {
+        this.size = imageFile.size / maxSize / maxSize;
         if (!imageFile.type.match("image.*")) {
           this.errorText = "Please choose an image file";
         } else {
@@ -110,12 +118,10 @@ export default {
           const reader = new FileReader();
           reader.onload = (event) => {
             this.url = event.target.result;
-            // this.$refs.cropper.tool.replace(event.target.result);
           };
           reader.readAsDataURL(this.file);
         } else {
           this.errorText = "FileReader API not supported";
-          // alert("Sorry, FileReader API not supported");
         }
       }
     },
@@ -124,9 +130,11 @@ export default {
       this.$refs.cropper.tool.replace(this.url);
     },
     cropImage(data) {
-			this.crop = false;
-			this.url = data.url;
-			this.file = data.file;
+      const maxSize = 1024;
+      this.crop = false;
+      this.url = data.url;
+      this.file = data.file;
+      this.size = data.file.size / maxSize / maxSize;
     },
     clearItem() {
       if (this.index != null) {
@@ -145,6 +153,13 @@ export default {
       this.$emit("saved", { file: this.file, name: this.name });
     },
   },
+	filters: {
+		size_filter(val){
+			if (val < 1)
+				return parseInt(val * 1000) + "KB";
+			return parseFloat(val).toFixed(1) + "MB";
+		}
+	},
   components: {
     ImageCropper,
   },
@@ -163,6 +178,7 @@ export default {
     border: 4px dotted #2eb9ffd5;
     border-radius: 10px;
     display: flex;
+    position: relative;
     justify-content: center;
 
     &.preview {
@@ -177,6 +193,16 @@ export default {
       img {
         width: 100%;
         margin: auto;
+      }
+
+      .img-size {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        padding: 2px 10px;
+        font-size: 14px;
+        color: #fff;
+        background-color: rgba(34, 34, 34, 0.788);
       }
     }
   }
