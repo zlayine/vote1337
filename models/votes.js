@@ -15,6 +15,10 @@ const voteSchema = new Schema({
 		type: Schema.Types.ObjectId,
 		ref: 'MealItem'
 	},
+	report: {
+		type: String,
+		default: "",
+	},
 }, {timestamps: true});
 
 module.exports = mongoose.model('Vote', voteSchema);

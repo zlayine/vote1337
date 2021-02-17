@@ -2,30 +2,16 @@ const models = require('../../../models')
 const { transformMeal } = require("../merge");
 const moment = require('moment');
 
-const createReport = async (data, meal, userId) => {
-	try {
-		const reportData = new models.Report({
-			description: data.report,
-			meal_item: data.meal_item_id,
-			meal: meal,
-			user: userId
-		});
-		await reportData.save();
-		return "1";
-	} catch (error) {
-		console.log(error);
-	}
-}
-
 const createVote = async (data, userId) => {
 	try {
 		const voteData = new models.Vote({
 			vote: data.vote,
 			meal_item: data.meal_item_id,
+			report: data.report,
 			user: userId
 		});
 		const resVote = await voteData.save();
-		const mealItem = await updateMealItemVote(data.vote, data.meal_item_id);
+		const mealItem = await updateMealItemVote(data.vote, data.meal_item_id, data.report);
 		mealItem.votes.push(resVote);
 		await mealItem.save();
 		return "1";
@@ -34,13 +20,15 @@ const createVote = async (data, userId) => {
 	}
 }
 
-const updateMealItemVote = async (vote, id) => {
+const updateMealItemVote = async (vote, id, report) => {
 	try {
 		const mealitem = await models.MealItem.findById(id);
 		if (vote == "up")
 			mealitem.votes_up += 1;
 		else
 			mealitem.votes_down += 1;
+		if (report != "")
+			mealitem.reports += 1;
 		return await mealitem.save();;
 	} catch (error) {
 		console.log(error);
@@ -76,18 +64,16 @@ const checkUserVoted = async (meal, userId) => {
 
 module.exports = {
 	addVotes: async (root, args, cntx, req) => {
-		if (!req.isAuth)
+		if (!cntx.isAuth)
 			throw new Error('Unauthenticated.');
 		try {
 			let items = args.voteInput;
 			if (!(await checkMeal(args.meal)))
 				throw new Error('Meal does not accept votes.')
-			if (await checkUserVoted(args.meal, req.userId))
+			if (await checkUserVoted(args.meal, cntx.userId))
 				throw new Error('You\'ve already voted for this meal.')
 			for (let i = 0; i < items.length; i++) {
-				await createVote(items[i], req.userId);
-				if (items[i].report != "")
-					await createReport(items[i], args.meal, req.userId);
+				await createVote(items[i], cntx.userId);
 			}
 			const result = await models.Meal.findById(args.meal);
 			return transformMeal(result);

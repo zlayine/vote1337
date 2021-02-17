@@ -30,21 +30,23 @@ type MealItem {
     image_url: String!
 	votes_up: Int!
 	votes_down: Int!
-	votes_sick: Int!
+	reports: Int!
 	meal: Meal!
 	votes: [Vote!]
 	createdAt: String!
     updatedAt: String!
 }
 
-type Report {
-    _id: ID!
-    description: String!
-    meal_item: MealItem!
-    meal: Meal!
-	user: User!
+type MealExport {
+	mealName: String
+	itemName: String!
+	votes_up: Int!
+	votes_down: Int!
+	user: String!
+	vote: String!
+	report: String
 	createdAt: String!
-    updatedAt: String!
+	mealDate: String!
 }
 
 type Vote {
@@ -56,14 +58,22 @@ type Vote {
     updatedAt: String!
 }
 
-type MealData {
-	meals: [Meal!]
-	page: Int
-	totalPages: Int
+type Report {
+	_id: ID!
+	user: User!
+	meal_item: MealItem!
+	report: String!
+	createdAt: String!
 }
 
 type ReportData {
 	reports: [Report!]
+	page: Int
+	totalPages: Int
+}
+
+type MealData {
+	meals: [Meal!]
 	page: Int
 	totalPages: Int
 }
@@ -79,12 +89,6 @@ input MealItemInput {
 	image: Upload!
 }
 
-input ReportInput {
-	description: String!
-	meal_item: String!
-	meal: String!
-}
-
 input VoteInput {
 	vote: String!
 	meal_item_id: String!
@@ -98,6 +102,7 @@ type RootQuery {
 	login(userId: String!): LoginData!
 	getUser(userId: String!): User!
 	checkAddMeal: Boolean!
+	getMealExport(mealId: String): [MealExport]!
 }
 
 type RootMutation {

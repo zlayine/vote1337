@@ -1,6 +1,6 @@
 <template>
   <footer class="footer">
-    s Made with <v-icon color="red lighten-1"> mdi-heart </v-icon> for 1337
+  	Made with <v-icon color="red lighten-1"> mdi-heart </v-icon> for 1337
   </footer>
 </template>
 

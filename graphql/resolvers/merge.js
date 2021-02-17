@@ -91,13 +91,22 @@ const transformMealItem = (item) => {
 
 const transformReport = (report) => {
 	return {
-		...report._doc,
-		_id: report.id,
-		meal: mealResolver.bind(this, report._doc.meal),
-		meal_item: mealItemResolver.bind(this, report._doc.meal_item),
-		user: userResolver.bind(this, report._doc.user),
-		createdAt: dateToString(report._doc.createdAt),
-		updatedAt: dateToString(report._doc.updatedAt),
+		...report,
+		_id: report._id,
+		user: userResolver.bind(this, report.user),
+		meal_item: mealItemResolver.bind(this, report.meal_item),
+		createdAt: dateToString(report.createdAt),
+	}
+};
+
+const transformExport = (data) => {
+	return {
+		...data._doc,
+		meal: mealResolver.bind(this, data._doc.meal),
+		meal_item: mealItemResolver.bind(this, data._doc.meal_item),
+		user: userResolver.bind(this, data._doc.user),
+		createdAt: dateToString(data._doc.createdAt),
+		updatedAt: dateToString(data._doc.updatedAt),
 	}
 };
 
@@ -107,6 +116,7 @@ const transformVote = (vote) => {
 		_id: vote.id,
 		meal_item: mealItemResolver.bind(this, vote._doc.meal_item),
 		user: userResolver.bind(this, vote._doc.user),
+		report: null,
 		createdAt: dateToString(vote._doc.createdAt),
 		updatedAt: dateToString(vote._doc.updatedAt),
 	}

@@ -14,6 +14,9 @@
     </div>
     <div class="reports_container">
       <div class="text-title">Reports for {{ meal.name }}</div>
+      <v-btn rounded color="primary" dark class="export" @click="exportMeal">
+        <v-icon small left> fas fa-cloud-download-alt </v-icon> Export
+      </v-btn>
       <v-item-group class="meals" v-model="selected">
         <div v-for="item in meal.meals" :key="item._id" class="meal-item">
           <v-item v-slot="{ active, toggle }">
@@ -60,7 +63,7 @@
             <div class="user-name">{{ report.user.username }}</div>
           </div>
           <div class="description">
-            {{ report.description }}
+            {{ report.report }}
           </div>
         </v-card>
         <!-- <div class="text-center" v-if="mealReports && mealReports.length">
@@ -95,13 +98,16 @@ export default {
     closeReports() {
       this.$emit("closeReports");
     },
-    async changePage() {
-      this.$router.replace({ query: { page: this.page } });
-      await this.$store.dispatch("getReports", {
-        id: this.meal._id,
-        page: page ? page : 1,
-      });
-    },
+    // async changePage() {
+    //   this.$router.replace({ query: { page: this.page } });
+    //   await this.$store.dispatch("getReports", {
+    //     id: this.meal._id,
+    //     page: page ? page : 1,
+    //   });
+    // },
+    async exportMeal() {
+			await this.$store.dispatch("exportMeal", this.meal._id);
+		},
   },
   computed: {
     reports() {
@@ -115,7 +121,6 @@ export default {
       }
       return null;
     },
-    
   },
   components: { MealItem },
 };
@@ -141,8 +146,17 @@ export default {
   .reports_container {
     display: flex;
     flex-direction: column;
+    align-items: center;
     width: 60%;
     margin: 50px auto;
+
+    .export {
+      padding: 0 20px;
+      font-weight: 600;
+      i {
+        margin-right: 10px;
+      }
+    }
 
     .text-title {
       text-align: center;

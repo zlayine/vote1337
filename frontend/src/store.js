@@ -107,7 +107,19 @@ export default {
 		},
 		UPDATE_PERCENTAGE(state, total) {
 			state.uploadPercent = total;
-		}
+		},
+		EXPORT_CSV(state, payload) {
+			let data = payload
+			let csvContent = "";
+			csvContent += [
+				Object.keys(data[0]).join(";"),
+				...data.map(item => Object.values(item).join(";"))
+			]
+				.join("\n")
+				.replace(/(^\[)|(\]$)/gm, "");
+			var blob = new Blob([csvContent], { type: "text/csv;charset=utf-8" });
+			saveAs(blob, `export_test.csv`);
+		},
 	},
 	actions: {
 		async getMeals({ commit }, page) {
@@ -167,11 +179,8 @@ export default {
 						query { 
 							getReports (meal: "${id}") {
 								_id
-								description
+								report
 								meal_item {
-									_id
-								}
-								meal {
 									_id
 								}
 								user {
@@ -436,6 +445,26 @@ export default {
 			} catch (error) {
 				commit("SET_NOTIFICATION", { msg: "Server error", error: 1 });
 			}
+		},
+		async exportMeal({ commit }, id) {
+			try {
+				const res = await axios({
+					url: process.env.VUE_APP_GRAPHQL_API,
+					method: 'post',
+					data: {
+						query: `
+								query { 
+									getMealExport(mealId: "${id}") {
+										name
+									}
+								}
+							`
+					}
+				});
+			} catch (error) {
+				commit("SET_NOTIFICATION", { msg: "Server error", error: 1 });
+			}
 		}
+
 	}
 }

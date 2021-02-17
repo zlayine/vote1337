@@ -78,8 +78,6 @@ export default {
         font-weight: 500;
         margin-right: 8px;
       }
-      span {
-      }
     }
   }
 

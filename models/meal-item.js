@@ -19,7 +19,7 @@ const mealItemSchema = new Schema({
 		type: Number,
 		default: 0
 	},
-	votes_sick: {
+	reports: {
 		type: Number,
 		default: 0
 	},
