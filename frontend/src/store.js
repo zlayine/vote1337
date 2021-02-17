@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { getLocalUser } from './auth.js';
+import { saveAs } from 'file-saver'
 
 const user = getLocalUser();
 
@@ -109,8 +110,9 @@ export default {
 			state.uploadPercent = total;
 		},
 		EXPORT_CSV(state, payload) {
+			if (!payload.length)
+				return;
 			let data = payload
-			console.log(Object.keys(data[0]).join(";"));
 			let csvContent = "";
 			csvContent += [
 				Object.keys(data[0]).join(";"),
@@ -119,7 +121,7 @@ export default {
 				.join("\n")
 				.replace(/(^\[)|(\]$)/gm, "");
 			var blob = new Blob([csvContent], { type: "text/csv;charset=utf-8" });
-			saveAs(blob, `export_test.csv`);
+			saveAs(blob, `export_${data[0].mealName}_${data[0].mealDate}.csv`);
 		},
 	},
 	actions: {
@@ -456,7 +458,16 @@ export default {
 						query: `
 								query { 
 									getMealExport(mealId: "${id}") {
-										name
+										mealName
+										mealName
+										itemName
+										votes_up
+										votes_down
+										user
+										vote
+										report
+										voteDate
+										mealDate
 									}
 								}
 							`
@@ -464,6 +475,7 @@ export default {
 				});
 				commit("EXPORT_CSV", res.data.data.getMealExport);
 			} catch (error) {
+				console.log(error)
 				commit("SET_NOTIFICATION", { msg: "Server error", error: 1 });
 			}
 		}

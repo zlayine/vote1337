@@ -53,21 +53,33 @@ module.exports = {
 		// if (!cntx.isAuth)
 		// 	throw new Error('Unauthenticated');
 		try {
-			const res = await models.Vote.aggregate([
-				{ $lookup: { from: 'users', localField: 'user', foreignField: '_id', as: 'user' } },
-				{ $unwind: "$user" },
+
+			const res = await models.Meal.aggregate([
+				{ $match: { _id: ObjectId(args.mealId) } },
 				{
 					$lookup: {
-						from: 'mealitems', let: { "mealitems": "$mealitems" }, pipeline: [
-							{ $match: { "meal": ObjectId(args.meal) } }
-						], as: "meal_item"
+						from: 'mealitems',
+						let: { meals: "$meals" },
+						pipeline: [
+							{ $match: { $expr: { $in: ["$_id", "$$meals"] } } }
+						], as: "meals"
 					},
 				},
-				{ $unwind: "$meal_item" },
-				{ $lookup: { from: 'meals', localField: 'meal_item.meal', foreignField: '_id', as: 'meal' } },
-				{ $unwind: "$meal" },
+				{ $unwind: "$meals" },
+				{
+					$lookup: {
+						from: 'votes',
+						let: { votes: "$meals.votes" },
+						pipeline: [
+							{ $match: { $expr: { $in: ["$_id", "$$votes"] } } },
+						], as: "votes"
+					}
+				},
+				{ $unwind: "$votes" },
+				{ $lookup: { from: 'users', localField: 'votes.user', foreignField: '_id', as: 'user' } },
+				{ $unwind: "$user" },
+				{ $project: { "name": 1, "meals.name": 1, "votes.vote": 1, "votes.report": 1, "meals.votes_up": 1, "meals.votes_down": 1, "createdAt": 1, "votes.createdAt": 1, "user.username": 1} }
 			]);
-			console.log(res);
 			return res.map(v => {
 				return transformExport(v)
 			});

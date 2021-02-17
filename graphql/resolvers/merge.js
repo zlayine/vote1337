@@ -1,4 +1,4 @@
-const { dateToString } = require('../../helpers/date');
+const { dateToString, dateToFormat } = require('../../helpers/date');
 const models = require('../../models')
 const env = require('../../environment')
 
@@ -93,7 +93,7 @@ const transformReport = (report) => {
 	return {
 		_id: report._id,
 		user: userResolver.bind(this, report.user),
-		meal_item: mealItemResolver.bind(this, report.meal_item),
+		meal_item: mealItemResolver.bind(this, report.votes.meal_item),
 		report: report.votes.report,
 		createdAt: dateToString(report.votes.createdAt),
 	}
@@ -101,15 +101,15 @@ const transformReport = (report) => {
 
 const transformExport = (data) => {
 	return {
-		mealName: data.meal.name,
-		itemName: data.meal_item.name,
-		votes_up: data.meal_item.votes_up,
-		votes_down: data.meal_item.votes_down,
+		mealName: data.name,
+		itemName: data.meals.name,
+		votes_up: data.meals.votes_up,
+		votes_down: data.meals.votes_down,
 		user: data.user.username,
-		vote: data.vote,
-		report: data.report,
-		createdAt: data.createdAt,
-		mealDate: data.meal.createdAt,
+		vote: data.votes.vote,
+		report: data.votes.report,
+		voteDate: dateToFormat(data.votes.createdAt),
+		mealDate: dateToFormat(data.createdAt),
 	}
 };
 

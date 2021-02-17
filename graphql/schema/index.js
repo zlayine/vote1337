@@ -45,7 +45,7 @@ type MealExport {
 	user: String!
 	vote: String!
 	report: String
-	createdAt: String!
+	voteDate: String!
 	mealDate: String!
 }
 
