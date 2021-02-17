@@ -41,6 +41,7 @@
           <v-btn
             class="mx-2"
             @click="crop = true"
+						v-if="!saved"
             fab
             dark
             small
@@ -99,6 +100,7 @@ export default {
     if (this.item_data) {
       this.url = URL.createObjectURL(this.item_data.file);
       this.name = this.item_data.name;
+			this.size = this.item_data.size;
       this.saved = true;
     }
   },
@@ -160,7 +162,7 @@ export default {
         return;
       }
       this.saved = true;
-      this.$emit("saved", { file: this.file, name: this.name });
+      this.$emit("saved", { file: this.file, name: this.name, size: this.size });
     },
   },
   filters: {
