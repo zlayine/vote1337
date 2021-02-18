@@ -47,14 +47,14 @@ module.exports = {
 		}
 	},
 	checkAddMeal: async (root, args, cntx, req) => {
-		return true;
+		// return true;
 		if (!cntx.isAuth)
 			return false;
 		return await checkAddMeal();
 	},
 	getMealExport: async (root, args, cntx, req) => {
-		// if (!cntx.isAuth)
-		// 	throw new Error('Unauthenticated');
+		if (!cntx.isAuth)
+			throw new Error('Unauthenticated');
 		try {
 
 			const res = await models.Meal.aggregate([
