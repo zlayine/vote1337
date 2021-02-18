@@ -173,7 +173,7 @@ export default {
 		},
 		SET_SOCKET(state, payload) {
 			if (!state.socket)
-				state.socket = io(process.env.VUE_APP_API_HOST, { query: { token: payload } })
+				state.socket = io("http://localhost:3000", { query: { token: payload } })
 		},
 		// SOCKET_LISTENERS(state, payload) {
 		// 	const socket = state.socket;
@@ -256,7 +256,7 @@ export default {
 			try {
 				const res = await getMeal(data.id);
 				commit("UPDATE_MEAL", res.data.data.getMeal);
-
+				
 			} catch (error) {
 				console.log(error);
 			}
