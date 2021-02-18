@@ -15,6 +15,7 @@ module.exports = {
 
 			const user = await models.User.findById(cntx.userId);
 			const count = parseInt(await models.Meal.count() / limit);
+			
 			const meals = await models.Meal.find({campus: user.campus}).sort({ createdAt: 'desc' }).skip((page - 1) * limit).limit(limit);
 			const res = meals.map(e => {
 				return transformMeal(e)
@@ -27,7 +28,7 @@ module.exports = {
 			return {
 				page: +page,
 				meals: res,
-				totalPages: !count ? 1 : count + 1
+				totalPages: !count ? 1 : count
 			}
 		} catch (err) {
 			console.log(err);
