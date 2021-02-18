@@ -6,6 +6,7 @@ const imagemin = require("imagemin");
 const imageminMozjpeg = require("imagemin-mozjpeg");
 const jwt = require('jsonwebtoken');
 const { transformUser } = require('./merge');
+const env = require('../../environment')
 
 const compressImage = async (dir, name) => {
 	const file = await imagemin([dir + "tmp/" + name], {
@@ -100,7 +101,7 @@ const loginUser = async (userId) => {
 	const user = await models.User.findOne({ _id: userId });
 	if (!user)
 		throw new Error('User does not exist');
-	const token = jwt.sign({ userId: user.id, email: user.email }, 'herfhehrbve12jkdkfdf', {
+	const token = jwt.sign({ userId: user.id, email: user.email }, env.process.JWT_PKEY, {
 		expiresIn: '3500h'
 	});
 	return { user: transformUser(user), token: token }

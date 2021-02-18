@@ -70,11 +70,10 @@ export default {
         } else {
           let msg = "";
 
-          if (this.meal_name == "" || !this.meal_name || this.items.length){
-						this.meal_name = "";
-						msg = "Meal name is required!";
-					}
-          else msg = "Meal items are required!";
+          if (this.meal_name == "" || !this.meal_name || this.items.length) {
+            this.meal_name = "";
+            msg = "Meal name is required!";
+          } else msg = "Meal items are required!";
           this.$store.commit("SET_NOTIFICATION", {
             msg: msg,
             error: 1,

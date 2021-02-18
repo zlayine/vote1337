@@ -1,12 +1,12 @@
 <template>
   <v-app>
     <navbar />
-		<loader />
-		<notification />
+    <loader />
+    <notification />
     <transition name="fade-out">
       <router-view></router-view>
     </transition>
-		<footer-layout />
+    <footer-layout />
   </v-app>
 </template>
 
@@ -14,20 +14,38 @@
 import Navbar from "./components/Navbar";
 import Loader from "./components/Loader";
 import Notification from "./components/Notification";
-import FooterLayout from './components/FooterLayout.vue';
+import FooterLayout from "./components/FooterLayout.vue";
 
+//  io("http://localhost:3000", { query: { token:  } })
 export default {
   name: "main-app",
-	data(){
-		return {
-			loading: false,
-		}
-	},
+  data() {
+    return {
+      loading: false,
+    };
+  },
   async created() {
     if (this.currentUser && !this.user) {
-			this.loading = true;
       await this.$store.dispatch("getUser", this.currentUser.id);
-			this.loading = false;
+    }
+  },
+  methods: {
+    listen() {
+      this.socket.on("newMealAdded", (data) => {
+        this.$store.dispatch("socketGetMeal", data);
+      });
+      this.socket.on("newVoteAdded", (data) => {
+        this.$store.dispatch("socketUpdateMeal", data);
+      });
+      this.socket.on("mealDeleted", (data) => {
+        this.$store.dispatch("socketDeleteMeal", data);
+      });
+    },
+  },
+  async mounted() {
+    if (this.currentUser) {
+      await this.$store.dispatch("connectSocket", this.currentUser.token);
+      if (this.socket) this.listen();
     }
   },
   computed: {
@@ -37,12 +55,15 @@ export default {
     user() {
       return this.$store.getters.user;
     },
+    socket() {
+      return this.$store.getters.socket;
+    },
   },
   components: {
     Navbar,
     FooterLayout,
-		Loader,
-		Notification
+    Loader,
+    Notification,
   },
 };
 </script>

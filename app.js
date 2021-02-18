@@ -1,15 +1,13 @@
 const express = require('express');
 const bodyParser = require('body-parser')
-
 const mongoose = require('mongoose')
+const http = require('http');
+const socketio = require('socket.io');
+
+const cors = require('cors');
 
 const graphqlHttp = require('express-graphql').graphqlHTTP
-
-// import { graphqlExpress, graphiqlExpress } from 'graphql-server-express';
-// const { SubscriptionServer } = require('subscriptions-transport-ws')
-// const { subscribe, execute } = require('graphql')
 const { makeExecutableSchema } = require('graphql-tools');
-// const { createServer } = require('http');
 
 const path = require('path');
 const graphqlSchema = require('./graphql/schema')
@@ -42,18 +40,13 @@ app.use((req, res, next) => {
 
 app.use(isAuth);
 
+app.use(cors());
+
 app.use('/graphql',
 	graphqlUploadExpress({ maxFileSize: '10M', maxFiles: 10 }),
 	graphqlHttp({
 		schema: schema,
 	}));
-
-// app.use('/graphiql', graphiqlExpress({
-// 	endpointURL: '/graphql',
-// 	subscriptionsEndpoint: `ws://localhost:3000/subscriptions` // subscriptions endpoint.
-// }));
-
-// const ws = createServer(app);
 
 const {
 	MONGO_USERNAME,
@@ -67,21 +60,14 @@ let url = `mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@${MONGO_HOSTNAME}:${MON
 if (process.env.NODE_ENV == "development")
 	url = `mongodb://${MONGO_HOSTNAME}:${MONGO_PORT}/${MONGO_DB}`;
 
+const server = http.createServer(app);
+const io = socketio.listen(server);
+
+require("./socket")(io);
+
 mongoose.connect(url)
 	.then(() => {
-		app.listen(3000);
-		// ws.listen(3000, () => {
-		// 	console.log(`GraphQL Server is now running`);
-		// 	new SubscriptionServer({
-		// 		execute,
-		// 		subscribe,
-		// 		schema,
-		// 		onConnect: () => console.log("client connected")
-		// 	}, {
-		// 		server: ws,
-		// 		path: '/subscriptions',
-		// 	});
-		// });
+		server.listen(3000);
 	}).catch(err => {
 		console.log(err)
 	})

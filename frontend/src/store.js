@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { getLocalUser } from './auth.js';
 import { saveAs } from 'file-saver'
+import io from "socket.io-client";
 
 const user = getLocalUser();
 
@@ -28,6 +29,46 @@ const createMealItems = async (commit, items, id) => {
 	return 1;
 }
 
+const getMeal = async (id) => {
+	try {
+		const res = await axios({
+			url: process.env.VUE_APP_GRAPHQL_API,
+			method: 'post',
+			data: {
+				query: `
+				query { 
+					getMeal (mealId: "${id}") {
+						_id
+						name
+						enabled
+						createdAt
+						user {
+							username
+							_id
+						}
+						meals {
+							_id
+							name 
+							image_url 
+							votes_up 
+							votes_down
+							votes {
+								user {
+									_id
+								}
+							}
+						}
+					}
+				}
+				`
+			}
+		});
+		return res;
+	} catch (error) {
+		console.log(error);
+	}
+}
+
 export default {
 	state: {
 		reports: [],
@@ -41,6 +82,7 @@ export default {
 		notification_msg: "",
 		addMeal: false,
 		uploadPercent: null,
+		socket: null,
 	},
 	getters: {
 		reports: state => state.reports,
@@ -54,6 +96,7 @@ export default {
 		addMeal: state => state.addMeal,
 		mealTotalPages: state => state.mealTotalPages,
 		uploadPercent: state => state.uploadPercent,
+		socket: state => state.socket,
 	},
 	mutations: {
 		LOGIN(state, payload) {
@@ -128,6 +171,28 @@ export default {
 			var blob = new Blob([csvContent], { type: "text/csv;charset=utf-8" });
 			saveAs(blob, `export_${data[0].mealName}_${data[0].mealDate}.csv`);
 		},
+		SET_SOCKET(state, payload) {
+			if (!state.socket)
+				state.socket = io("http://localhost:3000", { query: { token: payload } })
+		},
+		// SOCKET_LISTENERS(state, payload) {
+		// 	const socket = state.socket;
+		// 	socket.on("newMealAdded", (data) => {
+
+		// 	});
+		// },
+		EMIT_ADD_MEAL(state, payload) {
+			const socket = state.socket;
+			socket.emit("newMeal", { id: payload });
+		},
+		EMIT_ADD_VOTE(state, payload) {
+			const socket = state.socket;
+			socket.emit("newVote", { id: payload });
+		},
+		EMIT_DELETE_MEAL(state, payload) {
+			const socket = state.socket;
+			socket.emit("deletedMeal", { id: payload });
+		}
 	},
 	actions: {
 		async getMeals({ commit }, page) {
@@ -175,6 +240,32 @@ export default {
 				console.log(error)
 				commit("SET_NOTIFICATION", { msg: "Server error", error: 1 });
 				commit("UPDATE_LOADING")
+			}
+		},
+		async socketGetMeal({ commit }, data) {
+			try {
+				const res = await getMeal(data.id);
+				commit("ADD_MEAL", res.data.data.getMeal);
+				commit("SET_NOTIFICATION", { msg: "Today's meal was added few moments ago!", error: 0 });
+
+			} catch (error) {
+				console.log(error);
+			}
+		},
+		async socketUpdateMeal({ commit }, data) {
+			try {
+				const res = await getMeal(data.id);
+				commit("UPDATE_MEAL", res.data.data.getMeal);
+			} catch (error) {
+				console.log(error);
+			}
+		},
+		async socketDeleteMeal({ commit }, data) {
+			try {
+				commit("DELETE_MEAL", data.id);
+				commit("SET_NOTIFICATION", { msg: "Meal deleted by his owner!", error: 0 });
+			} catch (error) {
+				console.log(error);
 			}
 		},
 		async getReports({ commit }, id) {
@@ -274,6 +365,7 @@ export default {
 					commit("SET_NOTIFICATION", { msg: "Failed to add meal", error: 1 });
 				}
 				else {
+					commit('EMIT_ADD_MEAL', res.data.data.getMeal._id);
 					commit('ADD_MEAL', res.data.data.getMeal);
 					commit("SET_NOTIFICATION", { msg: "Meal added successfully!", error: 0 });
 				}
@@ -322,6 +414,7 @@ export default {
 				if (res.data.errors)
 					commit("SET_NOTIFICATION", { msg: res.data.errors[0].message, error: 1 });
 				else {
+					commit('EMIT_ADD_VOTE', res.data.data.addVotes._id);
 					commit('UPDATE_MEAL', res.data.data.addVotes);
 					commit("SET_NOTIFICATION", { msg: "Votes submited successfully!", error: 0 });
 				}
@@ -421,6 +514,7 @@ export default {
 					commit("SET_NOTIFICATION", { msg: res.data.errors, error: 1 });
 				else {
 					if (res.data.data.deleteMeal) {
+						commit("EMIT_DELETE_MEAL", id)
 						commit("DELETE_MEAL", id)
 						commit("SET_NOTIFICATION", { msg: "Meal deleted Successfully!", error: 0 });
 					}
@@ -480,7 +574,14 @@ export default {
 				console.log(error)
 				commit("SET_NOTIFICATION", { msg: "Server error", error: 1 });
 			}
+		},
+		async connectSocket({ commit }, token) {
+			try {
+				commit("SET_SOCKET", token);
+				// commit("SOCKET_LISTENERS")
+			} catch (error) {
+				console.log(error);
+			}
 		}
-
-	}
+	},
 }

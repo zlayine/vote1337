@@ -18,14 +18,14 @@
       <div class="text"></div>
     </div>
     <transition-group name="fade">
-        <meal
-          :key="meal._id"
-          :meal="meal"
-          v-for="meal in meals"
-          @openReports="openReports"
-          @preview="enablePreview"
-          @openVoting="openVoting"
-        />
+      <meal
+        :key="meal._id"
+        :meal="meal"
+        v-for="meal in meals"
+        @openReports="openReports"
+        @preview="enablePreview"
+        @openVoting="openVoting"
+      />
     </transition-group>
 
     <div class="text-center" v-if="!addMeal || meals.length">
@@ -70,6 +70,7 @@ import ImagePreview from "./ImagePreview.vue";
 import add_meal_img from "../assets/addmeal_img.svg";
 import nomeals_img from "../assets/nomeals_img.svg";
 
+
 export default {
   data() {
     return {
@@ -88,7 +89,9 @@ export default {
     await this.$store.dispatch("getMeals", page ? page : 1);
     await this.$store.dispatch("checkAddMeal");
   },
+
   methods: {
+    
     openReports(id) {
       this.selectedMeal = this.meals.filter((m) => m._id == id)[0];
       this.reports = true;
