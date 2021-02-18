@@ -256,6 +256,7 @@ export default {
 			try {
 				const res = await getMeal(data.id);
 				commit("UPDATE_MEAL", res.data.data.getMeal);
+				
 			} catch (error) {
 				console.log(error);
 			}
