@@ -1,38 +1,38 @@
 version: '3'
 services:
-  # app:
-  #   build:
-  #     context: ./frontend
-  #   image: nginx
-  #   container_name: app
-  #   ports:
-  #     - "80:80"
-  #   volumes:
-  #       - ./frontend:/app
-  #       - /app/node_modules
-  #   networks:
-  #     - app-network
-  # nodejs:
-  #   build:
-  #     context: .
-  #   image: nodejs
-  #   container_name: nodejs
-  #   restart: unless-stopped
-  #   env_file: .env
-  #   environment:
-  #     - MONGO_USERNAME=$MONGO_USERNAME
-  #     - MONGO_PASSWORD=$MONGO_PASSWORD
-  #     - MONGO_HOSTNAME=db
-  #     - MONGO_PORT=$MONGO_PORT
-  #     - MONGO_DB=$MONGO_DB
-  #   ports:
-  #     - "3000:3000"
-  #   volumes:
-  #     - .:/home/node/app
-  #     - node_modules:/home/node/app/node_modules
-  #   command: ./wait-for.sh db:27017 -- /usr/local/bin/npm start
-  #   networks:
-  #     - app-network
+  app:
+    build:
+      context: ./frontend
+    image: nginx
+    container_name: app
+    ports:
+      - "80:80"
+    volumes:
+        - ./frontend:/app
+        - /app/node_modules
+    networks:
+      - app-network
+  nodejs:
+    build:
+      context: .
+    image: nodejs
+    container_name: nodejs
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      - MONGO_USERNAME=$MONGO_USERNAME
+      - MONGO_PASSWORD=$MONGO_PASSWORD
+      - MONGO_HOSTNAME=db
+      - MONGO_PORT=$MONGO_PORT
+      - MONGO_DB=$MONGO_DB
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/home/node/app
+      - node_modules:/home/node/app/node_modules
+    command: ./wait-for.sh db:27017 -- /usr/local/bin/npm start
+    networks:
+      - app-network
   db:
     image: mongo:4.1.8-xenial
     container_name: db
@@ -44,7 +44,7 @@ services:
     ports:
       - "27017:27017"
     volumes:
-      - dbvol:/data/db
+      - dbdata:/data/db
     networks:
       - app-network
     
@@ -53,5 +53,5 @@ networks:
     driver: bridge
 
 volumes:
-  dbvol:
+  dbdata:
   node_modules:
