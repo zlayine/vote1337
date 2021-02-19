@@ -83,6 +83,7 @@ const checkAddMeal = async () => {
 		} else {
 			let mealStart = moment(moment("12:00:00", "HH:mm:ss").toDate());
 			let nowToStartDiff = now.diff(mealStart, "minutes");
+			console.log("meal start", mealStart);
 			console.log("now diff", nowToStartDiff);
 			if (nowToStartDiff >= 0 && nowToStartDiff < 4 * 60) return true;
 			else {
