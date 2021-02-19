@@ -44,7 +44,7 @@ services:
     ports:
       - "27017:27017"
     volumes:
-      - dbdata:/data/db
+      - dbvol:/data/db
     networks:
       - app-network
     
@@ -53,5 +53,5 @@ networks:
     driver: bridge
 
 volumes:
-  dbdata:
+  dbvol:
   node_modules:
