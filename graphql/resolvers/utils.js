@@ -59,14 +59,14 @@ const checkAddMeal = async () => {
 	try {
 		const meal = await models.Meal.findOne().sort({ createdAt: 'desc' });
 		let now = moment();
-		// console.log("now", now);
+		console.log("now", now);
 		// let now = moment(moment("12:45:00", "HH:mm:ss").toDate());
 		if (meal) {
 			let mealDate = moment(new Date(meal.createdAt));
-			let mealStart = moment(moment("13:00:00", "HH:mm:ss").toDate());
+			let mealStart = moment(moment("11:00:00", "HH:mm:ss").toDate());
 			let mealToStartDiff = mealDate.diff(mealStart, "minutes");
 			if (mealToStartDiff >= 0) {
-				mealStart = moment(moment("18:45:00", "HH:mm:ss").toDate());
+				mealStart = moment(moment("16:45:00", "HH:mm:ss").toDate());
 				mealToStartDiff = mealDate.diff(mealStart, "minutes");
 			}
 			let nowToStartDiff = now.diff(mealStart, "minutes");
@@ -80,11 +80,11 @@ const checkAddMeal = async () => {
 			}
 			return false;
 		} else {
-			let mealStart = moment(moment("13:00:00", "HH:mm:ss").toDate());
+			let mealStart = moment(moment("11:00:00", "HH:mm:ss").toDate());
 			let nowToStartDiff = now.diff(mealStart, "minutes");
 			if (nowToStartDiff >= 0 && nowToStartDiff < 4 * 60) return true;
 			else {
-				mealStart = moment(moment("18:45:00", "HH:mm:ss").toDate());
+				mealStart = moment(moment("16:45:00", "HH:mm:ss").toDate());
 				nowToStartDiff = now.diff(mealStart, "minutes");
 				if (nowToStartDiff >= 0 && nowToStartDiff < 3 * 60) return true;
 
