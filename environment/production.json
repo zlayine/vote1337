@@ -7,5 +7,6 @@
 	"MONGO_PASSWORD": "user1337",
 	"MONGO_HOSTNAME": "db",
 	"MONGO_PORT": "27017",
-	"MONGO_DB": "vote1337"
+	"MONGO_DB": "vote1337",
+	"JWT_PKEY": "herfhehrbve12jkdkfdf"
 }

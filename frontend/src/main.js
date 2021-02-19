@@ -8,6 +8,7 @@ import App from './App.vue'
 import 'vuetify/dist/vuetify.min.css';
 import '@fortawesome/fontawesome-free/css/all.css'
 
+
 import { initialize } from './auth.js'
 
 Vue.config.productionTip = false

@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken')
+const env = require('../environment')
 
 module.exports = (req, res, next) => {
 	const authData = req.get('Authorization');
@@ -15,7 +16,7 @@ module.exports = (req, res, next) => {
 	}
 	let decodedToken;
 	try {
-		decodedToken = jwt.verify(token, 'herfhehrbve12jkdkfdf')
+		decodedToken = jwt.verify(token, env.process.JWT_PKEY)
 	} catch (err) {
 		req.isAuth = false;
 		return next();
