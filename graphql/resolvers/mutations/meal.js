@@ -63,7 +63,7 @@ module.exports = {
 			await meal.save();
 			return "success";
 		} catch (err) {
-			console.log(err)
+			console.log(err);
 			throw err;
 		}
 	},

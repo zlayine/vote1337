@@ -6,8 +6,12 @@ import io from "socket.io-client";
 const user = getLocalUser();
 
 const createMealItems = async (commit, items, id) => {
+	let total = items.length;
+	let current = 0;
+	let divider = (1 / total) * 100;
+	commit('UPDATE_PERCENTAGE', 0);
 	for (let i = 0; i < items.length; i++) {
-		commit('UPDATE_PERCENTAGE', 0);
+		current = i * divider;
 		const query = `{"query": "mutation ($file: Upload!){ createMealItem (input: {meal: \\"${id}\\", name: \\"${items[i].name}\\", image: $file })}", "variables": {"file": null}}`;
 		const map = `{"0": ["variables.file"]}`;
 		const formdata = new FormData();
@@ -19,7 +23,7 @@ const createMealItems = async (commit, items, id) => {
 			method: 'post',
 			onUploadProgress: function (progressEvent) {
 				let uploadPercentage = parseInt(Math.round((progressEvent.loaded * 100) / progressEvent.total));
-				commit('UPDATE_PERCENTAGE', uploadPercentage);
+				commit('UPDATE_PERCENTAGE', (uploadPercentage / total) + current);
 			}.bind(this),
 			data: formdata
 		});
@@ -67,6 +71,26 @@ const getMeal = async (id) => {
 	} catch (error) {
 		console.log(error);
 	}
+}
+
+const deleteMeal = async (id) => {
+	try {
+		const res = await axios({
+			url: process.env.VUE_APP_GRAPHQL_API,
+			method: 'post',
+			data: {
+				query: `
+			mutation { 
+				deleteMeal (mealId: "${id}")
+			}
+			`
+			}
+		});
+		return res
+	} catch (error) {
+		console.log(error);
+	}
+
 }
 
 export default {
@@ -322,6 +346,8 @@ export default {
 				const items = await createMealItems(commit, data.items, id);
 				if (!items) {
 					commit("SET_NOTIFICATION", { msg: "Failed to add meal items", error: 1 });
+					await deleteMeal(id);
+					commit('UPDATE_PERCENTAGE', null);
 					commit("UPDATE_LOADING");
 					return 0;
 				}
@@ -485,7 +511,6 @@ export default {
 				});
 				commit("SET_USER", res.data.data.getUser);
 				commit("UPDATE_LOADING")
-
 				return "1";
 			} catch (error) {
 				console.log(error)
@@ -496,17 +521,7 @@ export default {
 		async deleteMeal({ commit }, id) {
 			try {
 				commit("UPDATE_LOADING")
-				const res = await axios({
-					url: process.env.VUE_APP_GRAPHQL_API,
-					method: 'post',
-					data: {
-						query: `
-						mutation { 
-							deleteMeal (mealId: "${id}")
-						}
-						`
-					}
-				});
+				const res = await deleteMeal(id);
 				if (res.data.errors)
 					commit("SET_NOTIFICATION", { msg: res.data.errors, error: 1 });
 				else {

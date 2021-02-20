@@ -16,7 +16,6 @@ import Loader from "./components/Loader";
 import Notification from "./components/Notification";
 import FooterLayout from "./components/FooterLayout.vue";
 
-//  io("http://localhost:3000", { query: { token:  } })
 export default {
   name: "main-app",
   data() {
