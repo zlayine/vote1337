@@ -35,7 +35,6 @@ module.exports = (io) => {
 
 		socket.on("disconnect", () => {
 			delete users[socket.decoded];
-			console.log("disconnected")
 		});
 	});
 }

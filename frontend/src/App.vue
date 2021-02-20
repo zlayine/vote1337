@@ -24,11 +24,6 @@ export default {
       loading: false,
     };
   },
-  async created() {
-    if (this.currentUser && !this.user) {
-      await this.$store.dispatch("getUser", this.currentUser.id);
-    }
-  },
   methods: {
     listen() {
       this.socket.on("newMealAdded", (data) => {
@@ -42,15 +37,17 @@ export default {
       });
     },
     async joinServer() {
-      if (this.currentUser) {
-        await this.$store.dispatch("connectSocket", this.currentUser.token);
-        if (this.socket) this.listen();
-      }
+      await this.$store.dispatch("connectSocket", this.currentUser.token);
+      if (this.socket) this.listen();
     },
   },
   async mounted() {
-		await this.joinServer();
-	},
+    if (this.currentUser) {
+      if (!this.user)
+        await this.$store.dispatch("getUser", this.currentUser.id);
+      if (!this.socket) await this.joinServer();
+    }
+  },
   computed: {
     currentUser() {
       return this.$store.getters.currentUser;
