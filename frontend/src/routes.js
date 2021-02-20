@@ -6,6 +6,7 @@ import NotFound from './pages/NotFound.vue'
 export const routes = [
 	{
 		path: "/",
+		name: "home",
 		component: Home,
 		meta: {
 			requiresAuth: true,
@@ -13,6 +14,7 @@ export const routes = [
 	},
 	{
 		path: "/addmeal",
+		name: "addmeal",
 		component: AddMeal,
 		meta: {
 			requiresAuth: true,
@@ -20,6 +22,7 @@ export const routes = [
 	},
 	{
 		path: "/auth",
+		name: "auth",
 		component: Auth,
 		meta: {
 			requiresAuth: false,

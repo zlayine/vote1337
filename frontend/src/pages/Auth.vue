@@ -26,6 +26,9 @@ export default {
     if (this.currentUser) this.$router.push("/");
     if (this.$route.query.code) this.accessData();
   },
+  mounted() {
+    this.loading = false;
+  },
   methods: {
     signin() {
       this.loading = true;
@@ -66,10 +69,10 @@ export default {
     margin-top: 25px;
 
     button {
-			text-transform: capitalize;
+      text-transform: capitalize;
       font-size: 20px;
       font-weight: 600;
-			padding: 20px 50px;
+      padding: 20px 50px;
       background-color: #2eb9ff;
       color: #fff;
     }

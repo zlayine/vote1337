@@ -18,7 +18,7 @@
           <v-icon color="grey" large>mdi-logout</v-icon>
         </div>
       </div>
-      <div v-else>
+      <div v-else-if="$route.name != 'auth' ">
         <router-link class="link" to="/auth">Login</router-link>
       </div>
     </div>
