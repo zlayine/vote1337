@@ -82,7 +82,7 @@ export default {
       return this.$store.getters.user;
     },
     voted() {
-			// return false;
+			return false;
       if (!this.meal.enabled) return true;
       if (this.currentUser && this.meal.meals[0]) {
         const res = this.meal.meals[0].votes.filter((v) => {

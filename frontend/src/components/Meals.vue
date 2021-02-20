@@ -1,6 +1,6 @@
 <template>
   <div class="meals_container">
-    <v-card class="add-meal-holder" to="/addmeal" v-if="!addMeal">
+    <v-card class="add-meal-holder" to="/addmeal" v-if="addMeal">
       <div class="add-meal-img">
         <img :src="add_meal_img" alt="add meal image" />
       </div>

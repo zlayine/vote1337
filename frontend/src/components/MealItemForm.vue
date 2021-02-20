@@ -32,7 +32,7 @@
           hide-details
           required
           outlined
-          class="my-2"
+          class="my-2 input-name"
         ></v-text-field>
         <div class="actions">
           <v-btn class="mx-2" @click="clearItem" fab dark small color="error">
@@ -180,10 +180,11 @@ export default {
 <style lang="scss" scoped>
 .item-form {
   margin-right: 15px;
+	width: 200px;
   transition: 200ms all;
 
   .empty {
-    width: 200px;
+    width: 100%;
     height: 300px;
     cursor: pointer;
     border: 4px dotted #2eb9ffd5;
@@ -220,6 +221,10 @@ export default {
 
   .item-info {
     transition: 200ms all;
+
+		.input-name {
+			width: 100%;
+		}
   }
   .actions {
     display: flex;

@@ -11,7 +11,7 @@
         outlined
         hide-details
       ></v-text-field>
-      <p class="text">Meal items:</p>
+      <p class="text">Meal items: <span class="hint">(Prefered square images)</span></p>
       <div class="meal-items mb-5">
         <meal-item-form @saved="addItem" ref="empty" />
         <template v-for="(item, index) in items">
@@ -127,6 +127,11 @@ export default {
     font-size: 19px;
     margin: 0;
     padding-left: 10px;
+
+		.hint {
+			font-size: 12px;
+			color: #3d3d3d;
+		}
   }
 
   .input {
