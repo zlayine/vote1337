@@ -41,13 +41,16 @@ export default {
         this.$store.dispatch("socketDeleteMeal", data);
       });
     },
+    async joinServer() {
+      if (this.currentUser) {
+        await this.$store.dispatch("connectSocket", this.currentUser.token);
+        if (this.socket) this.listen();
+      }
+    },
   },
   async mounted() {
-    if (this.currentUser) {
-      await this.$store.dispatch("connectSocket", this.currentUser.token);
-      if (this.socket) this.listen();
-    }
-  },
+		await this.joinServer();
+	},
   computed: {
     currentUser() {
       return this.$store.getters.currentUser;

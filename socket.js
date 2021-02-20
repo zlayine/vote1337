@@ -7,7 +7,7 @@ module.exports = (io) => {
 	let users = {};
 
 	io.use((socket, next) => {
-		console.log("user connected: ", socket.handshake.query)
+		// console.log("user connected: ", socket.handshake.query)
 		if (socket.handshake.query && socket.handshake.query.token) {
 			jwt.verify(socket.handshake.query.token, env.process.JWT_PKEY,
 				(err, decoded) => {
@@ -17,18 +17,20 @@ module.exports = (io) => {
 			);
 		}
 	}).on('connection', (socket) => {
+		socket.on('join', async (campus) => {
+			socket.join(campus)
+		});
 
 		socket.on('newMeal', async (data) => {
-			socket.broadcast.emit('newMealAdded', data);
+			socket.broadcast.to(data.campus).emit('newMealAdded', data);
 		});
 
 		socket.on('newVote', async (data) => {
-			socket.broadcast.emit('newVoteAdded', data);
+			socket.broadcast.to(data.campus).emit('newVoteAdded', data);
 		});
 
 		socket.on('deletedMeal', async (data) => {
-			io.emit('mealDeleted', data);
-			// socket.broadcast.emit('mealDeleted', data);
+			socket.broadcast.to(data.campus).emit('mealDeleted', data);
 		});
 
 		socket.on("disconnect", () => {

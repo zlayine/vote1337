@@ -35,10 +35,23 @@ export default {
       if (!this.currentUser) window.location.href = process.env.VUE_APP_AUTH_42;
       else login(this.currentUser.user);
     },
+    listen() {
+      this.socket.on("newMealAdded", (data) => {
+        this.$store.dispatch("socketGetMeal", data);
+      });
+      this.socket.on("newVoteAdded", (data) => {
+        this.$store.dispatch("socketUpdateMeal", data);
+      });
+      this.socket.on("mealDeleted", (data) => {
+        this.$store.dispatch("socketDeleteMeal", data);
+      });
+    },
     async accessData() {
       this.loading = true;
       await this.$store.dispatch("createUser", this.$route.query.code + "");
       this.loading = false;
+      await this.$store.dispatch("connectSocket", this.currentUser.token);
+      this.listen();
       this.$router.push("/");
     },
   },

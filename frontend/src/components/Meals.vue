@@ -165,7 +165,7 @@ export default {
     border-radius: 10px;
     overflow: hidden;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
 
     .add-meal-img {
       width: 30%;

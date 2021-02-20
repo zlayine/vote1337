@@ -172,26 +172,22 @@ export default {
 			saveAs(blob, `export_${data[0].mealName}_${data[0].mealDate}.csv`);
 		},
 		SET_SOCKET(state, payload) {
-			if (!state.socket)
+			if (!state.socket) {
 				state.socket = io(process.env.VUE_APP_API_HOST, { query: { token: payload } })
+				state.socket.emit('join', state.user.campus);
+			}
 		},
-		// SOCKET_LISTENERS(state, payload) {
-		// 	const socket = state.socket;
-		// 	socket.on("newMealAdded", (data) => {
-
-		// 	});
-		// },
 		EMIT_ADD_MEAL(state, payload) {
 			const socket = state.socket;
-			socket.emit("newMeal", { id: payload });
+			socket.emit("newMeal", { id: payload, campus: state.user.campus });
 		},
 		EMIT_ADD_VOTE(state, payload) {
 			const socket = state.socket;
-			socket.emit("newVote", { id: payload });
+			socket.emit("newVote", { id: payload, campus: state.user.campus });
 		},
 		EMIT_DELETE_MEAL(state, payload) {
 			const socket = state.socket;
-			socket.emit("deletedMeal", { id: payload });
+			socket.emit("deletedMeal", { id: payload, campus: state.user.campus });
 		}
 	},
 	actions: {
