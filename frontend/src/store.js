@@ -541,7 +541,6 @@ export default {
 							`
 					}
 				});
-				console.log(res.data.data.checkAddMeal);
 				commit("SET_ADDMEAL", res.data.data.checkAddMeal);
 			} catch (error) {
 				commit("SET_NOTIFICATION", { msg: "Server error", error: 1 });
