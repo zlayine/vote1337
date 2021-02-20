@@ -1,12 +1,12 @@
 <template>
   <div class="meals_container">
-    <v-card class="add-meal-holder" to="/addmeal" v-if="addMeal">
+    <v-card class="add-meal-holder" to="/addmeal" v-if="!addMeal">
       <div class="add-meal-img">
         <img :src="add_meal_img" alt="add meal image" />
       </div>
       <div class="add-meal">
         <div class="text">ADD TODAY'S MEAL</div>
-        <v-btn class="mx-2" fab small color="#2eb9ff">
+				 <v-btn class="mx-2" fab small color="#2eb9ff">
           <v-icon dark color="white"> mdi-plus </v-icon>
         </v-btn>
       </div>
@@ -70,7 +70,6 @@ import ImagePreview from "./ImagePreview.vue";
 import add_meal_img from "../assets/addmeal_img.svg";
 import nomeals_img from "../assets/nomeals_img.svg";
 
-
 export default {
   data() {
     return {
@@ -91,7 +90,6 @@ export default {
   },
 
   methods: {
-    
     openReports(id) {
       this.selectedMeal = this.meals.filter((m) => m._id == id)[0];
       this.reports = true;
@@ -156,7 +154,8 @@ export default {
 
   .add-meal-holder {
     width: 100%;
-    height: 300px;
+		max-height: 300px;
+		min-height: 300px;
     margin-bottom: 20px;
     border: 4px solid #2eb9ff;
     color: #2eb9ff;
@@ -166,12 +165,13 @@ export default {
     border-radius: 10px;
     overflow: hidden;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
 
     .add-meal-img {
       width: 30%;
       height: 100%;
       position: relative;
+
       img {
         width: 100%;
         margin-top: 15px;
@@ -207,8 +207,11 @@ export default {
 
 @media (max-width: 768px) {
   .meals_container {
+    .none .image {
+      width: 70%;
+    }
     .add-meal-holder {
-      width: 100%;
+			// margin-top: 20px;
       border-radius: 20px;
       flex-direction: column;
 
@@ -223,16 +226,7 @@ export default {
 
       .add-meal {
         flex: 0;
-      }
-    }
-  }
-}
-
-@media (max-width: 768px) {
-  .meals_container {
-    .none {
-      .image {
-        width: 70%;
+        position: relative;
       }
     }
   }
