@@ -46,12 +46,15 @@ export default {
         this.$store.dispatch("socketDeleteMeal", data);
       });
     },
+    async joinServer() {
+      await this.$store.dispatch("connectSocket", this.currentUser.token);
+      if (this.socket) this.listen();
+    },
     async accessData() {
       this.loading = true;
       await this.$store.dispatch("createUser", this.$route.query.code + "");
+			await this.joinServer();
       this.loading = false;
-      await this.$store.dispatch("connectSocket", this.currentUser.token);
-      this.listen();
       this.$router.push("/");
     },
   },

@@ -33,6 +33,11 @@ const request_data = async (token) => {
 	}
 }
 
+const getUserCampus = (data) => {
+	let primary = data.campus_users.filter(c => c.is_primary == true)[0].campus_id;
+	return data.campus.filter(c => c.id == primary)[0].name;
+}
+
 module.exports = {
 	createUser: async (root, args, cntx, req) => {
 		try {
@@ -42,13 +47,14 @@ module.exports = {
 				throw new Error("User creation failed");
 			const user = await models.User.findOne({ username: data.login })
 			if (!user) {
+				let campus = getUserCampus(data);
 				const userData = new models.User({
 					username: data.login,
 					displayname: data.displayname,
 					intra_id: data.id,
 					image_url: data.image_url,
 					staff: data["staff?"],
-					campus: data.campus[0].name
+					campus: campus
 				});
 				const result = await userData.save();
 				return await loginUser(result.id);

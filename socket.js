@@ -19,6 +19,7 @@ module.exports = (io) => {
 	}).on('connection', (socket) => {
 		socket.on('join', async (campus) => {
 			socket.join(campus)
+			// console.log("user joined", campus)
 		});
 
 		socket.on('newMeal', async (data) => {
