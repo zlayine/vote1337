@@ -1,6 +1,6 @@
 <template>
   <div class="meals_container">
-    <filter-layout @changeDate="fetchMeals" @changeCampus="fetchMeals" />
+    <filter-layout @changeDate="fetchMeals"  @changeCampus="fetchMeals" />
     <v-card class="add-meal-holder" to="/addmeal" v-if="addMeal">
       <div class="add-meal-img">
         <img :src="add_meal_img" alt="add meal image" />
@@ -12,10 +12,12 @@
         </v-btn>
       </div>
     </v-card>
-    <!-- <div class="none" v-if="!meals.length && !addMeal"> -->
-    <div class="none" v-if="displayNone">
+    <div class="none" v-if="displayNone || !meals.length">
       <div class="text text-center" v-if="displayNone">
         Next meal will be available at: {{ getDisplayText }}
+      </div>
+			<div class="text text-center" v-else-if="$route.query.page == 1">
+				No meals avalaible to vote for yet..
       </div>
       <div class="image">
         <img :src="nomeals_img" alt="no meals" />

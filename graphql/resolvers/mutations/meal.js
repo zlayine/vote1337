@@ -2,7 +2,6 @@ const models = require('../../../models')
 const fs = require('fs');
 const patho = require('path');
 const { transformMeal } = require('../merge');
-const socket = require('../../../socket');
 const { checkAddMeal, enableMealVoting, storeFS, compressImage } = require('../utils');
 
 // clean database;

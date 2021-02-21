@@ -3,8 +3,6 @@ const mongoose = require('mongoose')
 const ObjectId = mongoose.Types.ObjectId;
 const { transformMeal, transformExport } = require('../merge');
 const { enableMealVoting, checkAddMeal } = require('../utils');
-const socket = require('../../../socket');
-const { parse } = require('graphql');
 const moment = require('moment')
 
 const parse_date = (date) => {
@@ -63,7 +61,7 @@ module.exports = {
 		}
 	},
 	checkAddMeal: async (root, args, cntx, req) => {
-		// return true;
+		return true;
 		if (!cntx.isAuth)
 			return false;
 		return await checkAddMeal(args.campus);
