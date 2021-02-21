@@ -96,7 +96,7 @@ input VoteInput {
 }
 
 type RootQuery {
-    getMeals(page: Int): MealData!
+    getMeals(page: Int, campus: String, date: [String]): MealData!
 	getMeal(mealId: String!): Meal!
     getReports(meal: String!): [Report!]
 	login(userId: String!): LoginData!
@@ -106,8 +106,8 @@ type RootQuery {
 }
 
 type RootMutation {
-	createMeal(mealName: String): Meal
-	createMealItem(input: MealItemInput): String
+	createMeal(mealName: String!): Meal
+	createMealItem(input: MealItemInput!): String
 	deleteMeal(mealId: String!): Boolean
 	createUser(code: String!): LoginData
 	addVotes(voteInput: [VoteInput!]!, meal: String!): Meal

@@ -45,6 +45,8 @@ module.exports = {
 		if (!cntx.isAuth)
 			throw new Error('Unauthenticated');
 		try {
+			if (!args.input.meal || !args.input.image)
+				throw new Error('MealItem information is missing');
 			const meal = await models.Meal.findById(args.input.meal);
 			const { filename, createReadStream } = await args.input.image;
 			const { ext } = await patho.parse(filename);
