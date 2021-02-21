@@ -125,7 +125,7 @@ export default {
 	mutations: {
 		LOGIN(state, payload) {
 			state.isLogged = true;
-			state.currentUser = Object.assign({}, { id: payload.user._id }, { token: payload.token });
+			state.currentUser = Object.assign({}, { id: payload.user._id, campus: payload.user.campus }, { token: payload.token });
 			state.user = payload.user;
 			localStorage.setItem("user", JSON.stringify(state.currentUser));
 			axios.defaults.headers.common["Authorization"] = `Bearer ${state.currentUser.token}`

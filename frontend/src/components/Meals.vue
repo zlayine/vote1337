@@ -90,7 +90,7 @@ export default {
     if (this.meals.length > 0) return;
     let page = this.$route.query.page;
     await this.$store.dispatch("checkAddMeal");
-    this.campus = this.user ? this.user.campus : "";
+    this.campus = this.user ? this.user.campus : this.currentUser.campus;
     await this.fetchMeals({page: page ? page : 1, campus: this.campus});
   },
 
