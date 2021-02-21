@@ -1,6 +1,6 @@
 <template>
   <div class="nav">
-    <div class="nav_logo">
+    <router-link class="nav_logo" to="/auth">
       <div class="logo">
         <img :src="logo" alt="1337 logo" />
       </div>
@@ -8,7 +8,7 @@
         <h1>FOOD</h1>
         <span>ASSESSMENT</span>
       </div>
-    </div>
+    </router-link>
     <div class="nav_actions">
       <div class="action" v-if="user">
         <v-avatar color="primary" class="avatar" size="50">
@@ -18,7 +18,7 @@
           <v-icon color="grey" large>mdi-logout</v-icon>
         </div>
       </div>
-      <div v-else-if="$route.name != 'auth' ">
+      <div v-else-if="$route.name != 'auth'">
         <router-link class="link" to="/auth">Login</router-link>
       </div>
     </div>
@@ -61,6 +61,7 @@ export default {
 
   .nav_logo {
     margin-left: 25px;
+		text-decoration: none;
     display: flex;
     flex-direction: row;
 
@@ -71,6 +72,7 @@ export default {
     }
     .text {
       display: flex;
+			color: #000;
       margin-top: 30px;
 
       h1 {
