@@ -12,7 +12,7 @@
         </v-btn>
       </div>
     </v-card>
-    <div class="none" v-if="displayNone || !meals.length">
+    <div class="none" v-if="displayNone || (!meals.length && !addMeal)">
       <div class="text text-center" v-if="displayNone">
         Next meal will be available at: {{ getDisplayText }}
       </div>
