@@ -3,13 +3,18 @@
     <div class="meal_header">
       <div class="meal_info">
         <div class="meal_title">{{ this.meal.name }}</div>
-        <div class="meal_user">{{ this.meal.user.username }} <span class="date">{{this.meal.createdAt | formatDate}}</span></div>
+        <div class="meal_user">
+          {{ this.meal.user.username }}
+          <span class="date">{{ this.meal.createdAt | formatDate }}</span>
+        </div>
       </div>
       <div class="meal_action" v-if="user && user.staff">
         <div class="reports">
-          <v-btn class="my-2" plain color="primary" @click="openReports">
-            <v-icon left> mdi-poll </v-icon> Reports
-          </v-btn>
+          <v-badge color="red" overlap :content="this.totalReports">
+            <v-btn class="" plain color="primary" @click="openReports">
+              <v-icon left> mdi-poll </v-icon> Reports
+            </v-btn>
+          </v-badge>
         </div>
       </div>
     </div>
@@ -31,7 +36,7 @@
         <meal-item
           :key="item._id"
           :item="item"
-					@preview="enablePreview"
+          @preview="enablePreview"
           v-for="item in this.meal.meals"
         ></meal-item>
       </div>
@@ -70,9 +75,9 @@ export default {
         await this.$store.dispatch("checkAddMeal");
       }
     },
-		enablePreview(url){
-			this.$emit('preview', url);
-		}
+    enablePreview(url) {
+      this.$emit("preview", url);
+    },
   },
   computed: {
     currentUser() {
@@ -82,7 +87,7 @@ export default {
       return this.$store.getters.user;
     },
     voted() {
-			return false;
+      // return false;
       if (!this.meal.enabled) return true;
       if (this.currentUser && this.meal.meals[0]) {
         const res = this.meal.meals[0].votes.filter((v) => {
@@ -96,17 +101,22 @@ export default {
       if (
         this.meal &&
         this.currentUser &&
-        (this.meal.user._id == this.currentUser.id || (this.user && this.user.staff))
+        (this.meal.user._id == this.currentUser.id ||
+          (this.user && this.user.staff))
       )
         return true;
       return false;
     },
+    totalReports() {
+      if (!this.meal) return 0;
+      return this.meal.meals.reduce((total, m) => total + m.reports, 0) + "";
+    },
   },
-	filters: {
-		formatDate(val){
-			return moment(String(val)).format('DD/MM/YYYY hh:mm');
-		}
-	},
+  filters: {
+    formatDate(val) {
+      return moment(String(val)).format("DD/MM/YYYY hh:mm");
+    },
+  },
   components: {
     MealItem,
     ConfirmDialog: () => import("./ConfirmDialog"),
@@ -135,13 +145,19 @@ export default {
     font-weight: 700;
     color: grey;
 
-		span {
-			font-size: 16px;
-			&::before {
-				content: "•";
-				margin-right: 5px;
-			}
-		}
+    span {
+      font-size: 16px;
+      &::before {
+        content: "•";
+        margin-right: 5px;
+      }
+    }
+  }
+
+  .reports {
+    button {
+      padding: 8px 10px;
+    }
   }
 
   .meal_items_holder {
@@ -207,8 +223,8 @@ export default {
       border-radius: 10px;
       overflow-x: auto;
       padding-bottom: 15px;
-			padding-top: 5px;
-			padding-left: 5px;
+      padding-top: 5px;
+      padding-left: 5px;
     }
   }
 }
@@ -217,15 +233,15 @@ export default {
   .meal_section {
     .meal_title {
       font-size: 20px;
-			line-height: 20px;
+      line-height: 20px;
     }
 
     .meal_user {
       font-size: 14px;
 
-			span {
-				font-size: 12px;
-			}
+      span {
+        font-size: 12px;
+      }
     }
 
     .meal_items_holder {

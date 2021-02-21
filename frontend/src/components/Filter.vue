@@ -115,7 +115,7 @@ export default {
     padding: 10px;
 
     .campus-filter {
-      margin-bottom: 20px;
+      margin-bottom: 10px;
     }
   }
 }

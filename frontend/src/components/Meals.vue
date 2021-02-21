@@ -83,7 +83,7 @@ export default {
       nomeals_img: notfound_img,
       preview: null,
       campus: null,
-			date: [],
+      date: [],
     };
   },
   async created() {
@@ -91,7 +91,7 @@ export default {
     let page = this.$route.query.page;
     await this.$store.dispatch("checkAddMeal");
     this.campus = this.user ? this.user.campus : this.currentUser.campus;
-    await this.fetchMeals({page: page ? page : 1, campus: this.campus});
+    await this.fetchMeals({ page: page ? page : 1, campus: this.campus });
   },
 
   methods: {
@@ -107,18 +107,20 @@ export default {
     },
     async changePage() {
       this.$router.replace({ query: { page: this.page } });
-      await this.fetchMeals({page: this.page, campus: this.campus, date: this.date});
+      await this.fetchMeals({
+        page: this.page,
+        campus: this.campus,
+        date: this.date,
+      });
       window.scrollTo(0, 0);
     },
     enablePreview(url) {
       this.preview = url;
     },
     async fetchMeals(data) {
-			if (data.date)
-				this.date = data.date;
-			else
-				data.date = this.date;
-			// console.log(data);
+      if (data.date) this.date = data.date;
+      else data.date = this.date;
+      // console.log(data);
       await this.$store.dispatch("getMeals", data);
     },
   },
@@ -224,6 +226,8 @@ export default {
 
 @media (max-width: 768px) {
   .meals_container {
+    margin-top: 0px;
+
     .none .image {
       width: 70%;
     }

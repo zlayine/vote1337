@@ -56,6 +56,7 @@ const getMeal = async (id) => {
 							image_url 
 							votes_up 
 							votes_down
+							reports
 							votes {
 								user {
 									_id
@@ -241,6 +242,7 @@ export default {
 										image_url 
 										votes_up 
 										votes_down
+										reports
 										votes {
 											user {
 												_id
@@ -303,6 +305,7 @@ export default {
 								createdAt
 								meal_item {
 									_id
+									reports
 								}
 								user {
 									username
@@ -372,6 +375,7 @@ export default {
 									image_url 
 									votes_up 
 									votes_down
+									reports
 									votes {
 										user {
 											_id
