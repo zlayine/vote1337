@@ -215,7 +215,7 @@ export default {
 		}
 	},
 	actions: {
-		async getMeals({ commit }, page) {
+		async getMeals({ commit }, data) {
 			try {
 				commit("UPDATE_LOADING")
 				const res = await axios({
@@ -224,7 +224,7 @@ export default {
 					data: {
 						query: `
 						query { 
-							getMeals (page: ${page}) {
+							getMeals (page: ${data.page}, campus: "${data.campus}", date: "${data.date}") {
 								totalPages
 								meals {
 									_id

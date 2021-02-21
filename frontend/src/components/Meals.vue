@@ -1,12 +1,13 @@
 <template>
   <div class="meals_container">
+    <filter-layout @changeDate="fetchMeals" @changeCampus="fetchMeals" />
     <v-card class="add-meal-holder" to="/addmeal" v-if="addMeal">
       <div class="add-meal-img">
         <img :src="add_meal_img" alt="add meal image" />
       </div>
       <div class="add-meal">
         <div class="text">ADD TODAY'S MEAL</div>
-				 <v-btn class="mx-2" fab small color="#2eb9ff">
+        <v-btn class="mx-2" fab small color="#2eb9ff">
           <v-icon dark color="white"> mdi-plus </v-icon>
         </v-btn>
       </div>
@@ -67,8 +68,9 @@ import Meal from "./Meal.vue";
 import ReportsModal from "./ReportsModal.vue";
 import MealItemVoting from "./MealItemVoting.vue";
 import ImagePreview from "./ImagePreview.vue";
+import FilterLayout from "./Filter.vue";
 import add_meal_img from "../assets/addmeal_img.svg";
-import nomeals_img from "../assets/nomeals_img.svg";
+import notfound_img from "../assets/notfound_img.svg";
 
 export default {
   data() {
@@ -78,15 +80,18 @@ export default {
       selectedMeal: null,
       add_meal_img: add_meal_img,
       page: 1,
-      nomeals_img: nomeals_img,
+      nomeals_img: notfound_img,
       preview: null,
+      campus: null,
+			date: [],
     };
   },
   async created() {
     if (this.meals.length > 0) return;
     let page = this.$route.query.page;
-    await this.$store.dispatch("getMeals", page ? page : 1);
     await this.$store.dispatch("checkAddMeal");
+    this.campus = this.user ? this.user.campus : "";
+    await this.fetchMeals({page: page ? page : 1, campus: this.campus});
   },
 
   methods: {
@@ -102,11 +107,19 @@ export default {
     },
     async changePage() {
       this.$router.replace({ query: { page: this.page } });
-      await this.$store.dispatch("getMeals", this.page);
+      await this.fetchMeals({page: this.page, campus: this.campus, date: this.date});
       window.scrollTo(0, 0);
     },
     enablePreview(url) {
       this.preview = url;
+    },
+    async fetchMeals(data) {
+			if (data.date)
+				this.date = data.date;
+			else
+				data.date = this.date;
+			// console.log(data);
+      await this.$store.dispatch("getMeals", data);
     },
   },
   computed: {
@@ -122,12 +135,16 @@ export default {
     totalPages() {
       return this.$store.getters.mealTotalPages;
     },
+    user() {
+      return this.$store.getters.user;
+    },
   },
   components: {
     Meal,
     ReportsModal,
     MealItemVoting,
     ImagePreview,
+    FilterLayout,
   },
 };
 </script>
@@ -154,8 +171,8 @@ export default {
 
   .add-meal-holder {
     width: 100%;
-		max-height: 300px;
-		min-height: 300px;
+    max-height: 300px;
+    min-height: 300px;
     margin-bottom: 20px;
     border: 4px solid #2eb9ff;
     color: #2eb9ff;
@@ -211,7 +228,7 @@ export default {
       width: 70%;
     }
     .add-meal-holder {
-			// margin-top: 20px;
+      // margin-top: 20px;
       border-radius: 20px;
       flex-direction: column;
 
