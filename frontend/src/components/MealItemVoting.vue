@@ -246,16 +246,11 @@ export default {
           overflow: hidden;
           display: flex;
           transition: 500ms all;
-          // justify-content: center;
-          max-width: 400px;
-          min-width: 400px;
+          justify-content: center;
 
           img {
             margin: auto;
-            height: 100%;
-            max-width: 100%;
-            // max-height: 400px;
-            // height: 100%;
+						width: 100%;
           }
         }
 
@@ -366,8 +361,6 @@ export default {
 
           .image {
             height: 300px;
-            max-width: 300px;
-            min-width: 300px;
           }
         }
       }

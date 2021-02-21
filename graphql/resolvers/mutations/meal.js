@@ -21,11 +21,11 @@ module.exports = {
 		if (!cntx.isAuth)
 			throw new Error('Unauthenticated');
 		try {
-			if (!await checkAddMeal())
+			const user = await models.User.findById(cntx.userId);
+			if (!await checkAddMeal(user.campus))
 				throw new Error('Today\'s meal already exists.');
 			if (args.mealName == "null" || args.mealName == "")
 				throw new Error('Meal name is required');
-			const user = await models.User.findById(cntx.userId);
 			const meal = new models.Meal({
 				name: args.mealName,
 				user: cntx.userId,

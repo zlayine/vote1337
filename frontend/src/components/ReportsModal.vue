@@ -36,7 +36,7 @@
         </div>
       </v-item-group>
       <div class="reports">
-        <transition name="fade">
+        <transition name="fade-out">
           <div
             class="none"
             v-if="
@@ -50,7 +50,7 @@
             }}
           </div>
         </transition>
-        <transition-group name="fade">
+        <transition-group name="fade-out">
           <v-card
             class="report-info"
             elevation="1"

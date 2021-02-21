@@ -543,7 +543,7 @@ export default {
 				commit("SET_NOTIFICATION", { msg: "Cannot delete this item..", error: 1 });
 			}
 		},
-		async checkAddMeal({ commit }) {
+		async checkAddMeal({ commit }, campus) {
 			try {
 				const res = await axios({
 					url: process.env.VUE_APP_GRAPHQL_API,
@@ -551,7 +551,7 @@ export default {
 					data: {
 						query: `
 								query { 
-									checkAddMeal 
+									checkAddMeal(campus: "${campus}")
 								}
 							`
 					}

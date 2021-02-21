@@ -18,7 +18,7 @@
       </div>
       <div class="text"></div>
     </div>
-    <transition-group name="fade">
+    <transition-group name="fade-out">
       <meal
         :key="meal._id"
         :meal="meal"
@@ -89,8 +89,8 @@ export default {
   async created() {
     if (this.meals.length > 0) return;
     let page = this.$route.query.page;
-    await this.$store.dispatch("checkAddMeal");
     this.campus = this.user ? this.user.campus : this.currentUser.campus;
+    await this.$store.dispatch("checkAddMeal", this.campus);
     await this.fetchMeals({ page: page ? page : 1, campus: this.campus });
   },
 

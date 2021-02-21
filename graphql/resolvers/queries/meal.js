@@ -66,7 +66,7 @@ module.exports = {
 		// return true;
 		if (!cntx.isAuth)
 			return false;
-		return await checkAddMeal();
+		return await checkAddMeal(args.campus);
 	},
 	getMealExport: async (root, args, cntx, req) => {
 		if (!cntx.isAuth)

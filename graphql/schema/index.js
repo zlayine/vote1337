@@ -101,7 +101,7 @@ type RootQuery {
     getReports(meal: String!): [Report!]
 	login(userId: String!): LoginData!
 	getUser(userId: String!): User!
-	checkAddMeal: Boolean!
+	checkAddMeal(campus: String!): Boolean!
 	getMealExport(mealId: String): [MealExport]!
 }
 
