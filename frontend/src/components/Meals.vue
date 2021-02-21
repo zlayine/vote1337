@@ -12,11 +12,14 @@
         </v-btn>
       </div>
     </v-card>
-    <div class="none" v-if="!meals.length && !addMeal">
+    <!-- <div class="none" v-if="!meals.length && !addMeal"> -->
+    <div class="none" v-if="displayNone">
+      <div class="text text-center" v-if="displayNone">
+        Next meal will be available at: {{ getDisplayText }}
+      </div>
       <div class="image">
         <img :src="nomeals_img" alt="no meals" />
       </div>
-      <div class="text"></div>
     </div>
     <transition-group name="fade-out">
       <meal
@@ -71,6 +74,7 @@ import ImagePreview from "./ImagePreview.vue";
 import FilterLayout from "./Filter.vue";
 import add_meal_img from "../assets/addmeal_img.svg";
 import notfound_img from "../assets/notfound_img.svg";
+import moment from "moment";
 
 export default {
   data() {
@@ -91,6 +95,7 @@ export default {
     let page = this.$route.query.page;
     this.campus = this.user ? this.user.campus : this.currentUser.campus;
     await this.$store.dispatch("checkAddMeal", this.campus);
+    if (!page) this.$router.replace({ query: { page: 1 } });
     await this.fetchMeals({ page: page ? page : 1, campus: this.campus });
   },
 
@@ -120,8 +125,27 @@ export default {
     async fetchMeals(data) {
       if (data.date) this.date = data.date;
       else data.date = this.date;
-      // console.log(data);
+      this.campus = data.campus;
       await this.$store.dispatch("getMeals", data);
+      await this.$store.dispatch("checkAddMeal", this.campus);
+    },
+    getMealTimeDiff() {
+      let now = moment();
+      // now = moment(moment("16:00:00", "HH:mm:ss").toDate());
+      if (this.meals.length) {
+        let lastMeal = moment(new Date(this.meals[0].createdAt));
+        let diff = now.diff(lastMeal, "hours");
+        if (diff < 3 && diff >= 0) return 0;
+      }
+      let mealStart = moment(moment("11:00:00", "HH:mm:ss").toDate());
+      let nowToStartDiff = now.diff(mealStart, "hours");
+      if (nowToStartDiff == 0) return 1;
+      else if (nowToStartDiff > 0) {
+        mealStart = moment(moment("16:45:00", "HH:mm:ss").toDate());
+        nowToStartDiff = now.diff(mealStart, "hours");
+        if (nowToStartDiff == 0) return 2;
+      }
+      return 0;
     },
   },
   computed: {
@@ -139,6 +163,16 @@ export default {
     },
     user() {
       return this.$store.getters.user;
+    },
+    displayNone() {
+      let diff = this.getMealTimeDiff();
+      // console.log(diff);
+      if (this.addMeal) return false;
+      if (diff) return true;
+    },
+    getDisplayText() {
+      if (this.getMealTimeDiff() == 1) return "12:00";
+      return "17:45";
     },
   },
   components: {
@@ -160,7 +194,8 @@ export default {
   }
 
   .none {
-    width: 100%;
+    width: 70%;
+    margin: auto;
     .image {
       width: 30%;
       margin: auto;
@@ -168,6 +203,11 @@ export default {
       img {
         width: 100%;
       }
+    }
+
+    .text {
+      font-size: 18px;
+      margin-bottom: 15px;
     }
   }
 

@@ -10,7 +10,7 @@
       </div>
       <div class="meal_action" v-if="user && user.staff">
         <div class="reports">
-          <v-badge color="red" overlap :content="this.totalReports">
+          <v-badge color="primary" overlap :content="this.totalReports">
             <v-btn class="" plain color="primary" @click="openReports">
               <v-icon left> mdi-poll </v-icon> Reports
             </v-btn>
@@ -114,7 +114,7 @@ export default {
   },
   filters: {
     formatDate(val) {
-      return moment(String(val)).format("DD/MM/YYYY hh:mm");
+      return moment(String(val)).format("DD/MM/YYYY HH:mm");
     },
   },
   components: {
