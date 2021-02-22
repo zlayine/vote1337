@@ -23,9 +23,7 @@
         <v-date-picker v-model="dates" range color="primary" :max="currentDate">
           <v-spacer></v-spacer>
           <v-btn text color="primary" @click="modal = false"> Cancel </v-btn>
-          <v-btn text color="primary" @click="dateChange">
-            OK
-          </v-btn>
+          <v-btn text color="primary" @click="dateChange"> OK </v-btn>
         </v-date-picker>
       </v-dialog>
     </div>
@@ -66,10 +64,21 @@ export default {
     campusChange() {
       this.$emit("changeCampus", { page: 1, campus: this.campus });
     },
-		dateChange(){
-			this.$refs.dialog.save(this.dates);
-			this.$emit("changeDate", {page: 1, campus: this.campus, date: this.dates})
-		}
+    dateChange() {
+      if (this.dates.length == 2) {
+        this.$refs.dialog.save(this.dates);
+        this.$emit("changeDate", {
+          page: 1,
+          campus: this.campus,
+          date: this.dates,
+        });
+      } else {
+        this.$store.commit("SET_NOTIFICATION", {
+          msg: "Please select a range date",
+          error: 1,
+        });
+      }
+    },
   },
   computed: {
     currentDate() {

@@ -1,5 +1,6 @@
 <template>
   <div class="container add-meal">
+		<div class="overlay" v-show="demo"></div>
     <div class="text-title step0">Adding today's meal</div>
     <form>
       <v-text-field
@@ -15,7 +16,7 @@
         Meal items: <span class="hint">(Prefered square images)</span>
       </p>
       <div class="meal-items mb-5 step2">
-        <meal-item-form @saved="addItem" ref="empty" />
+        <meal-item-form @saved="addItem" ref="empty" v-if="!demo" />
         <template v-for="(item, index) in items">
           <meal-item-form
             :key="index"
@@ -96,6 +97,7 @@ export default {
     return {
       meal_name: null,
       items: [],
+			demo: false,
       nameRules: [(v) => !!v || "Name is required"],
       myCallbacks: {
         onStart: this.myCustomStartTour,
@@ -173,6 +175,7 @@ export default {
   mounted() {
     let tour = localStorage.getItem("tour");
     if (!tour) {
+			this.demo = true;
       this.$tours["addTour"].start();
     }
   },
@@ -217,6 +220,7 @@ export default {
     },
     myCustomFinishTour(data) {
       this.items = [];
+			this.demo = false;
       localStorage.setItem("tour", "done");
     },
   },
@@ -235,6 +239,16 @@ export default {
 <style lang="scss" scoped>
 .add-meal {
   margin-bottom: 100px;
+
+	.overlay {
+		position: fixed;
+		top: 0;
+		right: 0;
+		left: 0;
+		bottom: 0;
+		background-color: #00000030;
+		z-index: 100;
+	}
 
   .text-title {
     font-size: 22px;

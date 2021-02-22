@@ -1,6 +1,7 @@
 <template>
   <v-dialog
     v-model="dialog"
+		persistent
     :max-width="options.width"
     :style="{ zIndex: options.zIndex }"
     @keydown.esc="cancel"

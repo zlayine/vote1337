@@ -543,7 +543,9 @@ export default {
 				commit("SET_NOTIFICATION", { msg: "Cannot delete this item..", error: 1 });
 			}
 		},
-		async checkAddMeal({ commit }, campus) {
+		async checkAddMeal({ commit, state }, campus) {
+			if (!campus)
+				campus = state.currentUser.campus;
 			try {
 				const res = await axios({
 					url: process.env.VUE_APP_GRAPHQL_API,

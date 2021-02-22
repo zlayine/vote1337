@@ -31,6 +31,7 @@
     "imagemin-mozjpeg": "^9.0.0",
     "jsonwebtoken": "^8.5.1",
     "moment": "^2.29.1",
+    "moment-timezone": "^0.5.33",
     "mongoose": "^5.11.15",
     "socket.io": "^2.3.0",
     "subscriptions-transport-ws": "^0.9.18"

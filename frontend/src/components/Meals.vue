@@ -1,6 +1,6 @@
 <template>
   <div class="meals_container">
-    <filter-layout @changeDate="fetchMeals"  @changeCampus="fetchMeals" />
+    <filter-layout @changeDate="fetchMeals" @changeCampus="fetchMeals" />
     <v-card class="add-meal-holder" to="/addmeal" v-if="addMeal">
       <div class="add-meal-img">
         <img :src="add_meal_img" alt="add meal image" />
@@ -16,8 +16,8 @@
       <div class="text text-center" v-if="displayNone">
         Next meal will be available at: {{ getDisplayText }}
       </div>
-			<div class="text text-center" v-else-if="$route.query.page == 1">
-				No meals avalaible to vote for yet..
+      <div class="text text-center" v-else-if="$route.query.page == 1">
+        No meals avalaible to vote for yet..
       </div>
       <div class="image">
         <img :src="nomeals_img" alt="no meals" />
@@ -270,8 +270,11 @@ export default {
   .meals_container {
     margin-top: 0px;
 
-    .none .image {
-      width: 70%;
+    .none {
+      width: 100%;
+      .image {
+        width: 60%;
+      }
     }
     .add-meal-holder {
       // margin-top: 20px;

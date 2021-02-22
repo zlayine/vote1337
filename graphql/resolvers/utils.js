@@ -1,7 +1,7 @@
 const models = require('../../models')
 const fs = require('fs');
 const patho = require('path');
-const moment = require('moment');
+const moment = require('moment-timezone');
 const imagemin = require("imagemin");
 const imageminMozjpeg = require("imagemin-mozjpeg");
 const jwt = require('jsonwebtoken');
@@ -42,8 +42,8 @@ const storeFS = ({ stream, generatedName }) => {
 }
 
 const enableMealVoting = async (meal) => {
-	return true;
-	const latest = await models.Meal.findOne({campus: meal.campus}).sort({ createdAt: 'desc' });
+	// return true;
+	const latest = await models.Meal.findOne({ campus: meal.campus }).sort({ createdAt: 'desc' });
 	if (latest.id != meal._id)
 		return false;
 	let now = moment();
@@ -55,36 +55,35 @@ const enableMealVoting = async (meal) => {
 }
 
 const checkAddMeal = async (campus) => {
-	return true;
+	// return true;
+	let mealTimes = {
+		"Khouribga": { lunch: "12:00:00", dinner: "16:45:00" },
+		"Benguerir": { lunch: "12:00:00", dinner: "16:45:00" }
+	}
 	try {
-		const meal = await models.Meal.findOne({campus: campus}).sort({ createdAt: 'desc' });
-		let now = moment();
-		// console.log("now", now);
+		const meal = await models.Meal.findOne({ campus: campus }).sort({ createdAt: 'desc' });
+		let now = moment().tz("Africa/Casablanca");
+		console.log("now", now);
 		// now = moment(moment("16:00:00", "HH:mm:ss").toDate());
 		if (meal) {
 			let mealDate = moment(new Date(meal.createdAt));
-			let mealStart = moment(moment("11:00:00", "HH:mm:ss").toDate());
+			let mealStart = moment(moment(mealTimes[campus].lunch, "HH:mm:ss").toDate());
 			let mealToStartDiff = mealDate.diff(mealStart, "minutes");
 			if (mealToStartDiff >= 0) {
-				mealStart = moment(moment("16:45:00", "HH:mm:ss").toDate());
+				mealStart = moment(moment(mealTimes[campus].dinner, "HH:mm:ss").toDate());
 				mealToStartDiff = mealDate.diff(mealStart, "minutes");
 			}
 			let nowToStartDiff = now.diff(mealStart, "minutes");
-			// console.log("createed at", meal.createdAt);
-			// console.log("meal start", mealStart);
-			// console.log("now diff", nowToStartDiff);
-			// console.log("meal diff", mealToStartDiff);
-
 			if (nowToStartDiff >= 0 && mealToStartDiff < 0) {
 				return true;
 			}
 			return false;
 		} else {
-			let mealStart = moment(moment("11:00:00", "HH:mm:ss").toDate());
+			let mealStart = moment(moment(mealTimes[campus].lunch, "HH:mm:ss").toDate());
 			let nowToStartDiff = now.diff(mealStart, "minutes");
 			if (nowToStartDiff >= 0 && nowToStartDiff < 4 * 60) return true;
 			else {
-				mealStart = moment(moment("16:45:00", "HH:mm:ss").toDate());
+				mealStart = moment(moment(mealTimes[campus].dinner, "HH:mm:ss").toDate());
 				nowToStartDiff = now.diff(mealStart, "minutes");
 				if (nowToStartDiff >= 0 && nowToStartDiff < 3 * 60) return true;
 
