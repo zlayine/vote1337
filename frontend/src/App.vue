@@ -34,6 +34,12 @@ export default {
       this.socket.on("mealDeleted", (data) => {
         this.$store.dispatch("socketDeleteMeal", data);
       });
+			this.socket.on("someoneAdding", () => {
+				this.$store.commit("NOTIFY_ADDING", true);
+			})
+			this.socket.on("noOneAdding", () => {
+				this.$store.commit("NOTIFY_ADDING", false);
+			})
     },
     async joinServer() {
       await this.$store.dispatch("connectSocket", this.currentUser.token);
