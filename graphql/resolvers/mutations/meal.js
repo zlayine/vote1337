@@ -2,7 +2,6 @@ const models = require('../../../models')
 const fs = require('fs');
 const patho = require('path');
 const { transformMeal } = require('../merge');
-const socket = require('../../../socket');
 const { checkAddMeal, enableMealVoting, storeFS, compressImage } = require('../utils');
 
 // clean database;
@@ -21,11 +20,11 @@ module.exports = {
 		if (!cntx.isAuth)
 			throw new Error('Unauthenticated');
 		try {
-			if (!await checkAddMeal())
+			const user = await models.User.findById(cntx.userId);
+			if (!await checkAddMeal(user.campus))
 				throw new Error('Today\'s meal already exists.');
 			if (args.mealName == "null" || args.mealName == "")
 				throw new Error('Meal name is required');
-			const user = await models.User.findById(cntx.userId);
 			const meal = new models.Meal({
 				name: args.mealName,
 				user: cntx.userId,
@@ -45,6 +44,8 @@ module.exports = {
 		if (!cntx.isAuth)
 			throw new Error('Unauthenticated');
 		try {
+			if (!args.input.meal || !args.input.image)
+				throw new Error('MealItem information is missing');
 			const meal = await models.Meal.findById(args.input.meal);
 			const { filename, createReadStream } = await args.input.image;
 			const { ext } = await patho.parse(filename);
@@ -63,7 +64,7 @@ module.exports = {
 			await meal.save();
 			return "success";
 		} catch (err) {
-			console.log(err)
+			console.log(err);
 			throw err;
 		}
 	},

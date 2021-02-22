@@ -1,18 +1,20 @@
 <template>
   <div class="container add-meal">
-    <div class="text-title">Adding today's meal</div>
+    <div class="text-title step0">Adding today's meal</div>
     <form>
       <v-text-field
         v-model="meal_name"
         label="Meal Name"
-        class="input mb-3"
+        class="input mb-3 step1"
         required
         :rules="nameRules"
         outlined
         hide-details
       ></v-text-field>
-      <p class="text">Meal items:</p>
-      <div class="meal-items mb-5">
+      <p class="text">
+        Meal items: <span class="hint">(Prefered square images)</span>
+      </p>
+      <div class="meal-items mb-5 step2">
         <meal-item-form @saved="addItem" ref="empty" />
         <template v-for="(item, index) in items">
           <meal-item-form
@@ -25,9 +27,63 @@
       </div>
       <div class="actions">
         <v-btn class="mr-4" to="/"> cancel </v-btn>
-        <v-btn color="success" @click="submit"> Create meal </v-btn>
+        <v-btn color="success" class="step7" @click="submit">
+          Create meal
+        </v-btn>
       </div>
     </form>
+    <v-tour name="addTour" :steps="steps" :callbacks="myCallbacks">
+      <template slot-scope="tour">
+        <transition name="fade">
+          <v-step
+            v-if="tour.steps[tour.currentStep]"
+            :key="tour.currentStep"
+            :step="tour.steps[tour.currentStep]"
+            :previous-step="tour.previousStep"
+            :next-step="tour.nextStep"
+            :stop="tour.stop"
+            :skip="tour.skip"
+            :is-first="tour.isFirst"
+            :is-last="tour.isLast"
+            :labels="tour.labels"
+          >
+            <template v-if="!tour.isLast">
+              <div slot="actions">
+                <v-btn
+                  dark
+                  elevation="0"
+                  color="#2eb9ff"
+                  class="btn-tour"
+                  @click="tour.previousStep"
+                >
+                  Previous
+                </v-btn>
+                <v-btn
+                  color="success"
+                  elevation="0"
+                  class="btn-tour"
+                  @click="tour.nextStep"
+                >
+                  Next
+                </v-btn>
+              </div>
+            </template>
+            <template v-else>
+              <div slot="actions">
+                <v-btn
+                  color="success"
+                  elevation="0"
+                  class="btn-tour"
+                  @click="tour.finish"
+                >
+                  Finish
+                </v-btn>
+              </div>
+            </template>
+          </v-step>
+        </transition>
+      </template>
+    </v-tour>
     <DialogItem ref="d" />
   </div>
 </template>
@@ -41,6 +97,71 @@ export default {
       meal_name: null,
       items: [],
       nameRules: [(v) => !!v || "Name is required"],
+      myCallbacks: {
+        onStart: this.myCustomStartTour,
+        onFinish: this.myCustomFinishTour,
+      },
+      steps: [
+        {
+          target: ".step0",
+          content:
+            "Welcome! Here you can create today's meal. Please make sure you pick the right names and good looking pictures ;)",
+          params: {
+            placement: "bottom",
+          },
+        },
+        {
+          target: ".step1",
+          content: "Here you can insert the meal name. ex: Chicken lunch..",
+          params: {
+            placement: "bottom",
+          },
+        },
+        {
+          target: ".step2",
+          content: "Here is where the items you have choosed will be displayed",
+          params: {
+            placement: "bottom",
+          },
+        },
+        {
+          target: ".step3",
+          content: "You can preview the image you choosed before adding.",
+          params: {
+            placement: "bottom",
+          },
+        },
+        {
+          target: ".step4",
+          content: "Choose a name for the meal item. Be creative",
+          params: {
+            placement: "bottom",
+          },
+        },
+        {
+          target: ".step5",
+          content: "If you need to crop the image, this tool will help you.",
+          params: {
+            placement: "bottom",
+          },
+        },
+        {
+          target: ".step6",
+          content:
+            "After finishing the meal item, save it to add a new meal item",
+          params: {
+            placement: "bottom",
+          },
+        },
+        {
+          target: ".step7",
+          content:
+            "Create the meal so other students can vote for it. Thank you for your time!",
+          params: {
+            placement: "bottom",
+          },
+        },
+      ],
     };
   },
   async created() {
@@ -48,6 +169,12 @@ export default {
     setTimeout(() => {
       if (!this.addMeal && this.$refs.d) this.showDialog();
     }, 1000);
+  },
+  mounted() {
+    let tour = localStorage.getItem("tour");
+    if (!tour) {
+      this.$tours["addTour"].start();
+    }
   },
   methods: {
     addItem(data) {
@@ -84,6 +211,13 @@ export default {
     async showDialog() {
       await this.$refs.d.open("Information", "Today's meal is already added..");
       this.$router.push("/");
+    },
+    myCustomStartTour(data) {
+      this.items.push({ name: "Tacos", demo: 1, size: 1.4 });
+    },
+    myCustomFinishTour(data) {
+      this.items = [];
+      localStorage.setItem("tour", "done");
     },
   },
   computed: {
@@ -127,11 +261,21 @@ export default {
     font-size: 19px;
     margin: 0;
     padding-left: 10px;
+
+    .hint {
+      font-size: 12px;
+      color: #3d3d3d;
+    }
   }
 
   .input {
     width: 300px;
   }
+}
+
+.btn-tour {
+  font-weight: 600;
+  margin-right: 10px;
 }
 
 @media (max-width: 768px) {

@@ -10,12 +10,6 @@ if ! $(docker ps &> /dev/null) ; then
 
 		echo -e "\033[1;32mDocker not installed..Installing\033[0m"
 
-		# sudo yum install -y yum-utils device-mapper-persistent-data lvm2 &> /dev/null
-
-		# sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo &> /dev/null
-
-		# sudo yum install -y docker &> /dev/null
-
 		curl -fsSL https://get.docker.com/ | sh &> /dev/null
 
 		echo -e "\033[1;32mDocker installed..Starting docker\033[0m"

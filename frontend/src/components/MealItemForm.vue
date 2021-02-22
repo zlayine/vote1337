@@ -2,7 +2,7 @@
   <transition name="fade">
     <div class="item-form">
       <div
-        class="empty"
+        class="empty step3"
         :class="{ preview: url ? true : false }"
         @click="launchFilePicker"
       >
@@ -32,16 +32,16 @@
           hide-details
           required
           outlined
-          class="my-2"
+          class="my-2 input-name step4"
         ></v-text-field>
         <div class="actions">
           <v-btn class="mx-2" @click="clearItem" fab dark small color="error">
             <v-icon dark> mdi-close </v-icon>
           </v-btn>
           <v-btn
-            class="mx-2"
+            class="mx-2 step5"
             @click="crop = true"
-						v-if="!saved"
+            v-if="!saved || item_data.demo"
             fab
             dark
             small
@@ -51,8 +51,8 @@
           </v-btn>
           <transition name="fade">
             <v-btn
-              class="mx-2"
-              v-if="!saved"
+              class="mx-2 step6"
+              v-if="!saved || item_data.demo"
               @click="saveItem"
               fab
               dark
@@ -98,9 +98,12 @@ export default {
   },
   created() {
     if (this.item_data) {
-      this.url = URL.createObjectURL(this.item_data.file);
+      if (this.item_data.demo)
+        this.url =
+          "https://www.godairyfree.org/wp-content/uploads/2020/04/pics-Mexican-Mushroom-Beef-Tacos-feature.jpg";
+      else this.url = URL.createObjectURL(this.item_data.file);
       this.name = this.item_data.name;
-			this.size = this.item_data.size;
+      this.size = this.item_data.size;
       this.saved = true;
     }
   },
@@ -154,7 +157,7 @@ export default {
     },
     saveItem() {
       if (!this.name || this.name == "") {
-				this.name = "";
+        this.name = "";
         this.$store.commit("SET_NOTIFICATION", {
           msg: "Meal item name is required",
           error: 1,
@@ -162,7 +165,11 @@ export default {
         return;
       }
       this.saved = true;
-      this.$emit("saved", { file: this.file, name: this.name, size: this.size });
+      this.$emit("saved", {
+        file: this.file,
+        name: this.name,
+        size: this.size,
+      });
     },
   },
   filters: {
@@ -180,10 +187,11 @@ export default {
 <style lang="scss" scoped>
 .item-form {
   margin-right: 15px;
+  width: 200px;
   transition: 200ms all;
 
   .empty {
-    width: 200px;
+    width: 100%;
     height: 300px;
     cursor: pointer;
     border: 4px dotted #2eb9ffd5;
@@ -220,6 +228,10 @@ export default {
 
   .item-info {
     transition: 200ms all;
+
+    .input-name {
+      width: 100%;
+    }
   }
   .actions {
     display: flex;

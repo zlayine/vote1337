@@ -7,7 +7,7 @@
   >
     <v-card>
       <v-toolbar dark color="#2eb9ff" dense flat>
-        <v-toolbar-title class="text-body-2 font-weight-bold grey--text">
+        <v-toolbar-title class="text-body-2 font-weight-bold">
           {{ title }}
         </v-toolbar-title>
       </v-toolbar>
@@ -24,7 +24,7 @@
           text
           class="body-2 font-weight-bold"
           @click.native="cancel"
-          >Cancel</v-btn
+          >Ok</v-btn
         >
       </v-card-actions>
     </v-card>

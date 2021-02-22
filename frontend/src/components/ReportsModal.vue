@@ -29,14 +29,14 @@
                 small
                 :color="active ? 'primary' : 'grey'"
               >
-                <v-icon dark> mdi-check-bold </v-icon>
+                {{ item.reports }}
               </v-btn>
             </div>
           </v-item>
         </div>
       </v-item-group>
       <div class="reports">
-        <transition name="fade">
+        <transition name="fade-out">
           <div
             class="none"
             v-if="
@@ -50,7 +50,7 @@
             }}
           </div>
         </transition>
-        <transition-group name="fade">
+        <transition-group name="fade-out">
           <v-card
             class="report-info"
             elevation="1"
@@ -193,6 +193,9 @@ export default {
           .btn-check {
             margin: auto;
             margin-top: 10px;
+						font-size: 18px;
+						display: flex;
+						justify-content: center;
           }
         }
       }
@@ -218,7 +221,7 @@ export default {
         margin-top: 15px;
         display: flex;
         flex-direction: row;
-				position: relative;
+        position: relative;
         transition: 200ms all;
 
         .user-data {

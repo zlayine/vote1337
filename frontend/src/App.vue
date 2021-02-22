@@ -16,18 +16,12 @@ import Loader from "./components/Loader";
 import Notification from "./components/Notification";
 import FooterLayout from "./components/FooterLayout.vue";
 
-//  io("http://localhost:3000", { query: { token:  } })
 export default {
   name: "main-app",
   data() {
     return {
       loading: false,
     };
-  },
-  async created() {
-    if (this.currentUser && !this.user) {
-      await this.$store.dispatch("getUser", this.currentUser.id);
-    }
   },
   methods: {
     listen() {
@@ -41,11 +35,16 @@ export default {
         this.$store.dispatch("socketDeleteMeal", data);
       });
     },
+    async joinServer() {
+      await this.$store.dispatch("connectSocket", this.currentUser.token);
+      if (this.socket) this.listen();
+    },
   },
   async mounted() {
     if (this.currentUser) {
-      await this.$store.dispatch("connectSocket", this.currentUser.token);
-      if (this.socket) this.listen();
+      if (!this.user)
+        await this.$store.dispatch("getUser", this.currentUser.id);
+      if (!this.socket) await this.joinServer();
     }
   },
   computed: {

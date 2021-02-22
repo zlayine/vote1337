@@ -5,10 +5,14 @@ const { transformReport } = require("../merge");
 
 module.exports = {
 	getReports: async (root, args, cntx, req) => {
+		if (!cntx.isAuth)
+			throw new Error('Unauthenticated');
 		try {
 			// const count = parseInt(await models.Report.count() / 10);
 			// const reports = await models.Report.find({ meal: args.meal }).skip((page - 1) * 10).limit(10);
-			// console.log(args.meal)
+			const user = await models.User.findById(cntx.userId);
+			if (!user.staff)
+				throw new Error('You don\'t have permission for this action');
 			const reports = await models.Meal.aggregate([
 				{ $match: { _id: ObjectId(args.meal) } },
 				{
@@ -35,7 +39,6 @@ module.exports = {
 				{ $match: { "votes.report": { "$ne": '' } } },
 				{ $project: { "votes.meal_item": 1, "votes.report": 1, "votes.createdAt": 1, "user": 1, "votes._id": 1 } }
 			]);
-			console.log("reports", reports);
 			return reports.map(e => {
 				return transformReport(e)
 			});

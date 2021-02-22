@@ -242,16 +242,15 @@ export default {
 
         .image {
           height: 400px;
+          margin: auto;
           overflow: hidden;
           display: flex;
           transition: 500ms all;
-          max-width: 400px;
-          min-width: 400px;
+          justify-content: center;
 
           img {
             margin: auto;
-            // width: 100%;
-            height: 100%;
+						width: 100%;
           }
         }
 
@@ -273,7 +272,7 @@ export default {
 
             textarea {
               resize: none;
-							background-color: #fff;
+              background-color: #fff;
               width: 100%;
               padding: 5px;
               border: 1px solid #dbdbdb;
@@ -349,7 +348,7 @@ export default {
 @media (max-width: 768px) {
   .meals-voting {
     .meals-container {
-      width: 80%;
+      width: 95%;
       overflow: initial;
       margin: 50px auto;
 
@@ -358,11 +357,10 @@ export default {
           display: none;
         }
         .item {
-          width: 400px;
+          width: 90%;
+
           .image {
             height: 300px;
-            max-width: 300px;
-            min-width: 300px;
           }
         }
       }

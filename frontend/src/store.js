@@ -6,8 +6,12 @@ import io from "socket.io-client";
 const user = getLocalUser();
 
 const createMealItems = async (commit, items, id) => {
+	let total = items.length;
+	let current = 0;
+	let divider = (1 / total) * 100;
+	commit('UPDATE_PERCENTAGE', 0);
 	for (let i = 0; i < items.length; i++) {
-		commit('UPDATE_PERCENTAGE', 0);
+		current = i * divider;
 		const query = `{"query": "mutation ($file: Upload!){ createMealItem (input: {meal: \\"${id}\\", name: \\"${items[i].name}\\", image: $file })}", "variables": {"file": null}}`;
 		const map = `{"0": ["variables.file"]}`;
 		const formdata = new FormData();
@@ -19,7 +23,7 @@ const createMealItems = async (commit, items, id) => {
 			method: 'post',
 			onUploadProgress: function (progressEvent) {
 				let uploadPercentage = parseInt(Math.round((progressEvent.loaded * 100) / progressEvent.total));
-				commit('UPDATE_PERCENTAGE', uploadPercentage);
+				commit('UPDATE_PERCENTAGE', (uploadPercentage / total) + current);
 			}.bind(this),
 			data: formdata
 		});
@@ -52,6 +56,7 @@ const getMeal = async (id) => {
 							image_url 
 							votes_up 
 							votes_down
+							reports
 							votes {
 								user {
 									_id
@@ -67,6 +72,26 @@ const getMeal = async (id) => {
 	} catch (error) {
 		console.log(error);
 	}
+}
+
+const deleteMeal = async (id) => {
+	try {
+		const res = await axios({
+			url: process.env.VUE_APP_GRAPHQL_API,
+			method: 'post',
+			data: {
+				query: `
+			mutation { 
+				deleteMeal (mealId: "${id}")
+			}
+			`
+			}
+		});
+		return res
+	} catch (error) {
+		console.log(error);
+	}
+
 }
 
 export default {
@@ -101,7 +126,7 @@ export default {
 	mutations: {
 		LOGIN(state, payload) {
 			state.isLogged = true;
-			state.currentUser = Object.assign({}, { id: payload.user._id }, { token: payload.token });
+			state.currentUser = Object.assign({}, { id: payload.user._id, campus: payload.user.campus }, { token: payload.token });
 			state.user = payload.user;
 			localStorage.setItem("user", JSON.stringify(state.currentUser));
 			axios.defaults.headers.common["Authorization"] = `Bearer ${state.currentUser.token}`
@@ -172,30 +197,26 @@ export default {
 			saveAs(blob, `export_${data[0].mealName}_${data[0].mealDate}.csv`);
 		},
 		SET_SOCKET(state, payload) {
-			if (!state.socket)
+			if (!state.socket) {
 				state.socket = io(process.env.VUE_APP_API_HOST, { query: { token: payload } })
+				state.socket.emit('join', state.user.campus);
+			}
 		},
-		// SOCKET_LISTENERS(state, payload) {
-		// 	const socket = state.socket;
-		// 	socket.on("newMealAdded", (data) => {
-
-		// 	});
-		// },
 		EMIT_ADD_MEAL(state, payload) {
 			const socket = state.socket;
-			socket.emit("newMeal", { id: payload });
+			socket.emit("newMeal", { id: payload, campus: state.user.campus });
 		},
 		EMIT_ADD_VOTE(state, payload) {
 			const socket = state.socket;
-			socket.emit("newVote", { id: payload });
+			socket.emit("newVote", { id: payload, campus: state.user.campus });
 		},
 		EMIT_DELETE_MEAL(state, payload) {
 			const socket = state.socket;
-			socket.emit("deletedMeal", { id: payload });
+			socket.emit("deletedMeal", { id: payload, campus: state.user.campus });
 		}
 	},
 	actions: {
-		async getMeals({ commit }, page) {
+		async getMeals({ commit }, data) {
 			try {
 				commit("UPDATE_LOADING")
 				const res = await axios({
@@ -204,7 +225,7 @@ export default {
 					data: {
 						query: `
 						query { 
-							getMeals (page: ${page}) {
+							getMeals (page: ${data.page}, campus: "${data.campus}", date: "${data.date}") {
 								totalPages
 								meals {
 									_id
@@ -221,6 +242,7 @@ export default {
 										image_url 
 										votes_up 
 										votes_down
+										reports
 										votes {
 											user {
 												_id
@@ -283,6 +305,7 @@ export default {
 								createdAt
 								meal_item {
 									_id
+									reports
 								}
 								user {
 									username
@@ -326,6 +349,8 @@ export default {
 				const items = await createMealItems(commit, data.items, id);
 				if (!items) {
 					commit("SET_NOTIFICATION", { msg: "Failed to add meal items", error: 1 });
+					await deleteMeal(id);
+					commit('UPDATE_PERCENTAGE', null);
 					commit("UPDATE_LOADING");
 					return 0;
 				}
@@ -350,6 +375,7 @@ export default {
 									image_url 
 									votes_up 
 									votes_down
+									reports
 									votes {
 										user {
 											_id
@@ -489,7 +515,6 @@ export default {
 				});
 				commit("SET_USER", res.data.data.getUser);
 				commit("UPDATE_LOADING")
-
 				return "1";
 			} catch (error) {
 				console.log(error)
@@ -500,17 +525,7 @@ export default {
 		async deleteMeal({ commit }, id) {
 			try {
 				commit("UPDATE_LOADING")
-				const res = await axios({
-					url: process.env.VUE_APP_GRAPHQL_API,
-					method: 'post',
-					data: {
-						query: `
-						mutation { 
-							deleteMeal (mealId: "${id}")
-						}
-						`
-					}
-				});
+				const res = await deleteMeal(id);
 				if (res.data.errors)
 					commit("SET_NOTIFICATION", { msg: res.data.errors, error: 1 });
 				else {
@@ -528,7 +543,7 @@ export default {
 				commit("SET_NOTIFICATION", { msg: "Cannot delete this item..", error: 1 });
 			}
 		},
-		async checkAddMeal({ commit }) {
+		async checkAddMeal({ commit }, campus) {
 			try {
 				const res = await axios({
 					url: process.env.VUE_APP_GRAPHQL_API,
@@ -536,7 +551,7 @@ export default {
 					data: {
 						query: `
 								query { 
-									checkAddMeal 
+									checkAddMeal(campus: "${campus}")
 								}
 							`
 					}

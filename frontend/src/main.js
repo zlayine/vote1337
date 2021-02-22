@@ -4,10 +4,11 @@ import { routes } from './routes';
 import VueRouter from "vue-router";
 import StoreData from './store';
 import Vuetify from 'vuetify';
+import VueTour from 'vue-tour'
 import App from './App.vue'
 import 'vuetify/dist/vuetify.min.css';
 import '@fortawesome/fontawesome-free/css/all.css'
-
+import 'vue-tour/dist/vue-tour.css'
 
 import { initialize } from './auth.js'
 
@@ -22,6 +23,7 @@ export default new Vuetify({
 Vue.use(Vuetify);
 Vue.use(Vuex);
 Vue.use(VueRouter);
+Vue.use(VueTour)
 
 const store = new Vuex.Store(StoreData);
 
