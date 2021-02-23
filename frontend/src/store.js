@@ -198,7 +198,7 @@ export default {
 		},
 		SET_SOCKET(state, payload) {
 			if (!state.socket) {
-				state.socket = io(process.env.VUE_APP_API_HOST, { query: { token: payload } })
+				state.socket = io(process.env.VUE_APP_API_HOST, { path: '/api/socket.io' ,query: { token: payload } })
 				state.socket.emit('join', state.user.campus);
 			}
 		},
