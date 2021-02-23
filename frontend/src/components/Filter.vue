@@ -55,7 +55,7 @@ import moment from "moment";
 export default {
   data() {
     return {
-      campus: "Khouribga",
+      campus: "",
       dates: [],
       modal: false,
     };
@@ -63,6 +63,8 @@ export default {
   methods: {
     campusChange() {
       this.$emit("changeCampus", { page: 1, campus: this.campus });
+			let old = this.campus == "Khouribga" ? "Benguerir" : "Khouribga";
+			this.$store.commit("EMIT_CHANGE_CAMPUS", {old: old, new: this.campus})
     },
     dateChange() {
       if (this.dates.length == 2) {
@@ -80,6 +82,10 @@ export default {
       }
     },
   },
+	mounted(){
+		if (this.currentUser)
+			this.campus = this.currentUser.campus;
+	},
   computed: {
     currentDate() {
       return moment().format("YYYY-MM-DD");
@@ -89,6 +95,9 @@ export default {
     },
     user() {
       return this.$store.getters.user;
+    },
+    currentUser() {
+      return this.$store.getters.currentUser;
     },
   },
 };

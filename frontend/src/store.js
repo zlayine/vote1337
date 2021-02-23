@@ -224,6 +224,10 @@ export default {
 			const socket = state.socket;
 			socket.emit("notifyLeave", state.currentUser.campus);
 		},
+		EMIT_CHANGE_CAMPUS(state, payload) {
+			const socket = state.socket;
+			socket.emit("changeCampus", payload);
+		},
 		NOTIFY_ADDING(state, action) {
 			state.someoneAdding = action;
 		}
@@ -441,6 +445,7 @@ export default {
 									image_url 
 									votes_up 
 									votes_down
+									reports
 									votes {
 										user {
 											_id
