@@ -7,7 +7,7 @@ const imageminMozjpeg = require("imagemin-mozjpeg");
 const jwt = require('jsonwebtoken');
 const { transformUser } = require('./merge');
 const env = require('../../environment');
-const { default: config } = require('../../helpers/config');
+const { getConfig } = require('../../helpers/config');
 
 const compressImage = async (dir, name) => {
 	const file = await imagemin([dir + "tmp/" + name], {
@@ -50,14 +50,14 @@ const enableMealVoting = async (meal) => {
 	let now = moment();
 	let mealDate = moment(new Date(meal.createdAt));
 	let diff = now.diff(mealDate, 'hours');
-	if (diff > config.voting)
+	if (diff > getConfig().voting)
 		return false;
 	return true;
 }
 
 const checkAddMeal = async (campus) => {
 	// return true;
-	const mealTimes = config.times;
+	const mealTimes = getConfig().times;
 	try {
 		const meal = await models.Meal.findOne({ campus: campus }).sort({ createdAt: 'desc' });
 		let now = moment().tz("Africa/Casablanca");

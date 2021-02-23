@@ -85,13 +85,25 @@ export default {
     return {
       dialog: false,
       menu: false,
-      time: null,
+      data: {
+        times: {
+          Khouribga: {
+            lunch: "",
+						dinner: "",
+          },
+					Benguerir: {
+						lunch: "",
+						dinner: "",
+					}
+        },
+				voting: 0,
+      },
     };
   },
   methods: {
     changeTime(time) {
-			this.time = time;
-		},
+      this.time = time;
+    },
   },
   components: {
     TimePicker,
