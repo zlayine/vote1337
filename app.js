@@ -1,7 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser')
 const mongoose = require('mongoose')
-const http = require('https');
+const http = require('http');
 const socketio = require('socket.io');
 const fs = require('fs');
 
@@ -62,15 +62,8 @@ if (process.env.NODE_ENV == "development")
 	url = `mongodb://${MONGO_HOSTNAME}:${MONGO_PORT}/${MONGO_DB}`;
 
 let server;
-if (process.env.NODE_ENV == "production") {
-	var options = {
-		key: fs.readFileSync('1337.key'),
-		cert: fs.readFileSync('1337.crt')
-	};
-	server = http.createServer(options, app);
-}
-else
-	server = http.createServer(app);
+
+server = http.createServer(app);
 
 const io = socketio.listen(server);
 

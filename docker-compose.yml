@@ -33,6 +33,14 @@ services:
     command: ./wait-for.sh db:27017 -- /usr/local/bin/npm start
     networks:
       - app-network
+  nginx:
+    restart: always
+    build:
+      context: ./nginx
+    ports:
+      - "80:80"
+    networks:
+      - app-network
   db:
     image: mongo:4.1.8-xenial
     container_name: db
