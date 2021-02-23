@@ -72,7 +72,7 @@ require("./socket")(io);
 mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true })
 	.then(() => {
 		console.log("Database Connected!")
-		server.listen(3000);
+		server.listen(2000);
 		console.log("Listening on port 3000...")
 	}).catch(err => {
 		console.log(err)

@@ -26,7 +26,7 @@ services:
       - MONGO_PORT=$MONGO_PORT
       - MONGO_DB=$MONGO_DB
     ports:
-      - "3000:3000"
+      - "2000:2000"
     volumes:
       - .:/home/node/app
       - node_modules:/home/node/app/node_modules
@@ -35,10 +35,12 @@ services:
       - app-network
   nginx:
     restart: always
+    container_name: nginx
+    image: nodenginx
     build:
       context: ./nginx
     ports:
-      - "80:80"
+      - "3000:80"
     networks:
       - app-network
   db:
