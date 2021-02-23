@@ -546,7 +546,7 @@ export default {
 				else {
 					if (res.data.data.deleteMeal) {
 						commit("EMIT_DELETE_MEAL", id)
-						commit("DELETE_MEAL", id)
+						// commit("DELETE_MEAL", id)
 						commit("SET_NOTIFICATION", { msg: "Meal deleted Successfully!", error: 0 });
 					}
 					else

@@ -21,15 +21,15 @@ module.exports = (io) => {
 		});
 
 		socket.on('newMeal', async (data) => {
-			socket.broadcast.to(data.campus).emit('newMealAdded', data);
+			socket.to(data.campus).emit('newMealAdded', data);
 		});
 
 		socket.on('newVote', async (data) => {
-			socket.broadcast.to(data.campus).emit('newVoteAdded', data);
+			socket.to(data.campus).emit('newVoteAdded', data);
 		});
 
 		socket.on('deletedMeal', async (data) => {
-			socket.broadcast.to(data.campus).emit('mealDeleted', data);
+			socket.to(data.campus).emit('mealDeleted', data);
 		});
 
 		socket.on('notifyAdding', async (campus) => {
