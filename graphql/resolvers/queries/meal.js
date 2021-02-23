@@ -25,7 +25,7 @@ module.exports = {
 			const page = args.page;
 
 			const user = await models.User.findById(cntx.userId);
-			const count = parseInt(await models.Meal.count() / limit);
+			const count = parseInt(await models.Meal.countDocuments() / limit);
 
 			let campus = user.staff ? args.campus : user.campus;
 			let findOptions = {}

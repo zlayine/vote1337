@@ -407,7 +407,7 @@ export default {
 				}
 				else {
 					commit('EMIT_ADD_MEAL', res.data.data.getMeal._id);
-					commit('ADD_MEAL', res.data.data.getMeal);
+					// commit('ADD_MEAL', res.data.data.getMeal);
 					commit("SET_NOTIFICATION", { msg: "Meal added successfully!", error: 0 });
 				}
 				commit("UPDATE_LOADING");
@@ -456,7 +456,7 @@ export default {
 					commit("SET_NOTIFICATION", { msg: res.data.errors[0].message, error: 1 });
 				else {
 					commit('EMIT_ADD_VOTE', res.data.data.addVotes._id);
-					commit('UPDATE_MEAL', res.data.data.addVotes);
+					// commit('UPDATE_MEAL', res.data.data.addVotes);
 					commit("SET_NOTIFICATION", { msg: "Votes submited successfully!", error: 0 });
 				}
 				commit("UPDATE_LOADING")

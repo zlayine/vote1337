@@ -56,7 +56,7 @@ const enableMealVoting = async (meal) => {
 }
 
 const checkAddMeal = async (campus) => {
-	// return true;
+	return true;
 	const mealTimes = getConfig().times;
 	// console.log(mealTimes);
 	try {
