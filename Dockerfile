@@ -1,5 +1,6 @@
 FROM node:10-alpine
-RUN usermod -u 1004 node
+
+
 RUN apk --no-cache add shadow \                                                                   
     gcc \                                                                                         
     musl-dev \                                                                                    
@@ -26,6 +27,11 @@ USER node
 RUN npm install
 
 COPY --chown=node:node . .
+
+# RUN usermod -u 1004 node
+
+RUN groupmod -g 1001 node \
+  && usermod -u 1001 -g 1001 node
 
 EXPOSE 3000
 
