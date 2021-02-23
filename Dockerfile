@@ -1,5 +1,5 @@
 FROM node:10-alpine
-
+RUN usermod -u 1004 node
 RUN apk --no-cache add shadow \                                                                   
     gcc \                                                                                         
     musl-dev \                                                                                    
