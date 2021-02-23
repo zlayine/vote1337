@@ -24,7 +24,6 @@ COPY package*.json ./
 
 RUN echo root:RoAot321 | /usr/sbin/chpasswd
 RUN echo node:node123 | /usr/sbin/chpasswd
-RUN id
 RUN usermod -u 1003 node
 
 USER node
@@ -32,10 +31,6 @@ USER node
 RUN npm install
 
 COPY --chown=node:node . .
-
-# RUN usermod -u 1004 node
-
-# RUN sudo groupmod -g 1001 node && usermod -u 1001 -g 1001 node
 
 EXPOSE 3000
 
