@@ -1,6 +1,10 @@
 <template>
   <div class="container add-meal">
-    <div class="text-title step0">Adding today's meal</div>
+    <div class="overlay" v-show="demo"></div>
+    <div class="text-title step0">
+      Adding Today's Meal
+      <div class="how" @click="startTour">(How ?)</div>
+    </div>
     <form>
       <v-text-field
         v-model="meal_name"
@@ -15,7 +19,7 @@
         Meal items: <span class="hint">(Prefered square images)</span>
       </p>
       <div class="meal-items mb-5 step2">
-        <meal-item-form @saved="addItem" ref="empty" />
+        <meal-item-form @saved="addItem" ref="empty" v-if="!demo" />
         <template v-for="(item, index) in items">
           <meal-item-form
             :key="index"
@@ -47,7 +51,28 @@
             :is-last="tour.isLast"
             :labels="tour.labels"
           >
-            <template v-if="!tour.isLast">
+            <template v-if="tour.isFirst">
+              <div slot="actions">
+                <v-btn
+                  dark
+                  elevation="0"
+                  color="#2eb9ff"
+                  class="btn-tour"
+                  @click="tour.skip"
+                >
+                  Skip Tour
+                </v-btn>
+                <v-btn
+                  color="success"
+                  elevation="0"
+                  class="btn-tour"
+                  @click="tour.nextStep"
+                >
+                  Next
+                </v-btn>
+              </div>
+            </template>
+						<template v-else-if="!tour.isLast">
               <div slot="actions">
                 <v-btn
                   dark
@@ -96,10 +121,12 @@ export default {
     return {
       meal_name: null,
       items: [],
+      demo: false,
       nameRules: [(v) => !!v || "Name is required"],
       myCallbacks: {
         onStart: this.myCustomStartTour,
         onFinish: this.myCustomFinishTour,
+				onSkip: this.myCustomFinishTour,
       },
       steps: [
         {
@@ -168,13 +195,19 @@ export default {
     await this.$store.dispatch("checkAddMeal");
     setTimeout(() => {
       if (!this.addMeal && this.$refs.d) this.showDialog();
+      this.$store.commit("EMIT_NOTIFY_ADDING");
     }, 1000);
   },
   mounted() {
     let tour = localStorage.getItem("tour");
     if (!tour) {
+      this.demo = true;
       this.$tours["addTour"].start();
     }
+  },
+  beforeRouteLeave(to, from, next) {
+    this.$store.commit("EMIT_NOTIFY_LEAVE");
+    next();
   },
   methods: {
     addItem(data) {
@@ -217,8 +250,13 @@ export default {
     },
     myCustomFinishTour(data) {
       this.items = [];
+      this.demo = false;
       localStorage.setItem("tour", "done");
     },
+    startTour() {
+			this.demo = true;
+      this.$tours["addTour"].start();
+		},
   },
   computed: {
     addMeal() {
@@ -236,11 +274,28 @@ export default {
 .add-meal {
   margin-bottom: 100px;
 
+  .overlay {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    background-color: #00000030;
+    z-index: 100;
+  }
+
   .text-title {
     font-size: 22px;
     font-weight: 700;
     text-align: center;
     margin-bottom: 25px;
+
+    .how {
+			font-size: 14px;
+			display: inline;
+			cursor: pointer;
+			color: #2eb9ff;
+    }
   }
 
   .meal-items {

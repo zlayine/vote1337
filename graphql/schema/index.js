@@ -1,6 +1,8 @@
 module.exports = `
 scalar Upload
 
+scalar ConfigData
+
 type User {
     _id: ID!
     username: String!
@@ -103,6 +105,7 @@ type RootQuery {
 	getUser(userId: String!): User!
 	checkAddMeal(campus: String!): Boolean!
 	getMealExport(mealId: String): [MealExport]!
+	getConfig: ConfigData
 }
 
 type RootMutation {
@@ -111,6 +114,7 @@ type RootMutation {
 	deleteMeal(mealId: String!): Boolean
 	createUser(code: String!): LoginData
 	addVotes(voteInput: [VoteInput!]!, meal: String!): Meal
+	updateConfig(configData: ConfigData): String
 }
 
 type RootSubscription {

@@ -9,7 +9,10 @@
         <span>PLATE</span>
       </div>
     </router-link>
+		
     <div class="nav_actions">
+			
+			<!-- <settings-config v-if="user && user.staff == true" /> -->
       <div class="action" v-if="user">
         <v-avatar color="primary" class="avatar" size="50">
           <img :src="user.image_url" alt="avatar-img" />
@@ -27,11 +30,13 @@
 
 <script>
 import logo from "../assets/1337.svg";
+import SettingsConfig from './SettingsConfig.vue'
 
 export default {
   data() {
     return {
       logo: logo,
+      dialog: false,
     };
   },
   computed: {
@@ -46,6 +51,9 @@ export default {
       this.$router.push("/auth");
     },
   },
+	components: {
+		SettingsConfig,
+	}
 };
 </script>
 
@@ -61,7 +69,7 @@ export default {
 
   .nav_logo {
     margin-left: 25px;
-		text-decoration: none;
+    text-decoration: none;
     display: flex;
     flex-direction: row;
 
@@ -72,7 +80,7 @@ export default {
     }
     .text {
       display: flex;
-			color: #000;
+      color: #000;
       margin-top: 30px;
 
       h1 {
@@ -100,6 +108,8 @@ export default {
   .nav_actions {
     display: flex;
     padding: 0 10px;
+
+   
 
     .action {
       display: flex;

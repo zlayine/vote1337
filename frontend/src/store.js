@@ -108,6 +108,7 @@ export default {
 		addMeal: false,
 		uploadPercent: null,
 		socket: null,
+		someoneAdding: false,
 	},
 	getters: {
 		reports: state => state.reports,
@@ -122,6 +123,7 @@ export default {
 		mealTotalPages: state => state.mealTotalPages,
 		uploadPercent: state => state.uploadPercent,
 		socket: state => state.socket,
+		someoneAdding: state => state.someoneAdding,
 	},
 	mutations: {
 		LOGIN(state, payload) {
@@ -213,6 +215,18 @@ export default {
 		EMIT_DELETE_MEAL(state, payload) {
 			const socket = state.socket;
 			socket.emit("deletedMeal", { id: payload, campus: state.user.campus });
+		},
+		EMIT_NOTIFY_ADDING(state) {
+			const socket = state.socket;
+			socket.emit("notifyAdding", state.currentUser.campus);
+		},
+		EMIT_NOTIFY_LEAVE(state) {
+			console.log("emited leave");
+			const socket = state.socket;
+			socket.emit("notifyLeave", state.currentUser.campus);
+		},
+		NOTIFY_ADDING(state, action) {
+			state.someoneAdding = action;
 		}
 	},
 	actions: {
@@ -544,7 +558,9 @@ export default {
 				commit("SET_NOTIFICATION", { msg: "Cannot delete this item..", error: 1 });
 			}
 		},
-		async checkAddMeal({ commit }, campus) {
+		async checkAddMeal({ commit, state }, campus) {
+			if (!campus)
+				campus = state.currentUser.campus;
 			try {
 				const res = await axios({
 					url: process.env.VUE_APP_GRAPHQL_API,

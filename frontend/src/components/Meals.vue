@@ -1,23 +1,27 @@
 <template>
   <div class="meals_container">
-    <filter-layout @changeDate="fetchMeals"  @changeCampus="fetchMeals" />
+    <filter-layout @changeDate="fetchMeals" @changeCampus="fetchMeals" />
     <v-card class="add-meal-holder" to="/addmeal" v-if="addMeal">
       <div class="add-meal-img">
         <img :src="add_meal_img" alt="add meal image" />
       </div>
-      <div class="add-meal">
+      <div class="add-meal" v-if="!someoneAdding">
         <div class="text">ADD TODAY'S MEAL</div>
         <v-btn class="mx-2" fab small color="#2eb9ff">
           <v-icon dark color="white"> mdi-plus </v-icon>
         </v-btn>
+      </div>
+			<div class="add-meal waiting" v-else>
+        <div class="text">SOMEONE IS ADDING A MEAL</div>
+					<v-icon dark color="success">fas fa-circle-notch fa-spin</v-icon>
       </div>
     </v-card>
     <div class="none" v-if="displayNone || (!meals.length && !addMeal)">
       <div class="text text-center" v-if="displayNone">
         Next meal will be available at: {{ getDisplayText }}
       </div>
-			<div class="text text-center" v-else-if="$route.query.page == 1">
-				No meals avalaible to vote for yet..
+      <div class="text text-center" v-else-if="$route.query.page == 1">
+        No meals avalaible to vote for yet..
       </div>
       <div class="image">
         <img :src="nomeals_img" alt="no meals" />
@@ -76,7 +80,7 @@ import ImagePreview from "./ImagePreview.vue";
 import FilterLayout from "./Filter.vue";
 import add_meal_img from "../assets/addmeal_img.svg";
 import notfound_img from "../assets/notfound_img.svg";
-import moment from "moment";
+import moment from "moment-timezone";
 
 export default {
   data() {
@@ -132,18 +136,19 @@ export default {
       await this.$store.dispatch("checkAddMeal", this.campus);
     },
     getMealTimeDiff() {
-      let now = moment();
+      let now = moment().tz("Africa/Casablanca");
       // now = moment(moment("16:00:00", "HH:mm:ss").toDate());
+
       if (this.meals.length) {
         let lastMeal = moment(new Date(this.meals[0].createdAt));
         let diff = now.diff(lastMeal, "hours");
         if (diff < 3 && diff >= 0) return 0;
       }
-      let mealStart = moment(moment("11:00:00", "HH:mm:ss").toDate());
+      let mealStart = moment(moment("12:00:00", "HH:mm:ss").toDate());
       let nowToStartDiff = now.diff(mealStart, "hours");
       if (nowToStartDiff == 0) return 1;
       else if (nowToStartDiff > 0) {
-        mealStart = moment(moment("16:45:00", "HH:mm:ss").toDate());
+        mealStart = moment(moment("17:45:00", "HH:mm:ss").toDate());
         nowToStartDiff = now.diff(mealStart, "hours");
         if (nowToStartDiff == 0) return 2;
       }
@@ -168,13 +173,16 @@ export default {
     },
     displayNone() {
       let diff = this.getMealTimeDiff();
-      // console.log(diff);
       if (this.addMeal) return false;
       if (diff) return true;
+      return false;
     },
     getDisplayText() {
       if (this.getMealTimeDiff() == 1) return "12:00";
       return "17:45";
+    },
+    someoneAdding() {
+      return this.$store.getters.someoneAdding;
     },
   },
   components: {
@@ -242,7 +250,7 @@ export default {
     .add-meal {
       flex: 1;
       padding: 10px;
-      font-size: 24px;
+      font-size: 20px;
       padding-bottom: 15px;
       font-weight: 600;
       display: flex;
@@ -252,8 +260,13 @@ export default {
 
       .text {
         text-align: center;
-        // color: #fff;
       }
+
+			&.waiting {
+				.text {
+					color: #4caf50;
+				}
+			}
     }
   }
   .fade-enter-active,
@@ -270,8 +283,11 @@ export default {
   .meals_container {
     margin-top: 0px;
 
-    .none .image {
-      width: 70%;
+    .none {
+      width: 100%;
+      .image {
+        width: 60%;
+      }
     }
     .add-meal-holder {
       // margin-top: 20px;

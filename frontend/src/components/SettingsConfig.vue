@@ -88,9 +88,15 @@ export default {
       data: {
         times: {
           Khouribga: {
-            launch: "",
+            lunch: "",
+						dinner: "",
           },
+					Benguerir: {
+						lunch: "",
+						dinner: "",
+					}
         },
+				voting: 0,
       },
     };
   },
