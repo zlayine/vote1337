@@ -60,12 +60,22 @@ let url = `mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@${MONGO_HOSTNAME}:${MON
 if (process.env.NODE_ENV == "development")
 	url = `mongodb://${MONGO_HOSTNAME}:${MONGO_PORT}/${MONGO_DB}`;
 
-const server = http.createServer(app);
+let server;
+if (process.env.NODE_ENV == "production") {
+	var options = {
+		key: fs.readFileSync('1337.key'),
+		cert: fs.readFileSync('1337.crt')
+	};
+	server = http.createServer(options, app);
+}
+else
+	server = http.createServer(app);
+
 const io = socketio.listen(server);
 
 require("./socket")(io);
 
-mongoose.connect(url, { useNewUrlParser: true , useUnifiedTopology: true})
+mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true })
 	.then(() => {
 		console.log("Database Connected!")
 		server.listen(3000);
