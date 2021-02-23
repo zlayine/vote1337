@@ -26,7 +26,6 @@ export default {
   methods: {
     listen() {
       this.socket.on("newMealAdded", (data) => {
-				console.log(data);
         this.$store.dispatch("socketGetMeal", data);
       });
       this.socket.on("newVoteAdded", (data) => {

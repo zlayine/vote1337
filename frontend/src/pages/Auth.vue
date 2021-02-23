@@ -35,7 +35,7 @@ export default {
       if (!this.currentUser) window.location.href = process.env.VUE_APP_AUTH_42;
       else login(this.currentUser.user);
     },
-    listen() {
+    async listen() {
       this.socket.on("newMealAdded", (data) => {
         this.$store.dispatch("socketGetMeal", data);
       });
@@ -45,17 +45,20 @@ export default {
       this.socket.on("mealDeleted", (data) => {
         this.$store.dispatch("socketDeleteMeal", data);
       });
+      return 1;
     },
     async joinServer() {
       await this.$store.dispatch("connectSocket", this.currentUser.token);
-      if (this.socket) this.listen();
+      if (this.socket) await this.listen();
     },
     async accessData() {
       this.loading = true;
       await this.$store.dispatch("createUser", this.$route.query.code + "");
-			await this.joinServer();
-      this.loading = false;
-      this.$router.push("/");
+      await this.joinServer();
+      setTimeout(() => {
+        this.loading = false;
+        this.$router.push("/");
+      }, 1500);
     },
   },
   computed: {
