@@ -42,7 +42,7 @@ const storeFS = ({ stream, generatedName }) => {
 }
 
 const enableMealVoting = async (meal) => {
-	return true;
+	// return true;
 	const latest = await models.Meal.findOne({campus: meal.campus}).sort({ createdAt: 'desc' });
 	if (latest.id != meal._id)
 		return false;
@@ -55,7 +55,7 @@ const enableMealVoting = async (meal) => {
 }
 
 const checkAddMeal = async (campus) => {
-	return true;
+	// return true;
 	try {
 		const meal = await models.Meal.findOne({campus: campus}).sort({ createdAt: 'desc' });
 		let now = moment();
