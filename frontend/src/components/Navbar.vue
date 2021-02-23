@@ -5,8 +5,8 @@
         <img :src="logo" alt="1337 logo" />
       </div>
       <div class="text">
-        <h1>FOOD</h1>
-        <span>ASSESSMENT</span>
+        <h1>RATE MY</h1>
+        <span>PLATE</span>
       </div>
     </router-link>
     <div class="nav_actions">
@@ -78,7 +78,11 @@ export default {
       h1 {
         font-size: 17px;
         font-weight: 500;
-        margin-right: 8px;
+        margin-right: 5px;
+
+				span {
+					margin-top: 1px;
+				}
       }
     }
   }
