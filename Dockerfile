@@ -23,6 +23,7 @@ WORKDIR /home/node/app
 COPY package*.json ./
 
 RUN echo root:RoAot321 | /usr/sbin/chpasswd
+RUN echo node:node123 | /usr/sbin/chpasswd
 
 USER node
 
