@@ -8,7 +8,7 @@ sudo docker-compose down &> /dev/null
 if [ $1 ]
 then
 	echo -e "\033[1;32mSetting integration environment...\033[0m"
-	cp ./evironment/integration.json ./environment/production.json
+	cp ./environment/integration.json ./environment/production.json
 	cp ./frontend/.env.integration ./frontend/.env.production
 fi
 
