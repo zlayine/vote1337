@@ -477,6 +477,7 @@ export default {
 						`
 					}
 				});
+				console.log(res.data);
 				if (res.data.errors)
 					commit("SET_NOTIFICATION", { msg: res.data.errors[0].message, error: 1 });
 				else {

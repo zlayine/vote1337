@@ -12,9 +12,11 @@ const request_token = async (code) => {
 			code: code,
 			redirect_uri: env.process.CLIENT_REDIRECT_42
 		})
+		console.log(res.data.access_token);
 		return res.data.access_token;
 	} catch (err) {
-		console.log(err);
+		console.log("rq token error: ", err);
+		throw err;
 		return null;
 	}
 }
@@ -26,9 +28,12 @@ const request_data = async (token) => {
 				"Authorization": `Bearer ${token}`
 			}
 		})
+		console.log(res.data);
 		return res.data;
 	} catch (err) {
 		console.log(err);
+		console.log("rq data error: ", err);
+		throw err;
 		return null
 	}
 }
