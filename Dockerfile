@@ -31,7 +31,7 @@ COPY --chown=node:node . .
 
 # RUN usermod -u 1004 node
 
-RUN sudo groupmod -g 1001 node && usermod -u 1001 -g 1001 node
+# RUN sudo groupmod -g 1001 node && usermod -u 1001 -g 1001 node
 
 EXPOSE 3000
 
