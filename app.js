@@ -48,6 +48,15 @@ app.use('/graphql',
 		schema: schema,
 	}));
 
+// const { getConfig, updateConfig } = require('./helpers/config');
+
+// let config = getConfig();
+
+// config.voting = 10;
+
+// // let conte = updateConfig(JSON.stringify(config));
+
+
 const {
 	MONGO_USERNAME,
 	MONGO_PASSWORD,

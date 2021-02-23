@@ -11,7 +11,7 @@
           <v-icon dark color="white"> mdi-plus </v-icon>
         </v-btn>
       </div>
-			<div class="add-meal waiting">
+			<div class="add-meal waiting" v-else>
         <div class="text">SOMEONE IS ADDING A MEAL</div>
 					<v-icon dark color="success">fas fa-circle-notch fa-spin</v-icon>
       </div>

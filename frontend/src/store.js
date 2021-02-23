@@ -108,7 +108,7 @@ export default {
 		addMeal: false,
 		uploadPercent: null,
 		socket: null,
-		someoneAdding: true,
+		someoneAdding: false,
 	},
 	getters: {
 		reports: state => state.reports,
