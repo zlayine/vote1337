@@ -221,7 +221,7 @@ export default {
 			socket.emit("notifyAdding", state.currentUser.campus);
 		},
 		EMIT_NOTIFY_LEAVE(state) {
-			console.log("emited leave");
+			// console.log("emited leave");
 			const socket = state.socket;
 			socket.emit("notifyLeave", state.currentUser.campus);
 		},
