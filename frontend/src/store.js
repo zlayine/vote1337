@@ -198,7 +198,7 @@ export default {
 		},
 		SET_SOCKET(state, payload) {
 			if (!state.socket) {
-				state.socket = io('https://ratemyplate.1337.ma', { path: '/api/socket.io', query: { token: payload } })
+				state.socket = io(process.env.VUE_APP_API_HOST, { query: { token: payload } })
 				state.socket.emit('join', state.user.campus);
 			}
 		},
@@ -454,7 +454,6 @@ export default {
 			}
 		},
 		async createUser({ commit }, code) {
-			// axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
 			try {
 				commit("UPDATE_LOADING")
 				const res = await axios({
