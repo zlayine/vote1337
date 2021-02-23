@@ -454,7 +454,7 @@ export default {
 			}
 		},
 		async createUser({ commit }, code) {
-			axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
+			// axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
 			try {
 				commit("UPDATE_LOADING")
 				const res = await axios({
