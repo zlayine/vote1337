@@ -23,6 +23,8 @@ WORKDIR /home/node/app
 
 COPY package*.json ./
 
+RUN echo node:node123 | /usr/sbin/chpasswd
+
 USER node
 
 RUN npm install
