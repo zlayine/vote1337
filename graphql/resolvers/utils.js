@@ -58,7 +58,7 @@ const enableMealVoting = async (meal) => {
 const checkAddMeal = async (campus) => {
 	// return true;
 	const mealTimes = getConfig().times;
-	console.log(times);
+	console.log(mealTimes);
 	try {
 		const meal = await models.Meal.findOne({ campus: campus }).sort({ createdAt: 'desc' });
 		let now = moment().tz("Africa/Casablanca");
