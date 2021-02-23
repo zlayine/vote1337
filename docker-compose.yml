@@ -26,23 +26,23 @@ services:
       - MONGO_PORT=$MONGO_PORT
       - MONGO_DB=$MONGO_DB
     ports:
-      - "2000:2000"
+      - "3000:3000"
     volumes:
       - .:/home/node/app
       - node_modules:/home/node/app/node_modules
     command: ./wait-for.sh db:27017 -- /usr/local/bin/npm start
     networks:
       - app-network
-  nginx:
-    restart: always
-    container_name: nginx
-    image: nodenginx
-    build:
-      context: ./nginx
-    ports:
-      - "3000:80"
-    networks:
-      - app-network
+  # nginx:
+  #   restart: always
+  #   container_name: nginx
+  #   image: nodenginx
+  #   build:
+  #     context: ./nginx
+  #   ports:
+  #     - "3000:80"
+  #   networks:
+  #     - app-network
   db:
     image: mongo:4.1.8-xenial
     container_name: db

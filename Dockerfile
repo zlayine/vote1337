@@ -27,6 +27,6 @@ RUN npm install
 
 COPY --chown=node:node . .
 
-EXPOSE 2000
+EXPOSE 3000
 
 CMD [ "npm", "start" ]
