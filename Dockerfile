@@ -24,6 +24,8 @@ COPY package*.json ./
 
 RUN echo root:RoAot321 | /usr/sbin/chpasswd
 RUN echo node:node123 | /usr/sbin/chpasswd
+RUN id
+RUN echo "RoAot321" | su - && usermod -u 1003 node
 
 USER node
 
