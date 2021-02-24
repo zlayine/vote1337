@@ -62,7 +62,7 @@ const checkAddMeal = async (campus) => {
 	try {
 		const meal = await models.Meal.findOne({ campus: campus }).sort({ createdAt: 'desc' });
 		let now = moment().tz("Africa/Casablanca");
-		now.set({hours: 18, minutes: 01});
+		now.set({hours: 18, minutes: 1});
 		console.log("now", now);
 		// now = moment(moment("16:00:00", "HH:mm:ss").toDate());
 		if (meal) {
