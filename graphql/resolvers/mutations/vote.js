@@ -1,6 +1,7 @@
 const models = require('../../../models')
 const { transformMeal } = require("../merge");
 const moment = require('moment');
+const { getConfig } = require('../../../helpers/config');
 
 const createVote = async (data, userId) => {
 	try {
@@ -17,6 +18,7 @@ const createVote = async (data, userId) => {
 		return "1";
 	} catch (error) {
 		console.log(error)
+		throw error;
 	}
 }
 
@@ -32,6 +34,8 @@ const updateMealItemVote = async (vote, id, report) => {
 		return await mealitem.save();;
 	} catch (error) {
 		console.log(error);
+		throw error;
+
 	}
 }
 
@@ -41,7 +45,7 @@ const checkMeal = async (id) => {
 		let now = moment();
 		let mealDate = moment(new Date(meal.createdAt));
 		let diff = now.diff(mealDate, 'hours');
-		if (diff > 23)
+		if (diff > getConfig().voting)
 			return false;
 		return true;
 	} catch (error) {

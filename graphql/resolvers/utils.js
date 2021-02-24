@@ -56,7 +56,7 @@ const enableMealVoting = async (meal) => {
 }
 
 const checkAddMeal = async (campus) => {
-	return true;
+	// return true;
 	const mealTimes = getConfig().times;
 	// console.log(mealTimes);
 	try {
@@ -75,6 +75,8 @@ const checkAddMeal = async (campus) => {
 				mealToStartDiff = mealDate.diff(mealStart, "minutes");
 			}
 			let nowToStartDiff = now.diff(mealStart, "minutes");
+			// console.log("mealstart ", mealToStartDiff)
+			// console.log("nowstart ",nowToStartDiff)
 			if (nowToStartDiff >= 0 && mealToStartDiff < 0) {
 				return true;
 			}
@@ -89,7 +91,6 @@ const checkAddMeal = async (campus) => {
 				mealStart = mealStart = moment.tz("Africa/Casablanca").set({ hours: mealTime[0], minutes: mealTime[1], seconds: 0 });
 				nowToStartDiff = now.diff(mealStart, "minutes");
 				if (nowToStartDiff >= 0 && nowToStartDiff < 3 * 60) return true;
-
 			}
 			return false;
 		}

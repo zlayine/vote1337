@@ -363,7 +363,7 @@ export default {
 					}
 				});
 				if (createdMeal.data.errors) {
-					commit("SET_NOTIFICATION", { msg: "Failed to add meal", error: 1 });
+					commit("SET_NOTIFICATION", { msg: createdMeal.data.errors.message, error: 1 });
 					commit("UPDATE_LOADING");
 					return 0;
 				}
@@ -411,7 +411,7 @@ export default {
 				});
 				commit('UPDATE_PERCENTAGE', null);
 				if (res.data.errors) {
-					commit("SET_NOTIFICATION", { msg: "Failed to add meal", error: 1 });
+					commit("SET_NOTIFICATION", { msg: "Failed to get meal", error: 1 });
 				}
 				else {
 					commit('EMIT_ADD_MEAL', res.data.data.getMeal._id);

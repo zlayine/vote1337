@@ -47,16 +47,8 @@ app.use('/graphql',
 	graphqlUploadExpress({ maxFileSize: '10M', maxFiles: 10 }),
 	graphqlHttp({
 		schema: schema,
+		graphiql: true,
 	}));
-
-// const { getConfig, updateConfig } = require('./helpers/config');
-
-// let config = getConfig();
-
-// config.voting = 10;
-
-// // let conte = updateConfig(JSON.stringify(config));
-
 
 const {
 	MONGO_USERNAME,
