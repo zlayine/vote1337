@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "babel-node": "babel-node",
-    "start": "NODE_ENV=production nodemon --exec npm run babel-node -- app.js",
-    "dev": "NODE_ENV=development nodemon --exec npm run babel-node -- app.js"
+    "start": "NODE_ENV=production nodemon --ext js --exec npm run babel-node -- app.js",
+    "dev": "NODE_ENV=development nodemon --ext js --exec npm run babel-node -- app.js"
   },
   "author": "",
   "license": "ISC",

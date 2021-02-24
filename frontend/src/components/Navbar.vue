@@ -12,7 +12,7 @@
 		
     <div class="nav_actions">
 			
-			<!-- <settings-config v-if="user && user.staff == true" /> -->
+			<settings-config v-if="user && user.staff == true" />
       <div class="action" v-if="user">
         <v-avatar color="primary" class="avatar" size="50">
           <img :src="user.image_url" alt="avatar-img" />

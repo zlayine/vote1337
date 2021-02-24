@@ -7,6 +7,6 @@ exports.getConfig = () => {
 }
 
 exports.updateConfig = (data) => {
-	fs.writeFile('./appconfig.json', data, 'utf8', () => {});
+	fs.writeFileSync('./appconfig.json', JSON.stringify(data));
 	return 1;
 }

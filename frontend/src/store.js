@@ -2,6 +2,7 @@ import axios from 'axios'
 import { getLocalUser } from './auth.js';
 import { saveAs } from 'file-saver'
 import io from "socket.io-client";
+import { getConfig, updateConfig } from '../../helpers/config.js';
 
 const user = getLocalUser();
 
@@ -109,6 +110,7 @@ export default {
 		uploadPercent: null,
 		socket: null,
 		someoneAdding: false,
+		config: null,
 	},
 	getters: {
 		reports: state => state.reports,
@@ -124,6 +126,7 @@ export default {
 		uploadPercent: state => state.uploadPercent,
 		socket: state => state.socket,
 		someoneAdding: state => state.someoneAdding,
+		config: state => state.config,
 	},
 	mutations: {
 		LOGIN(state, payload) {
@@ -230,6 +233,9 @@ export default {
 		},
 		NOTIFY_ADDING(state, action) {
 			state.someoneAdding = action;
+		},
+		UPDATE_CONFIG(state, payload) {
+			state.config = payload;
 		}
 	},
 	actions: {
@@ -614,10 +620,49 @@ export default {
 		async connectSocket({ commit }, token) {
 			try {
 				commit("SET_SOCKET", token);
-				// commit("SOCKET_LISTENERS")
+			} catch (error) {
+				console.log(error);
+			}
+		},
+		async getConfig({ commit }) {
+			try {
+				const res = await axios({
+					url: process.env.VUE_APP_GRAPHQL_API,
+					method: 'post',
+					data: {
+						query: `
+						query { 
+							getConfig
+						}
+						`
+					}
+				});
+				commit("UPDATE_CONFIG", res.data.data.getConfig)
+			} catch (error) {
+				console.log(error);
+			}
+		},
+		async updateConfig({ commit }, data) {
+			try {
+				let json = JSON.stringify(JSON.stringify(data)) + "";
+				console.log(json)
+				const res = await axios({
+					url: process.env.VUE_APP_GRAPHQL_API,
+					method: 'post',
+					data: {
+						query: `
+						mutation { 
+							updateConfig(configData: ${json})
+						}
+						`
+					}
+				});
+				console.log(res.data);
+				// commit("UPDATE_CONFIG", res.data.data.getConfig)
 			} catch (error) {
 				console.log(error);
 			}
 		}
 	},
+
 }

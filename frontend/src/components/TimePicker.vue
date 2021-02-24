@@ -25,6 +25,7 @@
 
 <script>
 export default {
+	props: ["campus", "meal"],
 	data(){
 		return {
 			menu: false,
@@ -34,7 +35,7 @@ export default {
 	methods: {
 		setTime(){
 			this.$refs.menu.save(this.time);
-			this.$emit("saveTime", this.time)
+			this.$emit("saveTime", {campus: this.campus, meal: this.meal, time: this.time})
 		}
 	},
 };

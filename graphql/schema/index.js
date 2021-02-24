@@ -3,6 +3,8 @@ scalar Upload
 
 scalar ConfigData
 
+scalar JSON
+
 type User {
     _id: ID!
     username: String!
@@ -114,7 +116,7 @@ type RootMutation {
 	deleteMeal(mealId: String!): Boolean
 	createUser(code: String!): LoginData
 	addVotes(voteInput: [VoteInput!]!, meal: String!): Meal
-	updateConfig(configData: ConfigData): String
+	updateConfig(configData: String): String
 }
 
 type RootSubscription {

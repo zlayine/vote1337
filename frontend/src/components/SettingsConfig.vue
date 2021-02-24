@@ -6,72 +6,61 @@
       </div>
     </template>
     <v-card>
+      <v-card-title>
+        <span class="headline">App Config</span>
+      </v-card-title>
       <v-card-text>
         <v-container>
           <v-row>
             <v-col cols="12" sm="6" md="6">
-              <!-- <v-menu
-                ref="menu"
-                v-model="menu"
-                :close-on-content-click="false"
-                :nudge-right="40"
-                :return-value.sync="time"
-                transition="scale-transition"
-                offset-y
-                max-width="290px"
-                min-width="290px"
-              >
-                <template v-slot:activator="{ on, attrs }">
-                  <v-text-field
-                    v-model="time"
-                    label="Khouribga lunch"
-                    readonly
-                    v-bind="attrs"
-                    v-on="on"
-                  ></v-text-field>
-                </template>
-                <v-time-picker
-                  v-if="menu"
-                  v-model="time"
-									format="24hr"
-                  full-width
-                  @click:minute="$refs.menu.save(time)"
-                ></v-time-picker>
-              </v-menu> -->
-
-              <time-picker @saveTime="changeTime">
-                <template v-slot:abdo="{ attrs, on }">
-                  <v-text-field
-                    v-model="time"
-                    label="Khouribga lunch"
-                    v-bind="attrs"
-                    v-on="on"
-                    readonly
-                  ></v-text-field>
-                </template>
-              </time-picker>
+              <v-text-field
+                label="Label Text"
+                v-model="data.times.Khouribga.lunch"
+                type="time"
+                required
+              ></v-text-field>
             </v-col>
             <v-col cols="12" sm="6" md="6">
-              <v-text-field label="Khouribga dinner" required></v-text-field>
+              <v-text-field
+                label="Label Text"
+                v-model="data.times.Khouribga.dinner"
+                type="time"
+                required
+              ></v-text-field>
             </v-col>
             <v-col cols="12" sm="6" md="6">
-              <v-text-field label="Benguerir dinner" required></v-text-field>
+              <v-text-field
+                label="Label Text"
+                v-model="data.times.Benguerir.lunch"
+                type="time"
+                required
+              ></v-text-field>
             </v-col>
             <v-col cols="12" sm="6" md="6">
-              <v-text-field label="Benguerir dinner" required></v-text-field>
+              <v-text-field
+                label="Label Text"
+                v-model="data.times.Benguerir.dinner"
+                type="time"
+                required
+              ></v-text-field>
             </v-col>
             <v-col cols="12">
-              <v-text-field label="Benguerir dinner" required></v-text-field>
+              <v-text-field
+                type="number"
+                label="Voting timespan"
+								v-model="data.voting"
+                required
+              ></v-text-field>
             </v-col>
           </v-row>
         </v-container>
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="blue darken-1" text @click="dialog = false">
-          Close
+        <v-btn color="blue darken-1" text @click="closeDialog"> Close </v-btn>
+        <v-btn color="blue darken-1" dark @click="saveConfig">
+          Save Config
         </v-btn>
-        <v-btn color="blue darken-1" text @click="dialog = false"> Save </v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -84,25 +73,42 @@ export default {
   data() {
     return {
       dialog: false,
-      menu: false,
       data: {
         times: {
           Khouribga: {
             lunch: "",
-						dinner: "",
+            dinner: "",
           },
-					Benguerir: {
-						lunch: "",
-						dinner: "",
-					}
+          Benguerir: {
+            lunch: "",
+            dinner: "",
+          },
         },
-				voting: 0,
+        voting: 0,
       },
     };
   },
   methods: {
-    changeTime(time) {
-      this.time = time;
+    changeTime(data) {
+      this.data.times[data.campus][data.meal] = data.time;
+    },
+    closeDialog() {
+      this.dialog = false;
+      this.data = this.config;
+    },
+    async saveConfig() {
+      await this.$store.dispatch("updateConfig", this.data);
+      this.dialog = false;
+    },
+  },
+  mounted() {
+    if (this.config) {
+      this.data = this.config;
+    }
+  },
+  computed: {
+    config() {
+      return this.$store.getters.config;
     },
   },
   components: {

@@ -11,9 +11,9 @@
           <v-icon dark color="white"> mdi-plus </v-icon>
         </v-btn>
       </div>
-			<div class="add-meal waiting" v-else>
+      <div class="add-meal waiting" v-else>
         <div class="text">SOMEONE IS ADDING A MEAL</div>
-					<v-icon dark color="success">fas fa-circle-notch fa-spin</v-icon>
+        <v-icon dark color="success">fas fa-circle-notch fa-spin</v-icon>
       </div>
     </v-card>
     <div class="none" v-if="displayNone || (!meals.length && !addMeal)">
@@ -99,6 +99,7 @@ export default {
   async created() {
     if (this.meals.length > 0) return;
     let page = this.$route.query.page;
+    if (!this.config) await this.$store.dispatch("getConfig");
     this.campus = this.user ? this.user.campus : this.currentUser.campus;
     await this.$store.dispatch("checkAddMeal", this.campus);
     if (!page) this.$router.replace({ query: { page: 1 } });
@@ -136,19 +137,29 @@ export default {
       await this.$store.dispatch("checkAddMeal", this.campus);
     },
     getMealTimeDiff() {
+      if (!this.config) return 0;
       let now = moment().tz("Africa/Casablanca");
-      // now = moment(moment("16:00:00", "HH:mm:ss").toDate());
-
+      // now = moment(moment("16:00", "HH:mm").toDate());
       if (this.meals.length) {
         let lastMeal = moment(new Date(this.meals[0].createdAt));
         let diff = now.diff(lastMeal, "hours");
         if (diff < 3 && diff >= 0) return 0;
       }
-      let mealStart = moment(moment("12:00:00", "HH:mm:ss").toDate());
+      let mealStart = moment(
+        moment(
+          this.config.times[this.currentUser.campus].lunch,
+          "HH:mm"
+        ).toDate()
+      );
       let nowToStartDiff = now.diff(mealStart, "hours");
       if (nowToStartDiff == 0) return 1;
       else if (nowToStartDiff > 0) {
-        mealStart = moment(moment("17:45:00", "HH:mm:ss").toDate());
+        mealStart = moment(
+          moment(
+            this.config.times[this.currentUser.campus].dinner,
+            "HH:mm"
+          ).toDate()
+        );
         nowToStartDiff = now.diff(mealStart, "hours");
         if (nowToStartDiff == 0) return 2;
       }
@@ -158,6 +169,9 @@ export default {
   computed: {
     meals() {
       return this.$store.getters.meals;
+    },
+    config() {
+      return this.$store.getters.config;
     },
     currentUser() {
       return this.$store.getters.currentUser;
@@ -262,11 +276,11 @@ export default {
         text-align: center;
       }
 
-			&.waiting {
-				.text {
-					color: #4caf50;
-				}
-			}
+      &.waiting {
+        .text {
+          color: #4caf50;
+        }
+      }
     }
   }
   .fade-enter-active,

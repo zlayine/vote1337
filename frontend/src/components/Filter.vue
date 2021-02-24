@@ -16,6 +16,7 @@
             prepend-icon="mdi-calendar"
             readonly
             hide-details
+						clearable
             v-bind="attrs"
             v-on="on"
           ></v-text-field>
@@ -90,8 +91,13 @@ export default {
     currentDate() {
       return moment().format("YYYY-MM-DD");
     },
-    dateRangeText() {
-      return this.dates.join(" ~ ");
+    dateRangeText: {
+			get() {
+				return this.dates.join(" ~ ");
+			},
+			set() {
+				return '';
+			}
     },
     user() {
       return this.$store.getters.user;

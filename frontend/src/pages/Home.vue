@@ -36,6 +36,7 @@ export default {
   },
   async mounted() {
     if (this.currentUser) {
+			
       if (!this.user)
         await this.$store.dispatch("getUser", this.currentUser.id);
       if (!this.socket) await this.joinServer();
