@@ -57,41 +57,41 @@ const enableMealVoting = async (meal) => {
 
 const checkAddMeal = async (campus) => {
 	// return true;
+	let debug = 0;
 	const mealTimes = getConfig().times;
-	// console.log(mealTimes);
 	try {
 		const meal = await models.Meal.findOne({ campus: campus }).sort({ createdAt: 'desc' });
 		let now = moment().tz("Africa/Casablanca");
-		now.set({hours: 18, minutes: 1});
-		console.log("now", now);
-		// now = moment(moment("16:00:00", "HH:mm:ss").toDate());
+		let mealTime = mealTimes[campus].lunch.split(':');
+		let mealStart = moment.tz("Africa/Casablanca").set({ hours: mealTime[0], minutes: mealTime[1], seconds: 0 });
+
+		if (debug) now.set({ hours: 17, minutes: 43 });
+		if (debug) console.log("now", now);
+
 		if (meal) {
-			let mealTime = mealTimes[campus].lunch.split(':');
 			let mealDate = moment(new Date(meal.createdAt));
-			let mealStart = mealStart = moment.tz("Africa/Casablanca").set({ hours: mealTime[0], minutes: mealTime[1], seconds: 0 });
 			let mealToStartDiff = mealDate.diff(mealStart, "minutes");
 			if (mealToStartDiff >= 0) {
-				mealTime =  mealTimes[campus].dinner.split(':');
-				mealStart = mealStart = moment.tz("Africa/Casablanca").set({ hours: mealTime[0], minutes: mealTime[1], seconds: 0 });
+				mealTime = mealTimes[campus].dinner.split(':');
+				mealStart = moment.tz("Africa/Casablanca").set({ hours: mealTime[0], minutes: mealTime[1], seconds: 0 });
 				mealToStartDiff = mealDate.diff(mealStart, "minutes");
 			}
 			let nowToStartDiff = now.diff(mealStart, "minutes");
-			// console.log("mealstart ", mealToStartDiff)
-			// console.log("nowstart ",nowToStartDiff)
-			if (nowToStartDiff >= 0 && mealToStartDiff < 0) {
+			if (debug) console.log("mealstart ", mealToStartDiff)
+			if (debug) console.log("nowstart ", nowToStartDiff)
+			if (nowToStartDiff >= 0 && mealToStartDiff < 0)
 				return true;
-			}
 			return false;
 		} else {
-			let mealTime = mealTimes[campus].lunch.split(':');
-			let mealStart = moment.tz("Africa/Casablanca").set({ hours: mealTime[0], minutes: mealTime[1], seconds: 0 });
 			let nowToStartDiff = now.diff(mealStart, "minutes");
-			if (nowToStartDiff >= 0 && nowToStartDiff < 4 * 60) return true;
+			if (nowToStartDiff >= 0 && nowToStartDiff < 4 * 60)
+				return true;
 			else {
-				mealTime =  mealTimes[campus].dinner.split(':');
-				mealStart = mealStart = moment.tz("Africa/Casablanca").set({ hours: mealTime[0], minutes: mealTime[1], seconds: 0 });
+				mealTime = mealTimes[campus].dinner.split(':');
+				mealStart = moment.tz("Africa/Casablanca").set({ hours: mealTime[0], minutes: mealTime[1], seconds: 0 });
 				nowToStartDiff = now.diff(mealStart, "minutes");
-				if (nowToStartDiff >= 0 && nowToStartDiff < 3 * 60) return true;
+				if (nowToStartDiff >= 0 && nowToStartDiff < 3 * 60)
+					return true;
 			}
 			return false;
 		}

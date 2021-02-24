@@ -412,6 +412,9 @@ export default {
 				commit('UPDATE_PERCENTAGE', null);
 				if (res.data.errors) {
 					commit("SET_NOTIFICATION", { msg: "Failed to get meal", error: 1 });
+					await deleteMeal(id);
+					commit("UPDATE_LOADING");
+					return 0;
 				}
 				else {
 					commit('EMIT_ADD_MEAL', res.data.data.getMeal._id);

@@ -44,6 +44,8 @@ module.exports = {
 			if (!args.input.meal || !args.input.image)
 				throw new Error('MealItem information is missing');
 			const meal = await models.Meal.findById(args.input.meal);
+			if (!meal)
+				throw new Error('Meal does not exist');
 			const { filename, createReadStream } = await args.input.image;
 			const { ext } = await patho.parse(filename);
 			const generatedName = args.input.meal + "_" + args.input.name + "_" + parseInt(Math.random() * 1000000) + ext;
