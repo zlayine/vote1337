@@ -68,6 +68,7 @@ const checkAddMeal = async (campus) => {
 			let mealDate = moment(new Date(meal.createdAt));
 			let mealStart = moment(moment(mealTimes[campus].lunch, "HH:mm").toDate());
 			let mealToStartDiff = mealDate.diff(mealStart, "minutes");
+			console.log(mealToStartDiff);
 			if (mealToStartDiff >= 0) {
 				mealStart = moment(moment(mealTimes[campus].dinner, "HH:mm").toDate());
 				mealToStartDiff = mealDate.diff(mealStart, "minutes");
