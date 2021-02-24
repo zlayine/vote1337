@@ -14,7 +14,7 @@
           <v-row>
             <v-col cols="12" sm="6" md="6">
               <v-text-field
-                label="Label Text"
+                label="Khouribga launch time"
                 v-model="data.times.Khouribga.lunch"
                 type="time"
                 required
@@ -22,7 +22,7 @@
             </v-col>
             <v-col cols="12" sm="6" md="6">
               <v-text-field
-                label="Label Text"
+                label="Khouribga dinner time"
                 v-model="data.times.Khouribga.dinner"
                 type="time"
                 required
@@ -30,7 +30,7 @@
             </v-col>
             <v-col cols="12" sm="6" md="6">
               <v-text-field
-                label="Label Text"
+                label="Benguerir launch time"
                 v-model="data.times.Benguerir.lunch"
                 type="time"
                 required
@@ -38,7 +38,7 @@
             </v-col>
             <v-col cols="12" sm="6" md="6">
               <v-text-field
-                label="Label Text"
+                label="Benguerir dinner time"
                 v-model="data.times.Benguerir.dinner"
                 type="time"
                 required
@@ -47,7 +47,7 @@
             <v-col cols="12">
               <v-text-field
                 type="number"
-                label="Voting timespan"
+                label="Voting delay (hours)"
 								v-model="data.voting"
                 required
               ></v-text-field>

@@ -1,6 +1,6 @@
 <template>
   <div class="nav">
-    <router-link class="nav_logo" to="/auth">
+    <router-link class="nav_logo" to="/">
       <div class="logo">
         <img :src="logo" alt="1337 logo" />
       </div>
@@ -9,9 +9,7 @@
         <span>PLATE</span>
       </div>
     </router-link>
-		
     <div class="nav_actions">
-			
 			<settings-config v-if="user && user.staff == true" />
       <div class="action" v-if="user">
         <v-avatar color="primary" class="avatar" size="50">
