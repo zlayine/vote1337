@@ -61,16 +61,16 @@ const checkAddMeal = async (campus) => {
 	console.log(mealTimes);
 	try {
 		const meal = await models.Meal.findOne({ campus: campus }).sort({ createdAt: 'desc' });
-		let now = moment().tz("Africa/Casablanca").subtract(moment.duration("00:01:00"));
+		let now = moment().tz("Africa/Casablanca");
 		console.log("now", now);
 		// now = moment(moment("16:00:00", "HH:mm:ss").toDate());
 		if (meal) {
 			let mealDate = moment(new Date(meal.createdAt));
-			let mealStart = moment(moment(mealTimes[campus].lunch, "HH:mm").toDate());
+			let mealStart = moment(moment.tz(mealTimes[campus].lunch, "Africa/Casablanca").toDate());
 			let mealToStartDiff = mealDate.diff(mealStart, "minutes");
 			console.log(mealToStartDiff);
 			if (mealToStartDiff >= 0) {
-				mealStart = moment(moment(mealTimes[campus].dinner, "HH:mm").toDate());
+				mealStart = moment(moment(mealTimes[campus].dinner, "Africa/Casablanca").toDate());
 				mealToStartDiff = mealDate.diff(mealStart, "minutes");
 			}
 			let nowToStartDiff = now.diff(mealStart, "minutes");
