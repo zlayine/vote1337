@@ -58,6 +58,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+*::selection {
+    outline: none;
+}
 .nav {
   display: flex;
   flex-direction: row;
@@ -66,6 +69,7 @@ export default {
   padding: 0 5px;
   height: 80px;
   box-shadow: 0 0 5px #02020270;
+	outline: none;
 
   .nav_logo {
     margin-left: 25px;
