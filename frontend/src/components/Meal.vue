@@ -148,7 +148,7 @@ export default {
     span {
       font-size: 16px;
       &::before {
-        content: "•";
+        content: "at";
         margin-right: 5px;
       }
     }
