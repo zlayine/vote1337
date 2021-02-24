@@ -2,7 +2,6 @@ import axios from 'axios'
 import { getLocalUser } from './auth.js';
 import { saveAs } from 'file-saver'
 import io from "socket.io-client";
-import { getConfig, updateConfig } from '../../helpers/config.js';
 
 const user = getLocalUser();
 
