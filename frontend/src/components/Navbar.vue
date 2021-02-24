@@ -1,6 +1,6 @@
 <template>
   <div class="nav">
-    <router-link class="nav_logo" to="/">
+    <router-link class="nav_logo" to="/?page=1">
       <div class="logo">
         <img :src="logo" alt="1337 logo" />
       </div>

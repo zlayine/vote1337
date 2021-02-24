@@ -8,8 +8,8 @@
       <div class="info">
         <div class="info_title">{{ item.name }}</div>
         <div class="stats">
-          <div class="text">{{ item.votes_down | vote_text_up }}</div>
-          <div class="text">{{ item.votes_up | vote_text_down }}</div>
+          <div class="text">{{ item.votes_down | vote_text_down }}</div>
+          <div class="text">{{ item.votes_up | vote_text_up }}</div>
         </div>
         <div class="bar">
           <v-progress-linear
