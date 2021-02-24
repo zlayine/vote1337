@@ -68,7 +68,6 @@ const checkAddMeal = async (campus) => {
 			let mealTime = mealTimes[campus].lunch.split(':');
 			let mealDate = moment(new Date(meal.createdAt));
 			let mealStart = mealStart = moment.tz("Africa/Casablanca").set({ hours: mealTime[0], minutes: mealTime[1], seconds: 0 });
-			console.log(mealStart);
 			let mealToStartDiff = mealDate.diff(mealStart, "minutes");
 			if (mealToStartDiff >= 0) {
 				mealTime =  mealTimes[campus].dinner.split(':');
@@ -76,8 +75,6 @@ const checkAddMeal = async (campus) => {
 				mealToStartDiff = mealDate.diff(mealStart, "minutes");
 			}
 			let nowToStartDiff = now.diff(mealStart, "minutes");
-			console.log(mealStart);
-			console.log(nowToStartDiff);
 			if (nowToStartDiff >= 0 && mealToStartDiff < 0) {
 				return true;
 			}
@@ -86,8 +83,6 @@ const checkAddMeal = async (campus) => {
 			let mealTime = mealTimes[campus].lunch.split(':');
 			let mealStart = moment.tz("Africa/Casablanca").set({ hours: mealTime[0], minutes: mealTime[1], seconds: 0 });
 			let nowToStartDiff = now.diff(mealStart, "minutes");
-			console.log(mealStart);
-			console.log(nowToStartDiff);
 			if (nowToStartDiff >= 0 && nowToStartDiff < 4 * 60) return true;
 			else {
 				mealTime =  mealTimes[campus].dinner.split(':');
