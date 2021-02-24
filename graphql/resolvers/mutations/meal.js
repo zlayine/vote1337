@@ -31,9 +31,6 @@ module.exports = {
 				campus: user.campus
 			});
 			const result = await meal.save();
-			// socket.publish('MEAL_CREATED', {
-			// 	mealCreated: transformMeal(result, enableMealVoting(result))
-			// })
 			return transformMeal(result, enableMealVoting(result));
 		} catch (err) {
 			console.log(err);
