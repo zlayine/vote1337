@@ -644,7 +644,6 @@ export default {
 		async updateConfig({ commit }, data) {
 			try {
 				let json = JSON.stringify(JSON.stringify(data)) + "";
-				console.log(json)
 				const res = await axios({
 					url: process.env.VUE_APP_GRAPHQL_API,
 					method: 'post',
@@ -656,8 +655,8 @@ export default {
 						`
 					}
 				});
-				console.log(res.data);
-				// commit("UPDATE_CONFIG", res.data.data.getConfig)
+				commit("SET_NOTIFICATION", { msg: "Config updated Successfully!", error: 0 });
+				commit("UPDATE_CONFIG", data)
 			} catch (error) {
 				console.log(error);
 			}

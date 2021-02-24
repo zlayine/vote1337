@@ -47,7 +47,6 @@ app.use('/graphql',
 	graphqlUploadExpress({ maxFileSize: '10M', maxFiles: 10 }),
 	graphqlHttp({
 		schema: schema,
-		graphiql: true,
 	}));
 
 const {
