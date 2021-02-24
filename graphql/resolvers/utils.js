@@ -74,6 +74,7 @@ const checkAddMeal = async (campus) => {
 				mealToStartDiff = mealDate.diff(mealStart, "minutes");
 			}
 			let nowToStartDiff = now.diff(mealStart, "minutes");
+			console.log(nowToStartDiff);
 			if (nowToStartDiff >= 0 && mealToStartDiff < 0) {
 				return true;
 			}
@@ -81,6 +82,7 @@ const checkAddMeal = async (campus) => {
 		} else {
 			let mealStart = moment(moment(mealTimes[campus].lunch, "HH:mm").toDate());
 			let nowToStartDiff = now.diff(mealStart, "minutes");
+			console.log(nowToStartDiff);
 			if (nowToStartDiff >= 0 && nowToStartDiff < 4 * 60) return true;
 			else {
 				mealStart = moment(moment(mealTimes[campus].dinner, "HH:mm").toDate());
