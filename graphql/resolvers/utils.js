@@ -74,6 +74,7 @@ const checkAddMeal = async (campus) => {
 				mealToStartDiff = mealDate.diff(mealStart, "minutes");
 			}
 			let nowToStartDiff = now.diff(mealStart, "minutes");
+			console.log(mealStart);
 			console.log(nowToStartDiff);
 			if (nowToStartDiff >= 0 && mealToStartDiff < 0) {
 				return true;
