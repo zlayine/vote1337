@@ -65,7 +65,7 @@ const checkAddMeal = async (campus) => {
 		let mealTime = mealTimes[campus].lunch.split(':');
 		let mealStart = moment.tz("Africa/Casablanca").set({ hours: mealTime[0], minutes: mealTime[1], seconds: 0 });
 
-		if (debug) now.set({ hours: 12, minutes: 00 });
+		if (debug) now.set({ hours: 12, minutes: 0 });
 		if (debug) console.log("now", now);
 
 		if (meal) {
