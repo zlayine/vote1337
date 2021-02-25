@@ -15,7 +15,6 @@
     <div class="meals-container">
       <div class="text-title">{{ meal.name }}</div>
       <div class="items_carrousel">
-        <!-- <div class="edge left"></div> -->
         <div class="item" v-if="finish">
           <transition name="slide-hide">
             <div class="finish">
@@ -29,7 +28,7 @@
         <div class="item" v-else>
           <transition name="slide-hide">
             <div :key="item._id" class="image">
-              <img :src="item.image_url" alt="img" />
+              <img :src="item.image_url" :class="square ? 'square' : 'long'" alt="img" />
             </div>
           </transition>
           <div class="actions" v-if="!finish">
@@ -80,7 +79,6 @@
             </v-btn>
           </div>
         </div>
-        <!-- <div class="edge right"></div> -->
       </div>
     </div>
   </div>
@@ -97,6 +95,7 @@ export default {
       item: null,
       current: 0,
       description: null,
+      square: true,
       votes: [],
       finish: false,
       thankyou_img: thankyou_img,
@@ -137,6 +136,12 @@ export default {
       if (this.current == this.meal.meals.length) this.showFinish();
       else this.item = this.meal.meals[this.current];
       this.description = null;
+      this.square = true;
+      let img = new Image();
+      img.onload = () => {
+        if (img.height / img.width > 1) this.square = false;
+      };
+      img.src = this.item.image_url;
     },
     showFinish() {
       this.finish = true;
@@ -248,10 +253,14 @@ export default {
           transition: 500ms all;
           justify-content: center;
 
-          img {
-          //   // margin: auto;
+          .square {
 						width: 100%;
+						margin: auto;
           }
+					.long {
+						height: 100%;
+						margin: auto;
+					}
         }
 
         .actions {
