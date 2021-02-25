@@ -57,7 +57,7 @@ const enableMealVoting = async (meal) => {
 
 const checkAddMeal = async (campus) => {
 	// return true;
-	let debug = 1;
+	let debug = 0;
 	const mealTimes = getConfig().times;
 	try {
 		const meal = await models.Meal.findOne({ campus: campus }).sort({ createdAt: 'desc' });
