@@ -426,7 +426,7 @@ export default {
 			} catch (error) {
 				console.log(error)
 				commit('UPDATE_PERCENTAGE', null);
-				commit("SET_NOTIFICATION", { msg: "Could not add the meal", error: 1 });
+				commit("SET_NOTIFICATION", { msg: error, error: 1 });
 				commit("UPDATE_LOADING");
 				return 0;
 			}
