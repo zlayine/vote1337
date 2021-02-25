@@ -13,19 +13,25 @@
       </v-btn>
     </div>
     <div class="image" v-if="image">
-      <img
-        :src="image"
-        alt="image previewed"
-      />
+      <img :src="image" alt="image previewed" />
     </div>
   </div>
 </template>
 
 <script>
 export default {
-	props: {
-		image: String
-	},
+  props: {
+    image: String,
+  },
+  created() {
+    let that = this;
+
+    document.addEventListener("keyup", function (evt) {
+      if (evt.keyCode === 27) {
+        that.closePreview();
+      }
+    });
+  },
   data() {
     return {};
   },

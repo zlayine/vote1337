@@ -11,6 +11,7 @@
         ref="tool"
         :modal="true"
         :background="false"
+        :aspectRatio="1"
         :guides="false"
         :src="url"
         :zoomable="false"
@@ -37,8 +38,8 @@ export default {
     saveCrop() {
       let img_url = this.$refs.tool.getCroppedCanvas().toDataURL();
       this.$refs.tool.getCroppedCanvas().toBlob((blob) => {
-				this.$emit('cropImage', {url: img_url, file: this.blobToFile(blob)})
-      }, 'image/jpeg');
+        this.$emit("cropImage", { url: img_url, file: this.blobToFile(blob) });
+      }, "image/jpeg");
     },
     blobToFile(theBlob) {
       theBlob.lastModifiedDate = new Date();
