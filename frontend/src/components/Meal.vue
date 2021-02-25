@@ -24,10 +24,16 @@
           <v-icon> mdi-delete </v-icon>
         </v-btn>
       </div>
-      <div class="overlay" v-if="!voted"></div>
-
       <div class="start-vote" v-if="!voted">
-        <v-btn x-large rounded color="#2eb9ff" dark @click="openVoting">
+        <div class="white-shade"></div>
+        <v-btn
+          class="vote-btn"
+          x-large
+          rounded
+          color="#2eb9ff"
+          dark
+          @click="openVoting"
+        >
           Start voting
         </v-btn>
       </div>
@@ -193,27 +199,28 @@ export default {
       }
     }
 
-    .overlay {
-      position: absolute;
-      top: 0;
-      z-index: 30;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background-color: #ffffff80;
-      margin: auto;
-      backdrop-filter: blur(2px);
-    }
-
     .start-vote {
+      width: 300px;
       position: absolute;
-      z-index: 50;
-      left: 40%;
-      top: 40%;
+      left: 50%;
+      z-index: 30;
 
-      button {
-        font-size: 22px;
-        font-weight: 600;
+      .white-shade {
+        width: 300px;
+        height: 120px;
+        border-radius: 50%;
+        top: -80px;
+        left: -50%;
+        position: relative;
+        background-color: #fff;
+        box-shadow: 0px 0px 25px 25px #fff;
+      }
+
+      .vote-btn {
+        width: 160px;
+        position: absolute;
+        top: 0;
+        left: -25%;
       }
     }
 
@@ -244,11 +251,17 @@ export default {
       }
     }
 
-    .meal_items_holder {
-      .start-vote {
-        left: 20%;
+    .start-vote {
+      left: 0;
+      .white-shade {
+        left: 0;
+      }
+
+      .vote-btn {
+        left: 25%;
       }
     }
+
     .reports {
       button {
         padding: 0 8px;

@@ -42,6 +42,7 @@
           </v-btn>
           <v-btn
             class="mx-2 step5"
+            ref="cropBtn"
             @click="crop = true"
             v-if="!saved || item_data.demo"
             fab
@@ -135,6 +136,7 @@ export default {
           const reader = new FileReader();
           reader.onload = (event) => {
             this.url = event.target.result;
+            this.$refs.cropBtn.click();
           };
           reader.readAsDataURL(this.file);
         } else {
