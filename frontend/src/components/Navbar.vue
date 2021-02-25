@@ -1,6 +1,6 @@
 <template>
   <div class="nav">
-    <router-link class="nav_logo" to="/?page=1">
+    <div class="nav_logo" @click="goToHome">
       <div class="logo">
         <img :src="logo" alt="1337 logo" />
       </div>
@@ -8,7 +8,7 @@
         <h1>RATE MY</h1>
         <span>PLATE</span>
       </div>
-    </router-link>
+    </div>
     <div class="nav_actions">
 			<settings-config v-if="user && user.staff == true" />
       <div class="action" v-if="user">
@@ -48,7 +48,12 @@ export default {
       this.$store.commit("SET_NOTIFICATION", { msg: "Logged out!", error: 0 });
       this.$router.push("/auth");
     },
+		goToHome() {
+			this.$router.push('/?page=1');
+			this.$router.go()
+		}
   },
+	
 	components: {
 		SettingsConfig,
 	}
@@ -74,6 +79,7 @@ export default {
     text-decoration: none;
     display: flex;
     flex-direction: row;
+		cursor: pointer;
 
     .logo {
       // height: 80%;
