@@ -20,6 +20,7 @@
         type="file"
         ref="file"
         :name="file"
+        :disabled="saved"
         @change="onFileChange($event.target.files)"
         style="display: none"
       />
@@ -30,6 +31,7 @@
           dense
           label="Name"
           hide-details
+          :disabled="saved"
           required
           outlined
           class="my-2 input-name step4"
@@ -96,6 +98,13 @@ export default {
       size: 0,
     };
   },
+  watch: {
+    item_data: function (newVal, oldVal) {
+      this.url = URL.createObjectURL(newVal.file);
+      this.name = newVal.name;
+      this.size = newVal.size;
+    },
+  },
   created() {
     if (this.item_data) {
       if (this.item_data.demo)
@@ -146,6 +155,7 @@ export default {
     },
     clearItem() {
       if (this.index != null) {
+        console.log(this.index);
         this.$emit("removeItem", this.index);
         return;
       }
@@ -191,7 +201,7 @@ export default {
   transition: 200ms all;
 
   .empty {
-    width: 100%;
+    width: 200px;
     height: 300px;
     cursor: pointer;
     border: 4px dotted #2eb9ffd5;

@@ -72,7 +72,7 @@
                 </v-btn>
               </div>
             </template>
-						<template v-else-if="!tour.isLast">
+            <template v-else-if="!tour.isLast">
               <div slot="actions">
                 <v-btn
                   dark
@@ -126,7 +126,7 @@ export default {
       myCallbacks: {
         onStart: this.myCustomStartTour,
         onFinish: this.myCustomFinishTour,
-				onSkip: this.myCustomFinishTour,
+        onSkip: this.myCustomFinishTour,
       },
       steps: [
         {
@@ -215,9 +215,13 @@ export default {
       this.$refs.empty.clearItem();
     },
     removeItem(index) {
+			console.log(this.items);
       this.items = this.items.filter((item, i) => {
+				if (index == i)
+        	console.log(index + " " + i, item);
         if (index != i) return item;
       });
+			console.log(this.items);
     },
     async submit() {
       if (this.addMeal) {
@@ -254,9 +258,9 @@ export default {
       localStorage.setItem("tour", "done");
     },
     startTour() {
-			this.demo = true;
+      this.demo = true;
       this.$tours["addTour"].start();
-		},
+    },
   },
   computed: {
     addMeal() {
@@ -291,10 +295,10 @@ export default {
     margin-bottom: 25px;
 
     .how {
-			font-size: 14px;
-			display: inline;
-			cursor: pointer;
-			color: #2eb9ff;
+      font-size: 14px;
+      display: inline;
+      cursor: pointer;
+      color: #2eb9ff;
     }
   }
 
