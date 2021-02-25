@@ -249,8 +249,8 @@ export default {
           justify-content: center;
 
           img {
-            // margin: auto;
-						// width: 100%;
+          //   // margin: auto;
+						width: 100%;
           }
         }
 
