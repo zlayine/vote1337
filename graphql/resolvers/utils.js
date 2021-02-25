@@ -57,7 +57,7 @@ const enableMealVoting = async (meal) => {
 
 const checkAddMeal = async (campus) => {
 	// return true;
-	let debug = 0;
+	let debug = 1;
 	const mealTimes = getConfig().times;
 	try {
 		const meal = await models.Meal.findOne({ campus: campus }).sort({ createdAt: 'desc' });
@@ -65,7 +65,7 @@ const checkAddMeal = async (campus) => {
 		let mealTime = mealTimes[campus].lunch.split(':');
 		let mealStart = moment.tz("Africa/Casablanca").set({ hours: mealTime[0], minutes: mealTime[1], seconds: 0 });
 
-		if (debug) now.set({ hours: 17, minutes: 43 });
+		if (debug) now.set({ hours: 12, minutes: 00 });
 		if (debug) console.log("now", now);
 
 		if (meal) {
@@ -77,8 +77,10 @@ const checkAddMeal = async (campus) => {
 				mealToStartDiff = mealDate.diff(mealStart, "minutes");
 			}
 			let nowToStartDiff = now.diff(mealStart, "minutes");
+
 			if (debug) console.log("mealstart ", mealToStartDiff)
 			if (debug) console.log("nowstart ", nowToStartDiff)
+			
 			if (nowToStartDiff >= 0 && mealToStartDiff < 0)
 				return true;
 			return false;
