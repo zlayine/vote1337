@@ -4,6 +4,8 @@ const patho = require('path');
 const moment = require('moment-timezone');
 const imagemin = require("imagemin");
 const imageminMozjpeg = require("imagemin-mozjpeg");
+const mongoose = require('mongoose')
+const ObjectId = mongoose.Types.ObjectId;
 const jwt = require('jsonwebtoken');
 const { transformUser } = require('./merge');
 const env = require('../../environment');
@@ -42,7 +44,7 @@ const storeFS = ({ stream, generatedName }) => {
 	);
 }
 
-const enableMealVoting = async (meal) => {
+const enableMealVoting = async (meal, userId) => {
 	// return true;
 	const latest = await models.Meal.findOne({ campus: meal.campus }).sort({ createdAt: 'desc' });
 	if (latest.id != meal._id)
@@ -52,7 +54,12 @@ const enableMealVoting = async (meal) => {
 	let diff = now.diff(mealDate, 'hours');
 	if (diff > getConfig().voting)
 		return false;
-	return true;
+	if (meal.meals) {
+		const vote = await models.Vote.findOne({ user: ObjectId(userId), meal_item: meal.meals[0] });
+		if (!vote)
+			return true;
+	}
+	return false;
 }
 
 const checkAddMeal = async (campus) => {
@@ -80,7 +87,7 @@ const checkAddMeal = async (campus) => {
 
 			if (debug) console.log("mealstart ", mealToStartDiff)
 			if (debug) console.log("nowstart ", nowToStartDiff)
-			
+
 			if (nowToStartDiff >= 0 && mealToStartDiff < 0)
 				return true;
 			return false;

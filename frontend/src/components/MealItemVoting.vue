@@ -4,6 +4,7 @@
       <v-btn
         class="btn-close"
         color="error"
+        v-if="!finish"
         fab
         small
         dark
@@ -13,7 +14,7 @@
       </v-btn>
     </div>
     <div class="meals-container">
-      <div class="text-title">{{ meal.name }}</div>
+      <!-- <div class="text-title">{{ meal.name }}</div> -->
       <div class="items_carrousel">
         <div class="item" v-if="finish">
           <transition name="slide-hide">
@@ -21,14 +22,21 @@
               <div class="finish-img">
                 <img :src="thankyou_img" alt="image thank you" />
               </div>
-              <p>Thank you for your time!</p>
+              <p>
+                Thank you for your time! <br />And tell your friends to vote
+              </p>
             </div>
           </transition>
         </div>
         <div class="item" v-else>
+          <div class="item-title">{{ item.name }}</div>
           <transition name="slide-hide">
             <div :key="item._id" class="image">
-              <img :src="item.image_url" :class="square ? 'square' : 'long'" alt="img" />
+              <img
+                :src="item.image_url"
+                :class="square ? 'square' : 'long'"
+                alt="img"
+              />
             </div>
           </transition>
           <div class="actions" v-if="!finish">
@@ -39,9 +47,9 @@
                 dark
                 small
                 color="error"
-                @click="submitVote('down')"
+                @click="report = true"
               >
-                <v-icon dark> mdi-thumb-down </v-icon>
+                <v-icon dark> fas fa-heart-broken </v-icon>
               </v-btn>
               <v-btn
                 class="mx-2"
@@ -51,20 +59,22 @@
                 color="success"
                 @click="submitVote('up')"
               >
-                <v-icon dark> mdi-thumb-up </v-icon>
+                <v-icon dark> fas fa-heart</v-icon>
               </v-btn>
             </div>
             <div class="form-report" v-else>
-              <textarea v-model="description" rows="5">Description</textarea>
+              <div class="message">Tell us why ?</div>
+              <textarea v-model="description" rows="3">Description</textarea>
             </div>
             <v-btn
               class="btn-report mt-5 mx-5"
               rounded
-              :color="!report ? 'error' : 'primary'"
+              v-if="report"
+              color="primary"
               dark
-              @click="report ? submitReport() : (report = true)"
+              @click="submitReport()"
             >
-              {{ report ? "Submit" : "Report something ?" }}
+              Submit
             </v-btn>
             <v-btn
               v-if="report"
@@ -128,6 +138,7 @@ export default {
       this.nextItem();
       this.description = null;
       this.report = false;
+      window.scrollTo(0, 0);
     },
     closeVoting() {
       this.$emit("closeVoting");
@@ -185,36 +196,12 @@ export default {
       font-size: 25px;
       font-weight: 700;
       margin-bottom: 25px;
+      text-transform: uppercase;
     }
 
     .items_carrousel {
       display: flex;
       position: relative;
-      .edge {
-        position: absolute;
-        height: 100%;
-        z-index: 50;
-        width: 20%;
-
-        &.left {
-          background-image: linear-gradient(
-            to right,
-            #ffffff,
-            rgba(0, 255, 0, 0) 50%,
-            transparent 60%
-          );
-        }
-
-        &.right {
-          right: 0;
-          background-image: linear-gradient(
-            to left,
-            #fff,
-            rgba(0, 255, 0, 0) 50%,
-            transparent 60%
-          );
-        }
-      }
 
       .item {
         margin: auto;
@@ -242,6 +229,7 @@ export default {
             font-size: 18px;
             font-weight: 600;
             padding: 5px;
+            text-align: center;
           }
         }
 
@@ -254,30 +242,51 @@ export default {
           justify-content: center;
 
           .square {
-						width: 100%;
-						margin: auto;
+            width: 100%;
+            margin: auto;
           }
-					.long {
-						height: 100%;
-						margin: auto;
-					}
+          .long {
+            height: 100%;
+            margin: auto;
+          }
+        }
+				
+        .item-title {
+          font-weight: 700;
+          text-transform: uppercase;
+          font-size: 25px;
+					text-align: center;
+					margin-bottom: 15px;
         }
 
         .actions {
           margin-top: 10px;
+          margin-bottom: 10px;
           display: flex;
           flex-direction: column;
 
           .likes {
             display: flex;
-            margin: 10px 15px 0 15px;
+            margin: 10px 5px 0 5px;
             justify-content: space-between;
             transition: 400ms all;
+
+            button {
+              padding: 25px;
+            }
           }
 
           .form-report {
             margin: 10px 20px 0 20px;
             transition: 400ms all;
+            display: flex;
+            flex-direction: column;
+
+            .message {
+              font-size: 18px;
+              font-weight: 600;
+              text-align: center;
+            }
 
             textarea {
               resize: none;
@@ -298,32 +307,6 @@ export default {
           }
         }
       }
-
-      // .next,
-      // .prev {
-      //   width: 200px;
-      //   display: flex;
-      //   position: relative;
-
-      //   .image {
-      //     margin: auto;
-      // 		display: flex;
-      // 		height: 200px;
-      // 		overflow: hidden;
-      //     // transition: 500ms all 400ms;
-
-      //     img {
-      // 			margin: auto;
-      //       width: 100%;
-      //     }
-      //   }
-      // }
-      // .next {
-      //   right: -120px;
-      // }
-      // .prev {
-      //   left: -120px;
-      // }
     }
   }
 
@@ -338,20 +321,6 @@ export default {
   .slide-hide-leave-to {
     opacity: 0;
   }
-
-  // .slide-appear-enter-active {
-  // 	transition: all .3s ease;
-  // }
-  // .slide-appear-leave-active {
-  //   // position: absolute;
-  //   // top: 30%;
-  // 	transition: all .8s cubic-bezier(1.0, 0.5, 0.8, 1.0);
-  // }
-  // .slide-appear-enter,
-  // .slide-appear-leave-to {
-  //   transform: translateX(100%);
-  //   opacity: 0;
-  // }
 }
 
 @media (max-width: 768px) {

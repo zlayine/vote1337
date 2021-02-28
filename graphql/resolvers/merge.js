@@ -71,7 +71,7 @@ const transformMeal = (meal, enabled = false) => {
 		meals: mealItemsResolver.bind(this, meal._doc.meals),
 		reports: reportsResolver.bind(this, meal._doc.reports),
 		user: userResolver.bind(this, meal._doc.user),
-		enabled: enabled,
+		enabled: meal.enabled ? true : enabled,
 		createdAt: dateToString(meal.createdAt),
 		updatedAt: dateToString(meal.updatedAt),
 	}
@@ -82,7 +82,7 @@ const transformMealItem = (item) => {
 		...item._doc,
 		_id: item.id,
 		meal: mealResolver.bind(this, item._doc.meal),
-		votes: votesResolver.bind(this, item._doc.votes),
+		votes: [],
 		image_url: env.process.SERVER_URL + item._doc.image_url,
 		createdAt: dateToString(item._doc.createdAt),
 		updatedAt: dateToString(item._doc.updatedAt),

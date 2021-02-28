@@ -52,7 +52,6 @@
 </template>
 
 <script>
-import MealItem from "./MealItem.vue";
 import moment from "moment";
 
 export default {
@@ -93,15 +92,8 @@ export default {
       return this.$store.getters.user;
     },
     voted() {
-      // return false;
       if (!this.meal.enabled) return true;
-      if (this.currentUser && this.meal.meals[0]) {
-        const res = this.meal.meals[0].votes.filter((v) => {
-          if (v.user._id == this.currentUser.id) return v;
-        });
-        if (res.length == 0) return false;
-        else return true;
-      } else return true;
+      return false;
     },
     mealOwner() {
       if (
@@ -124,7 +116,7 @@ export default {
     },
   },
   components: {
-    MealItem,
+    MealItem: () => import("./MealItem"),
     ConfirmDialog: () => import("./ConfirmDialog"),
   },
 };
@@ -144,6 +136,7 @@ export default {
     font-weight: 700;
     line-height: 28px;
     margin-bottom: 5px;
+		text-transform: uppercase;
   }
 
   .meal_user {

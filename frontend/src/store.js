@@ -156,8 +156,10 @@ export default {
 		},
 		UPDATE_MEAL(state, payload) {
 			state.meals = state.meals.map(m => {
-				if (m._id == payload._id)
+				if (m._id == payload._id) {
 					m.meals = payload.meals;
+					m.enabled = false;
+				}
 				return m;
 			})
 		},
