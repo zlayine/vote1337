@@ -93,15 +93,8 @@ export default {
       return this.$store.getters.user;
     },
     voted() {
-      // return false;
       if (!this.meal.enabled) return true;
-      if (this.currentUser && this.meal.meals[0]) {
-        const res = this.meal.meals[0].votes.filter((v) => {
-          if (v.user._id == this.currentUser.id) return v;
-        });
-        if (res.length == 0) return false;
-        else return true;
-      } else return true;
+      return false;
     },
     mealOwner() {
       if (

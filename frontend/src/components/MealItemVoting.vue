@@ -28,7 +28,11 @@
         <div class="item" v-else>
           <transition name="slide-hide">
             <div :key="item._id" class="image">
-              <img :src="item.image_url" :class="square ? 'square' : 'long'" alt="img" />
+              <img
+                :src="item.image_url"
+                :class="square ? 'square' : 'long'"
+                alt="img"
+              />
             </div>
           </transition>
           <div class="actions" v-if="!finish">
@@ -39,7 +43,7 @@
                 dark
                 small
                 color="error"
-                @click="submitVote('down')"
+                @click="report = true"
               >
                 <v-icon dark> mdi-thumb-down </v-icon>
               </v-btn>
@@ -55,16 +59,20 @@
               </v-btn>
             </div>
             <div class="form-report" v-else>
-              <textarea v-model="description" rows="5">Description</textarea>
+							<div class="message">
+								Tell us why ?
+							</div>
+              <textarea v-model="description" rows="3">Description</textarea>
             </div>
             <v-btn
               class="btn-report mt-5 mx-5"
               rounded
-              :color="!report ? 'error' : 'primary'"
+              v-if="report"
+              color="primary"
               dark
-              @click="report ? submitReport() : (report = true)"
+              @click="submitReport()"
             >
-              {{ report ? "Submit" : "Report something ?" }}
+              Submit
             </v-btn>
             <v-btn
               v-if="report"
@@ -128,6 +136,7 @@ export default {
       this.nextItem();
       this.description = null;
       this.report = false;
+      window.scrollTo(0, 0);
     },
     closeVoting() {
       this.$emit("closeVoting");
@@ -254,17 +263,18 @@ export default {
           justify-content: center;
 
           .square {
-						width: 100%;
-						margin: auto;
+            width: 100%;
+            margin: auto;
           }
-					.long {
-						height: 100%;
-						margin: auto;
-					}
+          .long {
+            height: 100%;
+            margin: auto;
+          }
         }
 
         .actions {
           margin-top: 10px;
+          margin-bottom: 10px;
           display: flex;
           flex-direction: column;
 
@@ -278,6 +288,14 @@ export default {
           .form-report {
             margin: 10px 20px 0 20px;
             transition: 400ms all;
+						display: flex;
+						flex-direction: column;
+
+						.message {
+							font-size: 18px;
+							font-weight: 600;
+							text-align: center;
+						}
 
             textarea {
               resize: none;

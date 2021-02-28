@@ -34,11 +34,11 @@ module.exports = {
 			if (parseDate.length > 1)
 				findOptions.createdAt = { "$gte": new Date(parseDate[0]), "$lte": new Date(parseDate[1]) };
 			const meals = await models.Meal.find(findOptions).sort({ createdAt: 'desc' }).skip((page - 1) * limit).limit(limit);
+			if (meals.length)
+				meals[0].enabled = await enableMealVoting(meals[0], user.id);
 			const res = meals.map(e => {
 				return transformMeal(e)
 			});
-			if (res.length)
-				res[0].enabled = await enableMealVoting(res[0]);
 			return {
 				page: +page,
 				meals: res,
@@ -61,8 +61,8 @@ module.exports = {
 		}
 	},
 	checkAddMeal: async (root, args, cntx, req) => {
-		// if (!cntx.isAuth)
-		// 	return false;
+		if (!cntx.isAuth)
+			return false;
 		return await checkAddMeal(args.campus);
 	},
 	getMealExport: async (root, args, cntx, req) => {
