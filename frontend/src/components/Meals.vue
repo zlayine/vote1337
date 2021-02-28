@@ -73,11 +73,6 @@
 </template>
 
 <script>
-import Meal from "./Meal.vue";
-import ReportsModal from "./ReportsModal.vue";
-import MealItemVoting from "./MealItemVoting.vue";
-import ImagePreview from "./ImagePreview.vue";
-import FilterLayout from "./Filter.vue";
 import add_meal_img from "../assets/addmeal_img.svg";
 import notfound_img from "../assets/notfound_img.svg";
 import moment from "moment-timezone";
@@ -200,11 +195,11 @@ export default {
     },
   },
   components: {
-    Meal,
-    ReportsModal,
-    MealItemVoting,
-    ImagePreview,
-    FilterLayout,
+    Meal: () => import('./Meal'),
+    ReportsModal: () => import('./ReportsModal'),
+    MealItemVoting: () => import('./MealItemVoting'),
+    ImagePreview: () => import('./ImagePreview'),
+    FilterLayout: () => import('./Filter'),
   },
 };
 </script>

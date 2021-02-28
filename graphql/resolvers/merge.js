@@ -71,7 +71,7 @@ const transformMeal = (meal, enabled = false) => {
 		meals: mealItemsResolver.bind(this, meal._doc.meals),
 		reports: reportsResolver.bind(this, meal._doc.reports),
 		user: userResolver.bind(this, meal._doc.user),
-		enabled: enabled,
+		enabled: meal.enabled ? true : enabled,
 		createdAt: dateToString(meal.createdAt),
 		updatedAt: dateToString(meal.updatedAt),
 	}

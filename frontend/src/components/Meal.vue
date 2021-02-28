@@ -52,7 +52,6 @@
 </template>
 
 <script>
-import MealItem from "./MealItem.vue";
 import moment from "moment";
 
 export default {
@@ -117,7 +116,7 @@ export default {
     },
   },
   components: {
-    MealItem,
+    MealItem: () => import("./MealItem"),
     ConfirmDialog: () => import("./ConfirmDialog"),
   },
 };
@@ -137,6 +136,7 @@ export default {
     font-weight: 700;
     line-height: 28px;
     margin-bottom: 5px;
+		text-transform: uppercase;
   }
 
   .meal_user {

@@ -56,7 +56,6 @@ const enableMealVoting = async (meal, userId) => {
 		return false;
 	if (meal.meals) {
 		const vote = await models.Vote.findOne({ user: ObjectId(userId), meal_item: meal.meals[0] });
-		console.log(vote);
 		if (!vote)
 			return true;
 	}
