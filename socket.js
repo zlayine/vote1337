@@ -17,6 +17,11 @@ module.exports = (io) => {
 	}).on('connection', (socket) => {
 		socket.on('join', async (campus) => {
 			socket.join(campus)
+			io.of('/').in(campus + "_add").clients(function (error, clients) {
+				var total = clients.length;
+				if (total)
+					socket.emit('someoneAdding');
+			});
 			// console.log("user joined", campus)
 		});
 
