@@ -2,14 +2,27 @@
   <v-card class="meal_item" :class="{ small: small }" elevation="3">
     <div class="item">
       <div class="image">
-        <img :src="item.image_url" alt="img" />
+        <v-img :src="item.image_url">
+          <template v-slot:placeholder>
+            <v-row class="fill-height ma-0" align="center" justify="center">
+              <v-progress-circular
+                indeterminate
+                color="grey lighten-5"
+              ></v-progress-circular>
+            </v-row>
+          </template>
+        </v-img>
       </div>
       <div class="overlay" @click="enablePreview"></div>
       <div class="info">
         <div class="info_title">{{ item.name }}</div>
         <div class="stats">
-          <div class="text text-error">{{ item.votes_down | vote_text_down }}</div>
-          <div class="text text-success">{{ item.votes_up | vote_text_up }}</div>
+          <div class="text text-error">
+            {{ item.votes_down | vote_text_down }}
+          </div>
+          <div class="text text-success">
+            {{ item.votes_up | vote_text_up }}
+          </div>
         </div>
         <div class="bar">
           <v-progress-linear
@@ -141,13 +154,13 @@ export default {
           color: #fff;
           font-size: 20px;
           font-weight: 700;
-					// &.text-error {
-					// 	color: #ff5252;
-					// }
+          // &.text-error {
+          // 	color: #ff5252;
+          // }
 
-					// &.text-success {
-					// 	color: #53d857;
-					// }
+          // &.text-success {
+          // 	color: #53d857;
+          // }
         }
       }
 
