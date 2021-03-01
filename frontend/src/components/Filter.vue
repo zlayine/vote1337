@@ -16,7 +16,8 @@
             prepend-icon="mdi-calendar"
             readonly
             hide-details
-						clearable
+            clearable
+            @click:clear="clearDate"
             v-bind="attrs"
             v-on="on"
           ></v-text-field>
@@ -64,8 +65,15 @@ export default {
   methods: {
     campusChange() {
       this.$emit("changeCampus", { page: 1, campus: this.campus });
-			let old = this.campus == "Khouribga" ? "Benguerir" : "Khouribga";
-			this.$store.commit("EMIT_CHANGE_CAMPUS", {old: old, new: this.campus})
+      let old = this.campus == "Khouribga" ? "Benguerir" : "Khouribga";
+      this.$store.commit("EMIT_CHANGE_CAMPUS", { old: old, new: this.campus });
+    },
+    clearDate() {
+      this.$emit("changeDate", {
+        page: 1,
+        campus: this.campus,
+        date: [],
+      });
     },
     dateChange() {
       if (this.dates.length == 2) {
@@ -83,21 +91,20 @@ export default {
       }
     },
   },
-	mounted(){
-		if (this.currentUser)
-			this.campus = this.currentUser.campus;
-	},
+  mounted() {
+    if (this.currentUser) this.campus = this.currentUser.campus;
+  },
   computed: {
     currentDate() {
       return moment().format("YYYY-MM-DD");
     },
     dateRangeText: {
-			get() {
-				return this.dates.join(" ~ ");
-			},
-			set() {
-				return '';
-			}
+      get() {
+        return this.dates.join(" ~ ");
+      },
+      set() {
+        return "";
+      },
     },
     user() {
       return this.$store.getters.user;
