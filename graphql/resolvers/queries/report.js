@@ -8,8 +8,6 @@ module.exports = {
 		if (!cntx.isAuth)
 			throw new Error('Unauthenticated');
 		try {
-			// const count = parseInt(await models.Report.count() / 10);
-			// const reports = await models.Report.find({ meal: args.meal }).skip((page - 1) * 10).limit(10);
 			const user = await models.User.findById(cntx.userId);
 			if (!user.staff)
 				throw new Error('You don\'t have permission for this action');

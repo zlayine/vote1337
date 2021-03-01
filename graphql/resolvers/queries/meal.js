@@ -34,11 +34,10 @@ module.exports = {
 			if (parseDate.length > 1)
 				findOptions.createdAt = { "$gte": new Date(parseDate[0]), "$lte": new Date(parseDate[1]) };
 			const meals = await models.Meal.find(findOptions).sort({ createdAt: 'desc' }).skip((page - 1) * limit).limit(limit);
-			if (meals.length)
-				meals[0].enabled = await enableMealVoting(meals[0], user.id);
-			const res = meals.map(e => {
+			const res = await Promise.all(meals.map(async (e) => {
+				e.enabled = await enableMealVoting(e, user.id);
 				return transformMeal(e)
-			});
+			}));
 			return {
 				page: +page,
 				meals: res,

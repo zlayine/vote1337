@@ -23,7 +23,7 @@ const createMealItems = async (commit, items, id) => {
 			method: 'post',
 			onUploadProgress: function (progressEvent) {
 				let uploadPercentage = parseInt(Math.round((progressEvent.loaded * 100) / progressEvent.total));
-				commit('UPDATE_PERCENTAGE', (uploadPercentage / total) + current);
+				commit('UPDATE_PERCENTAGE', parseInt((uploadPercentage / total)) + current);
 			}.bind(this),
 			data: formdata
 		});
