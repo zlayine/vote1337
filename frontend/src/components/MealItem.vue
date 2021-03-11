@@ -5,10 +5,7 @@
         <v-img :src="item.image_url">
           <template v-slot:placeholder>
             <v-row class="fill-height ma-0" align="center" justify="center">
-              <v-progress-circular
-                indeterminate
-                color="grey lighten-5"
-              ></v-progress-circular>
+              <v-progress-circular indeterminate color="grey lighten-5"></v-progress-circular>
             </v-row>
           </template>
         </v-img>
@@ -17,12 +14,8 @@
       <div class="info">
         <div class="info_title">{{ item.name }}</div>
         <div class="stats">
-          <div class="text text-error">
-            {{ item.votes_down | vote_text_down }}
-          </div>
-          <div class="text text-success">
-            {{ item.votes_up | vote_text_up }}
-          </div>
+          <div class="text text-error">{{ item.votes_down | vote_text_down }}</div>
+          <div class="text text-success">{{ item.votes_up | vote_text_up }}</div>
         </div>
         <div class="bar">
           <v-progress-linear
@@ -41,20 +34,23 @@
 export default {
   props: {
     small: String,
-    item: Object,
+    item: Object
   },
   methods: {
     enablePreview() {
       this.$emit("preview", this.item.image_url);
-    },
+    }
   },
   computed: {
     votePercent() {
-      let total = this.item.votes.length;
-      if (this.item.votes_down > 0) {
-        return parseInt((this.item.votes_down / total) * 100);
-      }
-    },
+      if (this.item) {
+        let total = this.item.votes_up + this.item.votes_down;
+        if (this.item.votes_down > 0) {
+          return parseInt((this.item.votes_down / total) * 100);
+        }
+			}
+			return 0;
+    }
   },
   filters: {
     vote_text_up(val) {
@@ -64,8 +60,8 @@ export default {
     vote_text_down(val) {
       if (val > 0) return "-" + val;
       return val;
-    },
-  },
+    }
+  }
 };
 </script>
 
